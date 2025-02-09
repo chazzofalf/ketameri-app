@@ -13,6 +13,35 @@ namespace SymbolTest
             {
                 TestSymbols();
                 TestPhonetics();
+                TextGlyphs();
+            }
+        }
+
+        private void TextGlyphs()
+        {
+            foreach (var idx in Enumerable.Range(0,Glyph.Glyph.NumberOfGlyphs))
+            {
+                var symb = Glyph.Glyph.GetGlyphAtIndex(idx);
+                MultiPrintLine($"Symbol Number: {symb.Number} ({symb.Letter})");
+                MultiPrintLine();
+                MultiPrintLine($"Symbol Map:");
+                MultiPrintLine(string.Join("\n", Enumerable.Range(0, 5)
+                .Select(r => Enumerable.Range(0, 5)
+                .Select(c => symb.ReadBitMap(r, c) ? '#' : '.'))
+                .Select(r => string.Join("", r))));
+                MultiPrintLine();
+                MultiPrintLine($"Siblings:");
+                MultiPrintLine();
+                foreach (var sib in symb.AllOrientations)
+                {
+                    MultiPrintLine($"    Symbol Number: {sib.Number} ({symb.Letter})");
+                    MultiPrintLine();
+                    MultiPrintLine($"    Symbol Map:");
+                    MultiPrintLine("    " + string.Join("\n    ", Enumerable.Range(0, 5)
+                .Select(r => Enumerable.Range(0, 5)
+                .Select(c => sib.ReadBitMap(r, c) ? '#' : '.'))
+                .Select(r => string.Join("", r))));
+                }
             }
         }
 

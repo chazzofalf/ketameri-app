@@ -14,7 +14,7 @@ public class Glyph
     private static string[]? _LowerConsonantVowels;
     private static string[]? _UpperConsonantVowels;
     private static string[]? _Punctuation;
-    private static string[]? _Alphabet;
+    private static (string Text,bool IsNumber,bool IsSpecial,bool IsText)[]? _Alphabet;
     private static Glyph[]? _Glyphs;
     private Glyph[]? _AllOrientations;
 
@@ -61,27 +61,39 @@ public class Glyph
     private static string[] Punctuation => _Punctuation = _Punctuation ?? ".!?,'\":;()=<>+-/*^[]{}"
     .Select(s => $"{s}")
     .ToArray();
-    private static string[] Alphabet => _Alphabet = _Alphabet ?? 
-    Space
-    .Concat(Numbers)
-    .Concat(UpperVowels)
-    .Concat(UpperConsonants)
-    .Concat(UpperVowelConsonants)
-    .Concat(UpperConsonantVowels)
-    .Concat(LowerVowels)
-    .Concat(LowerConsonants)
-    .Concat(LowerVowelConsonants)
-    .Concat(LowerConsonantVowels)
-    .Concat(Punctuation)
+    private static (string Text,bool IsNumber,bool IsSpecial,bool IsText) [] Alphabet => _Alphabet = _Alphabet ?? 
+    Space.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true))
+    .Concat(Numbers.Select(s => (Text:s,IsNumber:true,IsSpecial:false,IsText:false)))
+    .Concat(UpperVowels.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(UpperConsonants.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(UpperVowelConsonants.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(UpperConsonantVowels.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(LowerVowels.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(LowerConsonants.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(LowerVowelConsonants.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(LowerConsonantVowels.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(Punctuation.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .ToArray();
-    private static Glyph[] Glyphs => _Glyphs = _Glyphs = Alphabet.Zip(global::Symbol.Symbol.All,(txt,sym) => new Glyph(txt,sym))
+    private static Glyph[] Glyphs => _Glyphs = _Glyphs = Alphabet.Zip(global::Symbol.Symbol.All,(txt,sym) => new Glyph(txt.Text,sym,txt.IsNumber,txt.IsSpecial,txt.IsText))
     .ToArray();
+    public static int NumberOfGlyphs => Glyphs.Length;
+    public static Glyph GetGlyphAtIndex(int index) => Glyphs[index];
+    public static Glyph GetGlyphWithNumber(int number) => Glyphs.Where(s => s.Number == number).First();
+    public static bool HasGlyphWithNumber(int number) => Glyphs.Where(s => s.Number == number).Any();
+    public static Glyph GetGlyphWithLetter(string letter) => Glyphs.Where(s=> s.Letter == letter).First();
+    public static bool HasGlyphWithLetter(string letter) => Glyphs.Where(s=> s.Letter == letter).Any();
     public string Letter {get;}
-    public Symbol.Symbol Symbol {get;}
-    public Glyph(string letter,Symbol.Symbol symbol)
+    public bool IsNumber {get;}
+    public bool IsSpecial {get;}
+    public bool IsText {get;}
+    private Symbol.Symbol Symbol {get;}
+    public Glyph(string letter,Symbol.Symbol symbol,bool isNumber,bool isSpecial,bool isText)
     {
         Letter = letter;
         Symbol = symbol;   
+        IsNumber = isNumber;
+        IsSpecial = isSpecial;
+        IsText = isText;
     }
     public  bool Similar(object? obj) 
     {
@@ -89,6 +101,12 @@ public class Glyph
     }
     public Glyph[] AllOrientations => _AllOrientations = _AllOrientations ??
         Symbol.AllOrientations
-        .Select(s=> new Glyph(Letter,s))
+        .Select(s=> new Glyph(Letter,s,IsNumber,IsSpecial,IsText))
         .ToArray();
+    
+    public int Number => Symbol.Number;
+    public bool ReadBitMap(int row,int column)
+    {
+        return Symbol.ReadBitMap(row,column);
+    }
 }
