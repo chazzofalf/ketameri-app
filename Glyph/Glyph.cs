@@ -87,7 +87,7 @@ public class Glyph
     public bool IsSpecial {get;}
     public bool IsText {get;}
     private Symbol.Symbol Symbol {get;}
-    public Glyph(string letter,Symbol.Symbol symbol,bool isNumber,bool isSpecial,bool isText)
+    private Glyph(string letter,Symbol.Symbol symbol,bool isNumber,bool isSpecial,bool isText)
     {
         Letter = letter;
         Symbol = symbol;   
@@ -99,10 +99,14 @@ public class Glyph
     {
         return Symbol.Similar(obj);
     }
-    public Glyph[] AllOrientations => _AllOrientations = _AllOrientations ??
-        Symbol.AllOrientations
-        .Select(s=> new Glyph(Letter,s,IsNumber,IsSpecial,IsText))
+    public int NumberOfOrientations => AllOrientations.Length;
+    public Glyph OrientationAtIndex(int index) => AllOrientations[index];
+    private Glyph[] AllOrientations => _AllOrientations = _AllOrientations ??
+        Enumerable.Range(0,Symbol.NumberOfOrientations)
+        .Select(s => Symbol.OrientationAtIndex(s))
+        .Select(s => new Glyph(Letter,s,IsNumber,IsSpecial,IsText))
         .ToArray();
+        
     
     public int Number => Symbol.Number;
     public bool ReadBitMap(int row,int column)

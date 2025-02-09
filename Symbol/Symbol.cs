@@ -151,7 +151,7 @@ public class Symbol
         }
         return cachedAll[number];
     }
-    public Symbol(int number)
+    private Symbol(int number)
     {
         Number = number;
     }
@@ -262,7 +262,10 @@ public class Symbol
        return Number == s.Number;
     }
     private Symbol[]? _AllOrientations;
-    public Symbol[] AllOrientations => _AllOrientations = _AllOrientations ??
+
+    public int NumberOfOrientations => AllOrientations.Length;
+    public Symbol OrientationAtIndex(int index) => AllOrientations[index];    
+    private Symbol[] AllOrientations => _AllOrientations = _AllOrientations ??
         Enumerable.Empty<Symbol>()
         .Append(Identity())
         .Append(R90())

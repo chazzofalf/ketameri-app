@@ -36,7 +36,7 @@ namespace SymbolTest
                 MultiPrintLine();
                 MultiPrintLine($"Siblings:");
                 MultiPrintLine();
-                foreach (var sib in symb.AllOrientations)
+                foreach (var sib in Enumerable.Range(0,symb.NumberOfOrientations).Select(s => symb.OrientationAtIndex(s)))
                 {
                     MultiPrintLine($"    Symbol Number: {sib.Number}");
                     MultiPrintLine();
@@ -79,7 +79,7 @@ namespace SymbolTest
                 MultiPrintLine();
                 MultiPrintLine($"Siblings:");
                 MultiPrintLine();
-                foreach (var sib in symb.AllOrientations)
+                foreach (var sib in Enumerable.Range(0,symb.NumberOfOrientations).Select(s => symb.OrientationAtIndex(s)))
                 {
                     MultiPrintLine($"    Symbol Number: {sib.Number}");
                     MultiPrintLine();
