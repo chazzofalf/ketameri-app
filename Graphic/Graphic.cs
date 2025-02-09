@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using System.Security.Cryptography.X509Certificates;
+using SkiaSharp;
 
 namespace Graphic;
 
@@ -129,6 +130,22 @@ public class Graphic
         }
         return bmp;
     }
+    public SKBitmap ColorizeBitmap(SKColor color,bool useSmall=false)
+    {
+        var original = useSmall ? Small : Large;
+        var inverter = new float[20] {
+    -1f,  0f,  0f, 0f, 1f,
+    0f, -1f,  0f, 0f, 1f,
+    0f,  0f, -1f, 0f, 1f,
+    0f,  0f,  0f, 1f, 0f
+};
+        return null; // TODO: You're here!
+    }
+    public SKBitmap ColorizeBitmap(string hex,bool useSmall=false)
+    {
+        return ColorizeBitmap(SKColor.Parse(hex),useSmall);
+    }
+
     public int NumberOfBits => Glyph.NumberOfBits;
     public bool GetBit(int index) => Glyph.GetBit(index);
 }
