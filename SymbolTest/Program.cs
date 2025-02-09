@@ -22,7 +22,11 @@ namespace SymbolTest
             foreach (var idx in Enumerable.Range(0,Glyph.Glyph.NumberOfGlyphs))
             {
                 var symb = Glyph.Glyph.GetGlyphAtIndex(idx);
-                MultiPrintLine($"Symbol Number: {symb.Number} ({symb.Letter})");
+                MultiPrintLine($"Symbol Number: {symb.Number}");
+                MultiPrintLine($"Symbol Letter: {symb.Letter}");
+                MultiPrintLine($"Is Number: {symb.IsNumber}");
+                MultiPrintLine($"Is Special: {symb.IsSpecial}");
+                MultiPrintLine($"Is Text: {symb.IsText}");
                 MultiPrintLine();
                 MultiPrintLine($"Symbol Map:");
                 MultiPrintLine(string.Join("\n", Enumerable.Range(0, 5)
@@ -34,13 +38,14 @@ namespace SymbolTest
                 MultiPrintLine();
                 foreach (var sib in symb.AllOrientations)
                 {
-                    MultiPrintLine($"    Symbol Number: {sib.Number} ({symb.Letter})");
+                    MultiPrintLine($"    Symbol Number: {sib.Number}");
                     MultiPrintLine();
                     MultiPrintLine($"    Symbol Map:");
                     MultiPrintLine("    " + string.Join("\n    ", Enumerable.Range(0, 5)
                 .Select(r => Enumerable.Range(0, 5)
                 .Select(c => sib.ReadBitMap(r, c) ? '#' : '.'))
                 .Select(r => string.Join("", r))));
+                MultiPrintLine();
                 }
             }
         }
@@ -83,6 +88,7 @@ namespace SymbolTest
                 .Select(r => Enumerable.Range(0, 5)
                 .Select(c => sib.ReadBitMap(r, c) ? '#' : '.'))
                 .Select(r => string.Join("", r))));
+                MultiPrintLine();
                 }
             }
         }
