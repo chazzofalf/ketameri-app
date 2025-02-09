@@ -85,10 +85,13 @@ public class Phonetics
         var not_mapped_consonants = consonants.Where(s => !PartialMappingDictionary.ContainsKey(s));
         var not_mapped_value_consonants = consonants.Where(s => !PartialMappingDictionary.ContainsValue(s));
         consonants_mappings = consonants_mappings.Concat(not_mapped_consonants.Zip(not_mapped_value_consonants.Reverse(),(a,b) => (English:a,Protodimenian:b)));
-        var all_mappings = vowel_mappings.Concat(consonants_mappings)
+        var all_mappings = vowel_mappings.Concat(consonants_mappings);
+        all_mappings = all_mappings.Concat(all_mappings.Select(s => (English:s.English.ToUpperInvariant(),Protodimenian:s.Protodimenian.ToUpperInvariant())));
+        var dict = 
+        all_mappings
         .OrderBy(m => m.English)
         .ToDictionary(m => m.English,m => m.Protodimenian);
-        return all_mappings;
+        return dict;
 
     }
 
