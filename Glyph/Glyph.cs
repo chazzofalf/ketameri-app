@@ -15,6 +15,8 @@ public class Glyph
     private static string[]? _UpperConsonantVowels;
     private static string[]? _Punctuation;
     private static string[]? _Alphabet;
+    private static Glyph[]? _Glyphs;
+    private Glyph[]? _AllOrientations;
 
     private static string[] Numbers => _Numbers = _Numbers ?? Enumerable.Range(0,14)
     .Select(s => $"{s}")
@@ -72,4 +74,21 @@ public class Glyph
     .Concat(LowerConsonantVowels)
     .Concat(Punctuation)
     .ToArray();
+    private static Glyph[] Glyphs => _Glyphs = _Glyphs = Alphabet.Zip(global::Symbol.Symbol.All,(txt,sym) => new Glyph(txt,sym))
+    .ToArray();
+    public string Letter {get;}
+    public Symbol.Symbol Symbol {get;}
+    public Glyph(string letter,Symbol.Symbol symbol)
+    {
+        Letter = letter;
+        Symbol = symbol;   
+    }
+    public  bool Similar(object? obj) 
+    {
+        return Symbol.Similar(obj);
+    }
+    public Glyph[] AllOrientations => _AllOrientations = _AllOrientations ??
+        Symbol.AllOrientations
+        .Select(s=> new Glyph(Letter,s))
+        .ToArray();
 }
