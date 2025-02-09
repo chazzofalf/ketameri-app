@@ -6,7 +6,7 @@ namespace SymbolTest
     public class Program
     {
         private TextWriter? textout;
-        public void Run()
+        private void Run()
         {
             Console.WriteLine("Hello, World!");
             if (Directory.Exists("Graphics"))
@@ -84,7 +84,7 @@ namespace SymbolTest
                 MultiPrintLine($"Wrote Small Graphic To: {name_base}_large.png");
             }
         }
-        public static bool IsValidFilename(string name)
+        private static bool IsValidFilename(string name)
         {
             
             return !name
@@ -92,7 +92,7 @@ namespace SymbolTest
             .Where(s => s)
             .Any();
         }
-        public static bool IsValidFileNameCharacter(char character)
+        private static bool IsValidFileNameCharacter(char character)
         {
             char[] invalidChars = Path.GetInvalidFileNameChars();
             return Array.IndexOf(invalidChars, character) == -1;
@@ -179,7 +179,7 @@ namespace SymbolTest
             prgm.Run();
                        
         }
-        public string GetFoxText()
+        private string GetFoxText()
         {
             var s = typeof(Program).Assembly.GetManifestResourceStream("SymbolTest.foxtext.txt");
             if (s != null)
@@ -193,7 +193,7 @@ namespace SymbolTest
             }
             throw new Exception("Resource not found");
         }
-        public void MultiPrintLine(string line="")
+        private void MultiPrintLine(string line="")
         {
             Console.WriteLine(line);
             textout?.WriteLine(line);
