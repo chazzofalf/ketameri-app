@@ -1,4 +1,6 @@
-﻿namespace Graphic;
+﻿using SkiaSharp;
+
+namespace Graphic;
 
 public class Graphic
 {
@@ -41,10 +43,92 @@ public class Graphic
     Enumerable.Range(0,global::Glyph.Glyph.NumberOfGlyphs)
     .Select(s => new Graphic(global::Glyph.Glyph.GetGlyphAtIndex(s)))
     .ToArray();
-
+    public SKBitmap Small {get;}
+    public SKBitmap Large {get;}
+    
 
     public Graphic(global::Glyph.Glyph glyph)
     {
         Glyph = glyph;
+        Small = GenerateSmallBitmap();
+        Large = GenerateLargeBitmap();
     }
+
+    private SKBitmap GenerateLargeBitmap()
+    {
+        var orig_small = Small;
+        
+        var bmp = new SKBitmap(54,54);
+        var opts = new SKSamplingOptions();
+        
+        orig_small.ScalePixels(bmp,opts);
+        
+        return bmp;
+    }
+
+    private SKBitmap GenerateSmallBitmap()
+    {
+        var bmp = new SKBitmap(9,9);
+        var can = new SKCanvas(bmp);
+        var black = new SKPaint();
+        black.Color = SKColors.Black;        
+        can.Clear();
+        foreach (var idx in Enumerable.Range(0,NumberOfBits))
+        {
+            if (GetBit(idx))
+            {
+                if (idx == 0)
+                {
+                    can.DrawLine(new SKPoint(4,0),new SKPoint(9,0),black);
+                }
+                else if (idx == 1)
+                {
+                    can.DrawLine(new SKPoint(8,0),new SKPoint(8,4),black);
+                }
+                else if (idx == 2)
+                {
+                    can.DrawLine(new SKPoint(8,4),new SKPoint(8,9),black);
+                }
+                else if (idx == 3)
+                {
+                    can.DrawLine(new SKPoint(4,8),new SKPoint(9,8),black);
+                }
+                else if (idx == 4)
+                {
+                    can.DrawLine(new SKPoint(0,8),new SKPoint(4,8),black);
+                }
+                else if (idx == 5)
+                {
+                    can.DrawLine(new SKPoint(0,4),new SKPoint(0,9),black);
+                }
+                else if (idx == 6)
+                {
+                    can.DrawLine(new SKPoint(0,0),new SKPoint(0,4),black);                    
+                }
+                else if (idx == 7)
+                {
+                    can.DrawLine(new SKPoint(0,0),new SKPoint(4,0),black);
+                }
+                else if (idx == 8)
+                {
+                    can.DrawLine(new SKPoint(4,0),new SKPoint(4,4),black);                    
+                }
+                else if (idx == 9)
+                {
+                    can.DrawLine(new SKPoint(4,4),new SKPoint(9,4),black);
+                }
+                else if (idx == 10)
+                {
+                    can.DrawLine(new SKPoint(4,4),new SKPoint(4,9),black);
+                }
+                else if (idx == 11)
+                {
+                    can.DrawLine(new SKPoint(0,4),new SKPoint(4,4),black);
+                }
+            }            
+        }
+        return bmp;
+    }
+    public int NumberOfBits => Glyph.NumberOfBits;
+    public bool GetBit(int index) => Glyph.GetBit(index);
 }

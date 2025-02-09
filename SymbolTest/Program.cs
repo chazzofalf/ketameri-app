@@ -9,26 +9,36 @@ namespace SymbolTest
         public void Run()
         {
             Console.WriteLine("Hello, World!");
+            if (Directory.Exists("Graphics"))
+            {
+                Directory.Delete("Graphics",true);
+            }
+            Directory.CreateDirectory("Graphics");
+            if (File.Exists("Symboltest.txt"))
+            {
+                File.Delete("Symboltest.txt");
+            }
             using (textout = new StreamWriter(File.OpenWrite("Symboltest.txt")))
             {
                 TestSymbols();
                 TestPhonetics();
                 TextGlyphs();
+                TextGraphics();
             }
         }
 
-        private void TextGlyphs()
+        private void TextGraphics()
         {
             foreach (var idx in Enumerable.Range(0,Glyph.Glyph.NumberOfGlyphs))
             {
-                var symb = Glyph.Glyph.GetGlyphAtIndex(idx);
-                MultiPrintLine($"Symbol Number: {symb.Number}");
-                MultiPrintLine($"Symbol Letter: {symb.Letter}");
+                var symb = global:: Graphic.Graphic.GetGraphicAtIndex(idx);
+                MultiPrintLine($"Graphic Number: {symb.Number}");
+                MultiPrintLine($"Graphic Letter: {symb.Letter}");
                 MultiPrintLine($"Is Number: {symb.IsNumber}");
                 MultiPrintLine($"Is Special: {symb.IsSpecial}");
                 MultiPrintLine($"Is Text: {symb.IsText}");
                 MultiPrintLine();
-                MultiPrintLine($"Symbol Map:");
+                MultiPrintLine($"Graphic Map:");
                 MultiPrintLine(string.Join("\n", Enumerable.Range(0, 5)
                 .Select(r => Enumerable.Range(0, 5)
                 .Select(c => symb.ReadBitMap(r, c) ? '#' : '.'))
@@ -38,9 +48,79 @@ namespace SymbolTest
                 MultiPrintLine();
                 foreach (var sib in Enumerable.Range(0,symb.NumberOfOrientations).Select(s => symb.OrientationAtIndex(s)))
                 {
-                    MultiPrintLine($"    Symbol Number: {sib.Number}");
+                    MultiPrintLine($"    Graphic Number: {sib.Number}");
                     MultiPrintLine();
-                    MultiPrintLine($"    Symbol Map:");
+                    MultiPrintLine($"    Graphic Map:");
+                    MultiPrintLine("    " + string.Join("\n    ", Enumerable.Range(0, 5)
+                .Select(r => Enumerable.Range(0, 5)
+                .Select(c => sib.ReadBitMap(r, c) ? '#' : '.'))
+                .Select(r => string.Join("", r))));
+                MultiPrintLine();
+
+                }
+                var idex = $"{idx}";
+                while (idex.Length < 3)
+                {
+                    idex = $"0{idex}";
+                }
+                var name_base = "";
+                if (IsValidFilename(symb.Letter))
+                {
+                    name_base = $"Graphics/CHR_{idx}_{symb.Letter}";
+                }
+                else
+                {
+                    name_base = $"Graphics/CHR_{idx}";
+                }
+                using (var fio = File.OpenWrite($"{name_base}_small.png"))
+                {
+                    symb.Small.Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
+                }
+                MultiPrintLine($"Wrote Small Graphic To: {name_base}_small.png");
+                using (var fio = File.OpenWrite($"{name_base}_large.png"))
+                {
+                    symb.Large.Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
+                }
+                MultiPrintLine($"Wrote Small Graphic To: {name_base}_large.png");
+            }
+        }
+        public static bool IsValidFilename(string name)
+        {
+            
+            return !name
+            .Select(s => !IsValidFileNameCharacter(s))
+            .Where(s => s)
+            .Any();
+        }
+        public static bool IsValidFileNameCharacter(char character)
+        {
+            char[] invalidChars = Path.GetInvalidFileNameChars();
+            return Array.IndexOf(invalidChars, character) == -1;
+        } 
+        private void TextGlyphs()
+        {
+            foreach (var idx in Enumerable.Range(0,Glyph.Glyph.NumberOfGlyphs))
+            {
+                var symb = Glyph.Glyph.GetGlyphAtIndex(idx);
+                MultiPrintLine($"Glyph Number: {symb.Number}");
+                MultiPrintLine($"Glyph Letter: {symb.Letter}");
+                MultiPrintLine($"Is Number: {symb.IsNumber}");
+                MultiPrintLine($"Is Special: {symb.IsSpecial}");
+                MultiPrintLine($"Is Text: {symb.IsText}");
+                MultiPrintLine();
+                MultiPrintLine($"Glyph Map:");
+                MultiPrintLine(string.Join("\n", Enumerable.Range(0, 5)
+                .Select(r => Enumerable.Range(0, 5)
+                .Select(c => symb.ReadBitMap(r, c) ? '#' : '.'))
+                .Select(r => string.Join("", r))));
+                MultiPrintLine();
+                MultiPrintLine($"Siblings:");
+                MultiPrintLine();
+                foreach (var sib in Enumerable.Range(0,symb.NumberOfOrientations).Select(s => symb.OrientationAtIndex(s)))
+                {
+                    MultiPrintLine($"    Glyph Number: {sib.Number}");
+                    MultiPrintLine();
+                    MultiPrintLine($"    Glyph Map:");
                     MultiPrintLine("    " + string.Join("\n    ", Enumerable.Range(0, 5)
                 .Select(r => Enumerable.Range(0, 5)
                 .Select(c => sib.ReadBitMap(r, c) ? '#' : '.'))

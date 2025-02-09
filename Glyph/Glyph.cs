@@ -48,7 +48,7 @@ public class Glyph
     .SelectMany(v => LowerConsonants
     .Select(c => $"{v}{c}"))
     .ToArray();
-    private static string[] UpperVowelConsonants => _UpperVowelConsonants = _UpperConsonants ?? LowerVowelConsonants
+    private static string[] UpperVowelConsonants => _UpperVowelConsonants = _UpperVowelConsonants ?? LowerVowelConsonants
     .Select(s => $"{char.ToUpperInvariant(s[0])}{s[1]}")
     .ToArray();
     private static string[] LowerConsonantVowels => _LowerConsonantVowels = _LowerConsonantVowels ?? LowerConsonants
@@ -73,6 +73,7 @@ public class Glyph
     .Concat(LowerVowelConsonants.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Concat(LowerConsonantVowels.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Concat(Punctuation.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Append((Text:"",IsNumber:false,IsSpecial:true,IsText:false))
     .ToArray();
     private static Glyph[] Glyphs => _Glyphs = _Glyphs = Alphabet.Zip(global::Symbol.Symbol.All,(txt,sym) => new Glyph(txt.Text,sym,txt.IsNumber,txt.IsSpecial,txt.IsText))
     .ToArray();
@@ -113,4 +114,6 @@ public class Glyph
     {
         return Symbol.ReadBitMap(row,column);
     }
+    public int NumberOfBits => Symbol.NumberOfBits;
+    public bool GetBit(int index) => Symbol.GetBit(index);
 }

@@ -25,6 +25,8 @@ public class Symbol
     .Select(s => Symbol.SymbolForNumber(s))
     .ToArray();
     public static Symbol[] cachedAll = new Symbol[4096];
+    public int NumberOfBits => Bits.Length;
+    public bool GetBit(int index) => Bits[index];
     private bool[]? bits;
     private bool[] Bits => bits = bits ?? Enumerable.Range(0,12)
     .Select(bi => (Number & (1 << (11-bi))) != 0)

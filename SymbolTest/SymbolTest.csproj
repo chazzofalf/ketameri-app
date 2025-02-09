@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Phonetics\Phonetics.csproj" />
     <ProjectReference Include="..\Glyph\Glyph.csproj" />
+    <ProjectReference Include="..\Graphic\Graphic.csproj" />
   </ItemGroup>
   
   <PropertyGroup>
