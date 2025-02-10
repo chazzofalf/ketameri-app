@@ -82,6 +82,39 @@ namespace SymbolTest
                     symb.Large.Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
                 }
                 MultiPrintLine($"Wrote Small Graphic To: {name_base}_large.png");
+                using (var fio = File.OpenWrite($"{name_base}_turquoise_small.png"))
+                {
+                    symb.ColorizeBitmap(useSmall:true).Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
+                }
+                using (var fio = File.OpenWrite($"{name_base}_turquoise_large.png"))
+                {
+                    symb.ColorizeBitmap(useSmall:false).Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
+                                        
+                }
+                //#8A0707
+                using (var fio = File.OpenWrite($"{name_base}_turquoise_small.png"))
+                {
+                    symb.ColorizeBitmap(useSmall:true).Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
+                }
+
+                using (var fio = File.OpenWrite($"{name_base}_blood_large.png"))
+                {
+                    symb.ColorizeBitmap(useSmall:false,hex:"#8A0707").Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
+                                        
+                }
+                using (var fio = File.OpenWrite($"{name_base}_blood_small.png"))
+                {
+                    symb.ColorizeBitmap(useSmall:true,hex:"#8A0707").Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
+                }
+                using (var fio = File.OpenWrite($"{name_base}_goldenrod_large.png"))
+                {
+                    symb.ColorizeBitmap(useSmall:false,hex:"#daa520").Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
+                                        
+                }
+                using (var fio = File.OpenWrite($"{name_base}_goldenrod_small.png"))
+                {
+                    symb.ColorizeBitmap(useSmall:true,hex:"#daa520").Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(fio);
+                }
             }
         }
         private static bool IsValidFilename(string name)

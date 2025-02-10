@@ -44,15 +44,29 @@ public class Graphic
     Enumerable.Range(0,global::Glyph.Glyph.NumberOfGlyphs)
     .Select(s => new Graphic(global::Glyph.Glyph.GetGlyphAtIndex(s)))
     .ToArray();
-    public SKBitmap Small {get;}
-    public SKBitmap Large {get;}
+    private SKBitmap _small ;
+    private SKBitmap _large;
+    public SKBitmap Small 
+    {
+        get
+        {
+            return _small.Copy();
+        }
+    }
+    public SKBitmap Large 
+    {
+        get
+        {
+            return _large.Copy();
+        }
+    }
     
 
     public Graphic(global::Glyph.Glyph glyph)
     {
         Glyph = glyph;
-        Small = GenerateSmallBitmap();
-        Large = GenerateLargeBitmap();
+        _small = GenerateSmallBitmap();
+        _large = GenerateLargeBitmap();
     }
 
     private SKBitmap GenerateLargeBitmap()
@@ -130,16 +144,44 @@ public class Graphic
         }
         return bmp;
     }
-    public SKBitmap ColorizeBitmap(SKColor color,bool useSmall=false)
+    public SKBitmap ColorizeBitmap(SKColor? color=null,bool useSmall=false)
     {
+        var real_color = color is SKColor colorx ? colorx : SKColors.Turquoise;
         var original = useSmall ? Small : Large;
-        var inverter = new float[20] {
-    -1f,  0f,  0f, 0f, 1f,
-    0f, -1f,  0f, 0f, 1f,
-    0f,  0f, -1f, 0f, 1f,
-    0f,  0f,  0f, 1f, 0f
-};
-        return null; // TODO: You're here!
+        using (var canvas = new SKCanvas(original))
+        {
+            float[] invertColorMatrix = {
+                -1,  0,  0,  0, 255,
+                 0, -1,  0,  0, 255,
+                 0,  0, -1,  0, 255,
+                 0,  0,  0,  1,   0,
+            };
+            float[] turquoiseColorMatrix = {
+               ((float)real_color.Red)/(255.0f), 0,     0,     0, 0,  // R 
+                0,     ((float)real_color.Green)/(255.0f), 0,     0, 0,  // G
+                0,     0,     ((float)real_color.Blue)/(255.0f), 0, 0,  // B
+                0,     0,     0,     ((float)real_color.Alpha)/(255.0f), 0   // A
+
+            };
+            using (var colorFilter = SKColorFilter.CreateColorMatrix(invertColorMatrix))
+            {
+                using (var turquoiseFilter = SKColorFilter.CreateColorMatrix(turquoiseColorMatrix))
+                {
+                    using (var paint = new SKPaint())
+                    {
+                        paint.ColorFilter = colorFilter;
+                        canvas.DrawBitmap(original, 0, 0, paint);
+                        canvas.Flush();
+                        paint.ColorFilter = turquoiseFilter;
+                        canvas.DrawBitmap(original,0,0,paint);
+                    }
+                }
+                
+            }
+        }
+        
+
+        return original; // TODO: You're here!
     }
     public SKBitmap ColorizeBitmap(string hex,bool useSmall=false)
     {
