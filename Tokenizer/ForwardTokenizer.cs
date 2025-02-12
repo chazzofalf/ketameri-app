@@ -362,7 +362,10 @@ class ForwardTokenizer
             outx.AddRange(SingleForLetter(last!.Value));
         }
         cbuffer.AddRange(outx);
-        return cbuffer.ToArray();
+        var outxx = cbuffer.ToArray();
+        cbuffer.Clear();
+        buffer.Clear();
+        return outxx;
         
     }
 
