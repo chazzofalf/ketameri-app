@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Tokenizer;
 
-public class ReverseTokenizer
+class ReverseTokenizer 
 {
     private bool _Is_SpecialMode;
     private bool _Is_NumericMode;
@@ -89,4 +89,6 @@ public class ReverseTokenizer
         }
         return string.Join("",cbuffer);
     }
+
+    
 }

@@ -5,7 +5,7 @@ using SkiaSharp;
 
 namespace Tokenizer;
 
-public class ForwardTokenizer
+class ForwardTokenizer 
 {
     private char[]? _SupportedCharacters = null;
     private string[]? _allGraphicLetters = null;
@@ -75,6 +75,7 @@ public class ForwardTokenizer
     private bool IsVowel(char c) => Vowels.Contains(c) || UpperVowels.Contains(c);
     private bool IsLetter(char c) => Letters.Contains(c);
     private List<char> buffer = new List<char>();
+    private List<Graphic.Graphic> cbuffer = new List<Graphic.Graphic>();
     private bool _IsNumberMode = false;
     private bool _IsSpecialMode = false;
     private Graphic.Graphic[] ConvertNumberInBuffer()
@@ -162,7 +163,7 @@ public class ForwardTokenizer
     {
         return Enumerable.Repeat(Graphic.Graphic.GetGraphicWithLetter($"{englishChar}"),1).ToArray();
     }
-    public Graphic.Graphic[] Put(char englishChar)
+    public void Put(char englishChar)
     {
         var outx = Enumerable.Empty<Graphic.Graphic>().ToList();
         var last = buffer.Any() ? buffer.Last() : (char?)null;
@@ -331,9 +332,9 @@ public class ForwardTokenizer
                 outx.AddRange(ConvertStrangeCharacter(englishChar));
             }
         }  
-        return outx.ToArray();
+        cbuffer.AddRange(outx);
     }
-    public Graphic.Graphic[]? Finish()
+    public Graphic.Graphic[] Finish()
     {
         var outx = Enumerable.Empty<Graphic.Graphic>().ToList();
         var last = buffer.Any() ? buffer.Last() : (char?)null;
@@ -360,6 +361,10 @@ public class ForwardTokenizer
         {
             outx.AddRange(SingleForLetter(last!.Value));
         }
-        return outx.ToArray();
+        cbuffer.AddRange(outx);
+        return cbuffer.ToArray();
+        
     }
+
+    
 }
