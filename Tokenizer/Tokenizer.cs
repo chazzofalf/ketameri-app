@@ -4,8 +4,8 @@ public class Tokenizer
 {
     private ForwardTokenizer? _ForwardTokenizer = null;
     private ReverseTokenizer? _ReverseTokenizer = null;
-    private ForwardTokenizer ForwardTokenizer => _ForwardTokenizer = _ForwardTokenizer = new ForwardTokenizer();
-    private ReverseTokenizer ReverseTokenizer => _ReverseTokenizer = _ReverseTokenizer = new ReverseTokenizer();
+    private ForwardTokenizer ForwardTokenizer => _ForwardTokenizer = _ForwardTokenizer ?? new ForwardTokenizer();
+    private ReverseTokenizer ReverseTokenizer => _ReverseTokenizer = _ReverseTokenizer ?? new ReverseTokenizer();
     public void Put<T>(T value)
     {
         if (value is char vc)

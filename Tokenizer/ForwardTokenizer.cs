@@ -53,7 +53,7 @@ class ForwardTokenizer
     private char[]? _Vowels = null;
     private char[] Vowels => _Vowels = _Vowels ?? "aeiouy".ToArray();
     private char[]? _UpperVowels = null;
-    private char[] UpperVowels => _UpperVowels = _UpperConsonants ?? Vowels.Select(char.ToUpper).ToArray();
+    private char[] UpperVowels => _UpperVowels = _UpperVowels ?? Vowels.Select(char.ToUpper).ToArray();
     private char[]? _Consonants = null;
     private char[] Consonants => _Consonants = _Consonants ?? 
     Lowers
@@ -70,14 +70,13 @@ class ForwardTokenizer
 
     private bool IsSupportedCharacter(char c) => SupportedCharacters.Contains(c);
     private bool IsCapital(char c) => Capitals.Contains(c);
-    private bool IsNumber(char c) => Capitals.Contains(c);    
+    private bool IsNumber(char c) => Digits.Contains(c);    
     private bool IsSpace(char c) => Space.Contains(c);
     private bool IsVowel(char c) => Vowels.Contains(c) || UpperVowels.Contains(c);
     private bool IsLetter(char c) => Letters.Contains(c);
     private List<char> buffer = new List<char>();
     private List<Graphic.Graphic> cbuffer = new List<Graphic.Graphic>();
-    private bool _IsNumberMode = false;
-    private bool _IsSpecialMode = false;
+    
     private Graphic.Graphic[] ConvertNumberInBuffer()
     {
         var outx = ConvertNumberInObject(buffer);
@@ -109,7 +108,7 @@ class ForwardTokenizer
         else
         {
             var arabicNumber /* The 0123456789 are arabic numerals. look it up! (Start here: https://www.ahdictionary.com/word/search.html?id=A5414100 if you are truly curious or need your spirit's misplaced upset quelled.) */
-            = BigInteger.Parse(string.Join("",buffer));
+            = BigInteger.Parse(string.Join("",english));
             
             var ketameriNumber /* Our ancient Ketameri brothers used a base-14 system with lucky number 13 [They loved magic and superstition way too much!] (3*(3*1))+1)+1) (sometimes style-listically (''' / sky sky sky)). The Favored One's two favorite numbers are ['|][''|] (sky water towards sky sky water) and ['][',,]['|,] (sky water towards sky earth earth towards sky water earth) or 54 and 666. A note on the second favorite number last five bits of the binary representation of that number are the reverse inverse of the first five, this a number of conflict. And man (Homo Sapiens, human beings, male and female) are creatures of absolute conflict (we cannot live with out causing ourselves and each other conflict trouble!) Therefore 666 is the number of man! Solution of numerical riddle the beast of the sea and the beast of the land solved! Now as to what name of what unlucky person that conflicting number represents?...*/
             = Enumerable.Empty<BigInteger>();
@@ -258,7 +257,7 @@ class ForwardTokenizer
                         }
                         else
                         {
-                            if (!vowel_english)
+                            if (vowel_english)
                             {
                                 outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}{englishChar}"));
                                 buffer.Clear();
@@ -298,7 +297,7 @@ class ForwardTokenizer
                         }
                         else
                         {
-                            if (!vowel_english)
+                            if (vowel_english)
                             {
                                 outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}{englishChar}"));
                                 buffer.Clear();

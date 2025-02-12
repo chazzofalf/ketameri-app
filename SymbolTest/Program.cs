@@ -145,7 +145,9 @@ namespace SymbolTest
             var bOs = "Zethana";
             var bOL = "Declán";
             var warning = "Watch out! Those two are going to quite literally rock your (the) entire world! Don't say I didn't warn you.";
-            var testItems = new [] {bOs,bOL,warning};
+            var bOsDOB = "Zethana - 2/23/9852 BCE - 7/3/2032 CE";
+            var bOLDOB = "Declán - 6/6/2006 - 7/3/2032";
+            var testItems = new [] {bOs,bOL,bOsDOB,bOLDOB,warning};
             var file_original_write_op_count = testItems
             .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
             .Select(itm => (IndexName:string.Join("",$"{itm.Index}".Reverse().Concat("00").Reverse().Take(3)),Item:itm.Item))
@@ -168,11 +170,23 @@ namespace SymbolTest
             
         })
         .ToArray();
+        var padnum = (int v) => {
+            var s = $"{v}";
+            while (s.Length < 3)
+            {
+                s = $"0{s}";
+            }
+            if (s != null)
+            {
+                return s;
+            }
+            throw new NullReferenceException();
+        };
             var file_convert_op_counts = tokenized_graphic_sets
             .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (RowIndex:b,Row:a))
             .Select(r => (RowIndex:r.RowIndex,Row:r.Row.Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (ColumnIndex:b,Column:a))))
             .SelectMany(r => r.Row.Select(c => (RowIndex:r.RowIndex,ColumnIndex:c.ColumnIndex,Item:c.Column)))
-            .Select(itm => (RowName:string.Join("",$"{itm.RowIndex}".Reverse().Concat("00").Reverse().Take(3)),ColumnName:string.Join("",$"{itm.ColumnIndex}".Reverse().Concat("00").Reverse().Take(3)),Item:itm.Item))
+            .Select(itm => (RowName:padnum(itm.RowIndex),ColumnName:padnum(itm.ColumnIndex),Item:itm.Item))
             .Select(itm => (Name:$"TokenizerTest/TokenizedGraphic_Row_{itm.RowName}_Column_{itm.ColumnName}.png",Item:itm.Item))
             .Select(itm => (Name:itm.Name,Item: ((Func<byte[]>)(() => { 
                 var ms = new MemoryStream();
