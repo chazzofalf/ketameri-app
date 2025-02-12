@@ -9,6 +9,7 @@
     <ProjectReference Include="..\Phonetics\Phonetics.csproj" />
     <ProjectReference Include="..\Glyph\Glyph.csproj" />
     <ProjectReference Include="..\Graphic\Graphic.csproj" />
+    <ProjectReference Include="..\Tokenizer\Tokenizer.csproj" />
   </ItemGroup>
   
   <PropertyGroup>

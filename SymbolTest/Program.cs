@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Data.Common;
 using System.Text;
+
 
 namespace SymbolTest
 {
@@ -22,12 +24,13 @@ namespace SymbolTest
             {
                 TestSymbols();
                 TestPhonetics();
-                TextGlyphs();
-                TextGraphics();
+                TestGlyphs();
+                TestGraphics();
+                TestTokenizer();
             }
         }
 
-        private void TextGraphics()
+        private void TestGraphics()
         {
             foreach (var idx in Enumerable.Range(0,Glyph.Glyph.NumberOfGlyphs))
             {
@@ -130,7 +133,77 @@ namespace SymbolTest
             char[] invalidChars = Path.GetInvalidFileNameChars();
             return Array.IndexOf(invalidChars, character) == -1;
         } 
-        private void TextGlyphs()
+        private void TestTokenizer()
+        {
+            if (Directory.Exists("TokenizerTest"))
+            {
+                Directory.Delete("TokenizerTest",true);
+            }
+            
+            Directory.CreateDirectory("TokenizerTest");
+            
+            var bOs = "Zethana";
+            var bOL = "Declán";
+            var warning = "Watch out! Those two are going to quite literally rock your (the) entire world! Don't say I didn't warn you.";
+            var testItems = new [] {bOs,bOL,warning};
+            var file_original_write_op_count = testItems
+            .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
+            .Select(itm => (IndexName:string.Join("",$"{itm.Index}".Reverse().Concat("00").Reverse().Take(3)),Item:itm.Item))
+            .Select(itm => (Name:$"TokenizerTest/Original_Source_{itm.IndexName}.txt",Item:itm.Item))
+            .Select(itm => {
+                File.WriteAllText(itm.Name,itm.Item);
+                return 1;
+            })
+            .Sum();
+            var tokenizer = new Tokenizer.Tokenizer();
+            var cnt_func = (string s) => 
+            s.Select(ch => {tokenizer.Put(ch); return 1;})
+            .Sum();
+            var reverse_cnt_func = (Graphic.Graphic[] g) =>
+            g.Select(gs => {tokenizer.Put(gs); return 1;})
+            .Sum();        
+            var tokenized_graphic_sets = testItems
+            .Select(s => { var cnt1 = cnt_func(s);
+            return tokenizer.Finish<Graphic.Graphic[]>();
+            
+        })
+        .ToArray();
+            var file_convert_op_counts = tokenized_graphic_sets
+            .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (RowIndex:b,Row:a))
+            .Select(r => (RowIndex:r.RowIndex,Row:r.Row.Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (ColumnIndex:b,Column:a))))
+            .SelectMany(r => r.Row.Select(c => (RowIndex:r.RowIndex,ColumnIndex:c.ColumnIndex,Item:c.Column)))
+            .Select(itm => (RowName:string.Join("",$"{itm.RowIndex}".Reverse().Concat("00").Reverse().Take(3)),ColumnName:string.Join("",$"{itm.ColumnIndex}".Reverse().Concat("00").Reverse().Take(3)),Item:itm.Item))
+            .Select(itm => (Name:$"TokenizerTest/TokenizedGraphic_Row_{itm.RowName}_Column_{itm.ColumnName}.png",Item:itm.Item))
+            .Select(itm => (Name:itm.Name,Item: ((Func<byte[]>)(() => { 
+                var ms = new MemoryStream();
+                itm.Item.ColorizeBitmap().Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(ms);
+                return ms.ToArray();
+            }))()))
+            .Select(itm => {File.WriteAllBytes(itm.Name,itm.Item); return 1;})
+            .Sum();
+            var detokenized_string_sets = tokenized_graphic_sets
+            .Select(s => {reverse_cnt_func(s);
+            return tokenizer.Finish<string>();
+        })
+        .ToArray();      
+            var file_detokenized_write_op_count = testItems
+            .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
+            .Select(itm => (IndexName:string.Join("",$"{itm.Index}".Reverse().Concat("00").Reverse().Take(3)),Item:itm.Item))
+            .Select(itm => (Name:$"TokenizerTest/Detokenized_Text_{itm.IndexName}.txt",Item:itm.Item))
+            .Select(itm => {
+                File.WriteAllText(itm.Name,itm.Item);
+                return 1;
+            })
+            .Sum();       
+            
+
+            
+            
+
+            
+
+        }
+        private void TestGlyphs()
         {
             foreach (var idx in Enumerable.Range(0,Glyph.Glyph.NumberOfGlyphs))
             {

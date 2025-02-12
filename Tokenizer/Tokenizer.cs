@@ -17,7 +17,7 @@ public class Tokenizer
             ReverseTokenizer.Put(token);
         }
     }
-    public T? Finish<T>()
+    public T Finish<T>()
     {
         if (typeof(T) == typeof(Graphic.Graphic[]))
         {
@@ -27,7 +27,7 @@ public class Tokenizer
         {
             return (T)(object)ReverseTokenizer.Finish();
         }
-        return default(T);
+        throw new InvalidOperationException();
     }
     
 }
