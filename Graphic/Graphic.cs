@@ -14,6 +14,7 @@ public class Graphic
     public static bool HasGraphicWithNumber(int number) => AllGraphics.Where(s => s.Glyph.Number == number).Any();
     public static Graphic GetGraphicWithLetter(string letter) => AllGraphics.Where(s=> s.Glyph.Letter == letter).First();
     public static bool HasGraphicWithLetter(string letter) => AllGraphics.Where(s=> s.Glyph.Letter == letter).Any();
+    public static Graphic GetGraphicForSpecial() => AllGraphics.Where(s => s.Glyph.IsSpecial).First();
 
     public string Letter => Glyph.Letter;
     public bool IsNumber => Glyph.IsNumber;
