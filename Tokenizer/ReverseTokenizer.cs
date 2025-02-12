@@ -87,6 +87,9 @@ class ReverseTokenizer
         {
             cbuffer.AddRange(DecodeNumberInBuffer());
         }
+        var outxx = string.Join("",cbuffer);
+        cbuffer.Clear();
+        buffer.Clear();
         return string.Join("",cbuffer);
     }
 
