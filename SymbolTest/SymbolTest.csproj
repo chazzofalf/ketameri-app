@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Glyph\Glyph.csproj" />
     <ProjectReference Include="..\Graphic\Graphic.csproj" />
     <ProjectReference Include="..\Tokenizer\Tokenizer.csproj" />
+    <ProjectReference Include="..\Recognizer\Recognizer.csproj" />
   </ItemGroup>
   
   <PropertyGroup>

@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Data.Common;
 using System.Text;
+using SkiaSharp;
 
 
 namespace SymbolTest
@@ -27,6 +28,7 @@ namespace SymbolTest
                 TestGlyphs();
                 TestGraphics();
                 TestTokenizer();
+                TestRecognizer();
             }
         }
 
@@ -133,6 +135,103 @@ namespace SymbolTest
             char[] invalidChars = Path.GetInvalidFileNameChars();
             return Array.IndexOf(invalidChars, character) == -1;
         } 
+        private void TestRecognizer()
+        {
+            if (Directory.Exists("RecognizerTest"))
+            {
+                Directory.Delete("RecognizerTest",true);
+            }
+            var padnum = (int v) => {
+            var s = $"{v}";
+            while (s.Length < 3)
+            {
+                s = $"0{s}";
+            }
+            if (s != null)
+            {
+                return s;
+            }
+            throw new NullReferenceException();
+        };
+        var tokenizer = new Tokenizer.Tokenizer();
+            var reverse_cnt_func = (Graphic.Graphic[] g) =>
+            g.Select(gs => {tokenizer.Put(gs); return 1;})
+            .Sum();
+
+            Directory.CreateDirectory("RecognizerTest");
+            var tfosFavoriteRemSongTitle = "It's the End of the World as We Know It (And I Feel Fine)";
+            var testItems = new [] {tfosFavoriteRemSongTitle};
+            var file_original_write_op_count = testItems
+            .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
+            .Select(itm => (IndexName:string.Join("",$"{itm.Index}".Reverse().Concat("00").Reverse().Take(3)),Item:itm.Item))
+            .Select(itm => (Name:$"RecognizerTest/Original_Source_{itm.IndexName}.txt",Item:itm.Item))
+            .Select(itm => {
+                File.WriteAllText(itm.Name,itm.Item);
+                return 1;
+            })
+            .Sum();
+            
+            var cnt_func = (string s) => 
+            s.Select(ch => {tokenizer.Put(ch); return 1;})
+            .Sum();
+                 
+            var tokenized_graphic_sets = testItems
+            .Select(s => { var cnt1 = cnt_func(s);
+            return tokenizer.Finish<Graphic.Graphic[]>();
+
+            
+        })
+        .Select(r => r.Select(c => {
+            var large = c.ColorizeBitmap();
+            var img = new SkiaSharp.SKBitmap(large.Height,large.Width,SkiaSharp.SKColorType.Rgba8888,SkiaSharp.SKAlphaType.Premul);
+            var can = new SKCanvas(img);
+            var paint = new SKPaint();
+            paint.Color = SKColors.Black.WithRed(1);
+            can.DrawRect(new SKRect(0,0,img.Width,img.Height),paint);
+            can.DrawBitmap(large,new SKPoint(0,0));
+            return img;
+        })).Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (RowIndex:b,Row:a
+        .Zip(Enumerable.Range(0,int.MaxValue),(c,d) => (ColumnIndex:d,Column:c))))
+        .SelectMany(r => r.Row.Select(c => (RowIndex:r.RowIndex,ColumnIndex:c.ColumnIndex,Item:c.Column)))
+        .Select(itm => (RowName:padnum(itm.RowIndex),ColumnName:padnum(itm.ColumnIndex),itm.Item))
+        .Select(itm => (Name:$"RecognizerTest/FilledTokens_Row_{itm.RowName}_Column_{itm.ColumnName}.png",Item:((Func<byte[]>)(() => { 
+                var ms = new MemoryStream();
+                itm.Item.Encode(SkiaSharp.SKEncodedImageFormat.Png,100).AsStream().CopyTo(ms);
+                return ms.ToArray();
+            }))()))
+            .Select(itm => {
+                File.WriteAllBytes(itm.Name,itm.Item);
+                return 1;
+            })
+            .Sum();
+            MultiPrintLine($"TestRecognizer: Wrote {file_original_write_op_count} Items.");
+            var rec = new Recognizer.Recognizer();
+        var decode_count = Enumerable.Range(0,1000)
+        .Select(r => padnum(r))
+        .Where(r => Directory.GetFiles("RecognizerTest")
+        .Where(f => f.Contains($"RecognizerTest/FilledTokens_Row_{r}_")).Any())
+        .Select(r => Enumerable.Range(0,1000).Select(c => (RowName:r,ColumnName:padnum(c)))
+        .Where(c => Directory.GetFiles("RecognizerTest")
+        .Where(f => f.Contains($"RecognizerTest/FilledTokens_Row_{c.RowName}_Column_{c.ColumnName}.")).Any()))
+        .Select(r => r.Select(c=> $"RecognizerTest/FilledTokens_Row_{c.RowName}_Column_{c.ColumnName}.png"))
+        .Select(r => r.Select(c => File.ReadAllBytes(c)))
+        .Select(r => r.Select(c => SKBitmap.Decode(c)))
+        .Select(r => r.ToArray())
+        .Select(r => r.Select(c => rec.Recognize(c)).ToArray())
+        .Select(s => {reverse_cnt_func(s);
+            return tokenizer.Finish<string>();
+
+        })        
+        .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
+        .Select(s => (IndexName:padnum(s.Index),s.Item))
+        .Select(s => (Name:$"RecognizerTest/Decoded_{s.IndexName}.txt",s.Item))
+        .Select(s => {
+            File.WriteAllText(s.Name,s.Item);
+            return 1;
+        })
+        .Sum();
+        MultiPrintLine($"TestRecognizer: Decoded {decode_count} items.");
+        }
         private void TestTokenizer()
         {
             if (Directory.Exists("TokenizerTest"))
@@ -157,6 +256,7 @@ namespace SymbolTest
                 return 1;
             })
             .Sum();
+            MultiPrintLine($"TestTokenizer: Wrote {file_original_write_op_count} Items");
             var tokenizer = new Tokenizer.Tokenizer();
             var cnt_func = (string s) => 
             s.Select(ch => {tokenizer.Put(ch); return 1;})
@@ -195,6 +295,7 @@ namespace SymbolTest
             }))()))
             .Select(itm => {File.WriteAllBytes(itm.Name,itm.Item); return 1;})
             .Sum();
+            MultiPrintLine($"TestTokenizer: Converted {file_convert_op_counts} Items");
             var detokenized_string_sets = tokenized_graphic_sets
             .Select(s => {reverse_cnt_func(s);
             return tokenizer.Finish<string>();
@@ -209,7 +310,7 @@ namespace SymbolTest
                 return 1;
             })
             .Sum();       
-            
+            MultiPrintLine($"TestTokenizer: Detokenized {file_detokenized_write_op_count} Items");
 
             
             

@@ -148,6 +148,7 @@ public class Graphic
     public SKBitmap ColorizeBitmap(SKColor? color=null,bool useSmall=false)
     {
         var real_color = color is SKColor colorx ? colorx : SKColors.Turquoise;
+        real_color = new SKColor((byte)(real_color.Red & 0xfe),real_color.Green,real_color.Blue,real_color.Alpha);
         var original = useSmall ? Small : Large;
         using (var canvas = new SKCanvas(original))
         {

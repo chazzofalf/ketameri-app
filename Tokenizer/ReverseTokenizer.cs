@@ -90,7 +90,7 @@ class ReverseTokenizer
         var outxx = string.Join("",cbuffer);
         cbuffer.Clear();
         buffer.Clear();
-        return string.Join("",cbuffer);
+        return outxx;
     }
 
     
