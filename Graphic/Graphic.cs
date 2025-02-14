@@ -21,6 +21,7 @@ public class Graphic
     public bool IsSpecial => Glyph.IsSpecial;
     public bool IsText => Glyph.IsText;
     public int Number => Glyph.Number;
+    public bool IsLetterSymbol => Glyph.IsLetterSymbol;
     public bool ReadBitMap(int row,int column)
     {
         return Glyph.ReadBitMap(row,column);

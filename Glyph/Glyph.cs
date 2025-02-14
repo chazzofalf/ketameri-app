@@ -75,7 +75,7 @@ public class Glyph
     .Concat(Punctuation.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Append((Text:"",IsNumber:false,IsSpecial:true,IsText:false))
     .ToArray();
-    private static Glyph[] Glyphs => _Glyphs = _Glyphs = Alphabet.Zip(global::Symbol.Symbol.All,(txt,sym) => new Glyph(txt.Text,sym,txt.IsNumber,txt.IsSpecial,txt.IsText))
+    private static Glyph[] Glyphs => _Glyphs = _Glyphs = Alphabet.Zip(global::Symbol.LetterSymbol.All,(txt,sym) => new Glyph(txt.Text,sym,txt.IsNumber,txt.IsSpecial,txt.IsText))
     .ToArray();
     public static int NumberOfGlyphs => Glyphs.Length;
     public static Glyph GetGlyphAtIndex(int index) => Glyphs[index];
@@ -87,8 +87,8 @@ public class Glyph
     public bool IsNumber {get;}
     public bool IsSpecial {get;}
     public bool IsText {get;}
-    private Symbol.Symbol Symbol {get;}
-    private Glyph(string letter,Symbol.Symbol symbol,bool isNumber,bool isSpecial,bool isText)
+    private Symbol.LetterSymbol Symbol {get;}
+    private Glyph(string letter,Symbol.LetterSymbol symbol,bool isNumber,bool isSpecial,bool isText)
     {
         Letter = letter;
         Symbol = symbol;   
@@ -110,6 +110,7 @@ public class Glyph
         
     
     public int Number => Symbol.Number;
+    public bool IsLetterSymbol => Symbol.IsLetterSymbol;
     public bool ReadBitMap(int row,int column)
     {
         return Symbol.ReadBitMap(row,column);

@@ -29,6 +29,7 @@ namespace SymbolTest
                 TestGraphics();
                 TestTokenizer();
                 TestRecognizer();
+                TestLinerJoinerSplitter();
             }
         }
 
@@ -368,7 +369,7 @@ namespace SymbolTest
 
         private void TestSymbols()
         {
-            foreach (var symb in Symbol.Symbol.All)
+            foreach (var symb in Symbol.LetterSymbol.All)
             {
                 MultiPrintLine($"Symbol Number: {symb.Number}");
                 MultiPrintLine();
@@ -394,6 +395,73 @@ namespace SymbolTest
             }
         }
 
+        private void TestLinerJoinerSplitter()
+        {
+            if (Directory.Exists("RecognizerTest"))
+            {
+                Directory.Delete("RecognizerTest",true);
+            }
+            var padnum = (int v) => {
+            var s = $"{v}";
+            while (s.Length < 3)
+            {
+                s = $"0{s}";
+            }
+            if (s != null)
+            {
+                return s;
+            }
+            throw new NullReferenceException();
+        };
+        var linerJoiner = new LineJoinerSplitter.LineJoinerSplitter();
+        var tokenizer = new Tokenizer.Tokenizer();
+            var reverse_cnt_func = (Graphic.Graphic[] g) =>
+            g.Select(gs => {tokenizer.Put(gs); return 1;})
+            .Sum();
+
+            Directory.CreateDirectory("LinerJoinerTest");
+            var tfosFavoriteRemSongTitle = "It's the End of the World as We Know It (And I Feel Fine)";
+            var testItems = new [] {tfosFavoriteRemSongTitle};
+            var file_original_write_op_count = testItems
+            .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
+            .Select(itm => (IndexName:string.Join("",$"{itm.Index}".Reverse().Concat("00").Reverse().Take(3)),Item:itm.Item))
+            .Select(itm => (Name:$"LinerJoinerTest/Original_Source_{itm.IndexName}.txt",Item:itm.Item))
+            .Select(itm => {
+                File.WriteAllText(itm.Name,itm.Item);
+                return 1;
+            })
+            .Sum();
+            
+            var cnt_func = (string s) => 
+            s.Select(ch => {tokenizer.Put(ch); return 1;})
+            .Sum();
+                 
+            var tokenized_graphic_sets = testItems
+            .Select(s => { var cnt1 = cnt_func(s);
+            return tokenizer.Finish<Graphic.Graphic[]>();
+
+            
+        })
+        .Select(r => {
+            return linerJoiner.Join(r);
+        })
+        
+        .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
+        .Select(s => (IndexName:padnum(s.Index),s.Item))
+        .Select(s => (Name:$"LinerJoinerTest/FilledTokens_Row_{s.IndexName}.png",s.Item))
+        .Select(s => (s.Name,Item:((Func<byte[]>)(() => {
+            var ms = new MemoryStream();
+            s.Item.Encode(SKEncodedImageFormat.Png,100).AsStream().CopyTo(ms);
+            return ms.ToArray();
+        }))()))
+        .Select(s => {
+            File.WriteAllBytes(s.Name,s.Item);
+            return 1;
+        })
+        .Sum();
+        
+        }
+        
         public static void Main()
         {
             var prgm = new Program();
