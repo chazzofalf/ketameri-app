@@ -45,8 +45,8 @@ namespace SymbolTest
                 MultiPrintLine($"Is Text: {symb.IsText}");
                 MultiPrintLine();
                 MultiPrintLine($"Graphic Map:");
-                MultiPrintLine(string.Join("\n", Enumerable.Range(0, 11)
-                .Select(r => Enumerable.Range(0, 11)
+                MultiPrintLine(string.Join("\n", Enumerable.Range(0, 9)
+                .Select(r => Enumerable.Range(0, 9)
                 .Select(c => symb.ReadBitMap(r, c) ? '#' : '.'))
                 .Select(r => string.Join("", r))));
                 MultiPrintLine();
@@ -320,8 +320,8 @@ namespace SymbolTest
                 MultiPrintLine($"Is Text: {symb.IsText}");
                 MultiPrintLine();
                 MultiPrintLine($"Glyph Map:");
-                MultiPrintLine(  string.Join("\n",Enumerable.Range(0,11)
-                .Select(r => Enumerable.Range(0,11)
+                MultiPrintLine(  string.Join("\n",Enumerable.Range(0,9)
+                .Select(r => Enumerable.Range(0,9)
                 .Select(c => symb.ReadBitMap(r,c) ))));
                 MultiPrintLine();
                 
@@ -353,8 +353,8 @@ namespace SymbolTest
                 
                 MultiPrintLine();
                 MultiPrintLine($"Glyph Map:");
-                MultiPrintLine(  string.Join("\n",Enumerable.Range(0,11)
-                .Select(r => Enumerable.Range(0,11)
+                MultiPrintLine(  string.Join("\n",Enumerable.Range(0,9)
+                .Select(r => Enumerable.Range(0,9)
                 .Select(c => symb.ReadBitMap(r,c) ? '#' : '.' ))
                 .Select(r => string.Join("",r))));
                 MultiPrintLine();

@@ -10,7 +10,7 @@ public class LineJoinerSplitter
         var realBackgroundColor = backgroundColor != null ? backgroundColor.Value : SKColors.Black;
         realBackgroundColor = realBackgroundColor.WithRed((byte)(realBackgroundColor.Red | 1));
         if (!glyphs.Any()) {
-            var o = new SKBitmap(1,useLarge ? 66 : 11,SKColorType.Rgba8888,SKAlphaType.Premul);
+            var o = new SKBitmap(1,useLarge ? 54 : 9,SKColorType.Rgba8888,SKAlphaType.Premul);
             var c = new SKCanvas(o);
             if (useBackground)
             {
@@ -24,7 +24,7 @@ public class LineJoinerSplitter
             return o;
         }
         var lineThickness = useLarge ? 6 : 1;
-        var glyphWidth = useLarge ? 66 : 11;
+        var glyphWidth = useLarge ? 54 : 9;
         var padding = glyphs.Count()*lineThickness-lineThickness;
         var width = glyphWidth*glyphs.Length+padding;
         var height = glyphWidth;

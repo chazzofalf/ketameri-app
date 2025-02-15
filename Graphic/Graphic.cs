@@ -68,7 +68,7 @@ public class Graphic
     {
         var orig_small = Small;
         
-        var bmp = new SKBitmap(66,66);
+        var bmp = new SKBitmap(54,54);
         var opts = new SKSamplingOptions();
         
         orig_small.ScalePixels(bmp,opts);
@@ -153,13 +153,13 @@ public class Graphic
         // } 
         // else
         // {
-            var bmpx = new SKBitmap(11,11);
+            var bmpx = new SKBitmap(9,9);
             var canx = new SKCanvas(bmpx);
             var blackx = new SKPaint();
             blackx.Color = SKColors.Black;        
             canx.Clear();
-            var opts = Enumerable.Range(0,11)
-            .Select(r => Enumerable.Range(0,11)
+            var opts = Enumerable.Range(0,9)
+            .Select(r => Enumerable.Range(0,9)
             .Select(c => {
                 if (ReadBitMap(r,c))
                 {

@@ -16,7 +16,7 @@ public class Glyph
     private static string[]? _Punctuation;
     private static (string Text,bool IsNumber,bool IsSpecial,bool IsText)[]? _Alphabet;
     private static Glyph[]? _Glyphs;
-    private Glyph[]? _AllOrientations;
+    
 
     private static string[] Numbers => _Numbers = _Numbers ?? Enumerable.Range(0,14)
     .Select(s => $"{s}")

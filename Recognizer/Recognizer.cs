@@ -44,116 +44,118 @@ public class Recognizer
     }
     private object orientationCheckLock = new object();
     private object recognizerLock = new object();
-    private SKBitmap? lastCheckedImage;
-    private IRecognizedOrientation? lastDeterminedOrientation;
-    public IRecognizedOrientation DetermineGlyphOrientation(SKBitmap glyphImage)
-    {
-        lock (orientationCheckLock)
-        {
+
+    // public IRecognizedOrientation DetermineGlyphOrientation(SKBitmap glyphImage)
+    // {
+    //     lock (orientationCheckLock)
+    //     {
 
         
-            if (glyphImage != lastCheckedImage || lastDeterminedOrientation == null)            
-            {
-                if (glyphImage.Height != glyphImage.Width) throw new Exception("Ketameri Glyphs are square. This is not!");
-                SKBitmap mini = new SKBitmap(11,11);
-                glyphImage.ScalePixels(mini,SKSamplingOptions.Default);
-                (int top,int bottom,int right,int left) = Enumerable.Range(0,4)
-                .Select(s => 
-                Enumerable.Range(0,11)
-                .Select(c => {
-                    if (s == 0)
-                    {
-                        if ((mini.GetPixel(c,0).Red & 1) == 1)
-                        {
-                            return 1;
-                        }
-                        else
-                        {
-                            return 0;
-                        }
-                    }
-                    else if (s == 1) {
-                        if ((mini.GetPixel(c,10).Red & 1) == 1)
-                        {
-                            return 1;
-                        }
-                        else
-                        {
-                            return 0;
-                        }
-                    }
-                    else if (s == 2) {
-                        if ((mini.GetPixel(10,c).Red & 1) == 1)
-                        {
-                            return 1;
-                        }
-                        else
-                        {
-                            return 0;
-                        }
-                    }
-                    else if (s == 3) {
-                        if ((mini.GetPixel(0,c).Red & 1) == 1)
-                        {
-                            return 1;
-                        }
-                        else
-                        {
-                            return 0;
-                        }
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                }).Sum()).ToArray();
-                (var vflip,var hflip,var rotate) = (false,false,false);
-                if (top == 2 || top == 3)
-                {
-                    rotate = true;
-                    var temp = 0;
-                    left = top;
-                    top = right;
-                    right = bottom;
-                    bottom = temp;
+    //         if (glyphImage != lastCheckedImage || lastDeterminedOrientation == null)            
+    //         {
+    //             if (glyphImage.Height != glyphImage.Width) throw new Exception("Ketameri Glyphs are square. This is not!");
+    //             SKBitmap mini = new SKBitmap(11,11);
+    //             glyphImage.ScalePixels(mini,SKSamplingOptions.Default);
+    //             (int top,int bottom,int right,int left) = Enumerable.Range(0,4)
+    //             .Select(s => 
+    //             Enumerable.Range(0,11)
+    //             .Select(c => {
+    //                 if (s == 0)
+    //                 {
+    //                     if ((mini.GetPixel(c,0).Red & 1) == 1)
+    //                     {
+    //                         return 1;
+    //                     }
+    //                     else
+    //                     {
+    //                         return 0;
+    //                     }
+    //                 }
+    //                 else if (s == 1) {
+    //                     if ((mini.GetPixel(c,10).Red & 1) == 1)
+    //                     {
+    //                         return 1;
+    //                     }
+    //                     else
+    //                     {
+    //                         return 0;
+    //                     }
+    //                 }
+    //                 else if (s == 2) {
+    //                     if ((mini.GetPixel(10,c).Red & 1) == 1)
+    //                     {
+    //                         return 1;
+    //                     }
+    //                     else
+    //                     {
+    //                         return 0;
+    //                     }
+    //                 }
+    //                 else if (s == 3) {
+    //                     if ((mini.GetPixel(0,c).Red & 1) == 1)
+    //                     {
+    //                         return 1;
+    //                     }
+    //                     else
+    //                     {
+    //                         return 0;
+    //                     }
+    //                 }
+    //                 else
+    //                 {
+    //                     return 0;
+    //                 }
+    //             }).Sum()).ToArray();
+    //             (var vflip,var hflip,var rotate) = (false,false,false);
+    //             if (top == 2 || top == 3)
+    //             {
+    //                 rotate = true;
+    //                 var temp = 0;
+    //                 left = top;
+    //                 top = right;
+    //                 right = bottom;
+    //                 bottom = temp;
                     
-                }
-                if (top == 1) {
-                    vflip = true;
-                }
-                if (left == 2)
-                {
-                    hflip = true;
-                }
-                lastCheckedImage = glyphImage;
-                lastDeterminedOrientation = new RecognizedOrientation(vflip,hflip,rotate);
+    //             }
+    //             if (top == 1) {
+    //                 vflip = true;
+    //             }
+    //             if (left == 2)
+    //             {
+    //                 hflip = true;
+    //             }
+    //             lastCheckedImage = glyphImage;
+    //             lastDeterminedOrientation = new RecognizedOrientation(vflip,hflip,rotate);
                 
 
-            }
-        }
-        return lastDeterminedOrientation;
+    //         }
+    //     }
+    //     return lastDeterminedOrientation;
         
-    }
+    // }
     public Graphic.Graphic Recognize(SKBitmap glyphImage)
     {
         Graphic.Graphic? recognizedGraphic = null;
         lock (recognizerLock)
         {
             if (glyphImage.Height != glyphImage.Width) throw new Exception("Ketameri Glyphs are square. This is not!");
-            var ori = DetermineGlyphOrientation(glyphImage);
-            if (ori.IsHorizontallyFlipped || ori.IsVerticallyFlipped || ori.IsRotated) throw new Exception("Out of proper orientation. Please use DetermineGlyphOrientation(...) and orient the root graphic properly first.");
+            // var ori = DetermineGlyphOrientation(glyphImage);
+            // if (ori.IsHorizontallyFlipped || ori.IsVerticallyFlipped || ori.IsRotated) throw new Exception("Out of proper orientation. Please use DetermineGlyphOrientation(...) and orient the root graphic properly first.");
             
-            var borderless = new SKBitmap(glyphImage.Width*9/11,glyphImage.Height*9/11); // 54 is 9/11 of 66. Never forget. 
-            var c = new SKCanvas(borderless);
-            c.DrawBitmap(glyphImage,new SKRect(glyphImage.Width/11,glyphImage.Height/11,glyphImage.Width*10/11,glyphImage.Height*10/11),new SKRect(0,0,glyphImage.Width*9/11,glyphImage.Height*9/11));
+            // var borderless = new SKBitmap(glyphImage.Width*9/11,glyphImage.Height*9/11); // 54 is 9/11 of 66. Never forget. 
+            // var c = new SKCanvas(borderless);
+            // c.DrawBitmap(glyphImage,new SKRect(glyphImage.Width/11,glyphImage.Height/11,glyphImage.Width*10/11,glyphImage.Height*10/11),new SKRect(0,0,glyphImage.Width*9/11,glyphImage.Height*9/11));
+            var borderless = glyphImage;
             var borderless_mini = new SKBitmap(9,9);
             borderless.ScalePixels(borderless_mini,SKSamplingOptions.Default);
-            var is_number = (borderless_mini.GetPixel(3,3).Red & 1) == 0;
+            var is_number = (borderless_mini.GetPixel(1,1).Red & 1) == 0;
             if (is_number)
             {
                 var num = 0;
-                var ops = Enumerable.Range(3,3)
-                .Select(r => Enumerable.Range(3,3)
+                var ops = Enumerable.Range(0,3)
+                .Select(s => s *3)
+                .Select(r => Enumerable.Range(0,3)
+                .Select(s => s * 3)
                 .Select(c => (borderless_mini.GetPixel(c,r).Red & 1) == 0))
                 .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (RowIndex:b,Row:a
                 .Zip(Enumerable.Range(0,int.MaxValue),(c,d) => (ColumnIndex:d,Item:c))))
