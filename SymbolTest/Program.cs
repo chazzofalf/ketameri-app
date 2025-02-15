@@ -429,8 +429,37 @@ namespace SymbolTest
             return 1;
         })
         .Sum();
-        
+        var opso =Enumerable.Range(0,1000)
+        .Select(s => {
+            
+            var name = $"LinerJoinerTest/FilledTokens_Row_{padnum(s)}.png";
+            if (File.Exists(name))
+            {
+                var image = (SKBitmap?)null;
+                using (var fio = File.OpenRead(name))
+                {
+                    if (fio != null)
+                    {
+                        image = SKBitmap.Decode(fio);
+                    }
+                }
+                var splitted =  image is SKBitmap bmp ? linerJoiner.Split(bmp) : null;
+                var ops = splitted?
+                .Select(s => {
+                    tokenizer.Put(s);
+                    return 1;
+                }).Sum();
+                var output = tokenizer.Finish<string>();
+                var textname = $"LinerJoinerTest/FilledTokens_Decoded_Row_{padnum(s)}.txt";
+                File.WriteAllText(textname,output);
+                return 1;
+            }
+            return 0;
+            
+            
+        }).Sum();
         }
+       
         
         public static void Main()
         {

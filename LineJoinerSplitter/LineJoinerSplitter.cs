@@ -6,13 +6,26 @@ public class LineJoinerSplitter
 {
     public Graphic.Graphic[] Split(SKBitmap line)
     {
+        var rec = new Recognizer.Recognizer();
         var fontsize = line.Height;
         var line_width = line.Height / 9;
         if (line.Width == line_width)
         {
             return Enumerable.Empty<Graphic.Graphic>().ToArray();
         }
-        return null;
+        else
+        {
+            return Enumerable.Range(0,(line.Width+line_width)/(fontsize+line_width))
+            .Select(idx => {
+                var glyph = new SKBitmap(fontsize,fontsize);
+                var canvas = new SKCanvas(glyph);
+                canvas.DrawBitmap(line,new SKRect((fontsize+line_width)*idx,0,(fontsize+line_width)*idx+fontsize,fontsize),new SKRect(0,0,fontsize,fontsize));
+                return rec.Recognize(glyph);
+            }).Reverse().ToArray();
+        }
+        
+
+        
         
     }
     public SKBitmap Join(Graphic.Graphic[] glyphs,bool useLarge=true,bool useBackground=true,SKColor? color=null,SKColor? backgroundColor=null)
@@ -43,7 +56,7 @@ public class LineJoinerSplitter
         var can = new SKCanvas(outx);
         var bmps_ops = glyphs
         .Select(g => useLarge ? g.ColorizeBitmap(color,!useLarge) : g.Small)
-        .Reverse()  // Protodimic or Ketameri is read right to left.
+        .Reverse()  // Protodimic, Ketameri, and other very old texts are read right to left.
         .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
         .Select(s => {
             can.DrawBitmap(s.Item,s.Index*(glyphWidth+lineThickness),0);
