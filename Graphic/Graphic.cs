@@ -10,7 +10,8 @@ public class Graphic
 
     public static int NumberOfGlyphs => AllGraphics.Length;
     public static Graphic GetGraphicAtIndex(int index) => AllGraphics[index];
-    public static Graphic GetGraphicWithNumber(int number) =>  AllGraphics.Where(s => s.Glyph.Number == number).First(); //Glyphs.Where(s => s.Number == number).First();
+    public static Graphic GetLetterGraphicWithNumber(int number) =>  AllGraphics.Where(s => s.Glyph.Number == number && s.Glyph.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
+    public static Graphic GetNumberGraphicWithNumber(int number) =>  AllGraphics.Where(s => s.Glyph.Number == number && !s.Glyph.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
     public static bool HasGraphicWithNumber(int number) => AllGraphics.Where(s => s.Glyph.Number == number).Any();
     public static Graphic GetGraphicWithLetter(string letter) => AllGraphics.Where(s=> s.Glyph.Letter == letter).First();
     public static bool HasGraphicWithLetter(string letter) => AllGraphics.Where(s=> s.Glyph.Letter == letter).Any();

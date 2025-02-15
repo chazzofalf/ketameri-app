@@ -149,7 +149,7 @@ namespace SymbolTest
             .Sum();
 
             Directory.CreateDirectory("RecognizerTest");
-            var tfosFavoriteRemSongTitle = "It's the End of the World as We Know It (And I Feel Fine)";
+            var tfosFavoriteRemSongTitle = "It's the End of the World as We Know It (And I Feel Fine) - R.E.M ©️ 1987";
             var testItems = new [] {tfosFavoriteRemSongTitle};
             var file_original_write_op_count = testItems
             .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
@@ -365,9 +365,9 @@ namespace SymbolTest
 
         private void TestLinerJoinerSplitter()
         {
-            if (Directory.Exists("RecognizerTest"))
+            if (Directory.Exists("LinerJoinerTest"))
             {
-                Directory.Delete("RecognizerTest",true);
+                Directory.Delete("LinerJoinerTest",true);
             }
             var padnum = (int v) => {
             var s = $"{v}";
@@ -388,7 +388,7 @@ namespace SymbolTest
             .Sum();
 
             Directory.CreateDirectory("LinerJoinerTest");
-            var tfosFavoriteRemSongTitle = "It's the End of the World as We Know It (And I Feel Fine)";
+            var tfosFavoriteRemSongTitle = "It's the End of the World as We Know It (And I Feel Fine) - R.E.M ©️ 1987";
             var testItems = new [] {tfosFavoriteRemSongTitle};
             var file_original_write_op_count = testItems
             .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
