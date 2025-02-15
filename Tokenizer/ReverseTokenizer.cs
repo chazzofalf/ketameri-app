@@ -22,6 +22,7 @@ class ReverseTokenizer
             else if (token.IsSpecial)
             {
                 cbuffer.AddRange(DecodeSymbolFromNumberInBuffer());
+                _Is_SpecialMode = false;
             }
             
         }
@@ -34,6 +35,7 @@ class ReverseTokenizer
             else
             {
                 cbuffer.AddRange(DecodeNumberInBuffer());
+                _Is_NumericMode = false;
                 Put(token);
             }
         }

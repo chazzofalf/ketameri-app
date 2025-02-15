@@ -8,6 +8,8 @@ namespace SymbolTest
 {
     public class Program
     {
+        public string TestHandle => "@liv5be4wise"; //Nobody in the multiverse should have this handle, hopefully... Change it immediately upon finding out otherwise.
+        public string AtlasText => $"It's the End of the World as We Know It (And I Feel Fine) - R.E.M ©️ 1987 [54 666 911 2105: My bad numbers that I associate with trouble. Really this was me seeing if I can break this with a sequence of numbers. That's all. Oh and handle to see if numbers in a word can break this. (DISCLAIMER: Before deciding that you must commit untoward action against me on this, remember that I Pulled this one totally out of my ass. I swear to The Three As One, The Favored One, and On My Mother's Grave that Any existence of any persons or entities holding this handle in any reality within the multiverse is coincidental and any implied references to such persons or entities are purely unintentional. Yes. Yes. I know. I had to borrow from the MPAA's statement about their movies, but I felt, for my personal safety, that I should be explicit about the fact, that it applies here and I am just messing around. Again. I swear to God I know of nobody with this handle, if I did, I wouldn't have used it here. If you just so happen to have this handle, than I am sorry it was an accident, perhaps you could drop me a email at chazzofalf@gmail.com with the subject \"Hello, I am {TestHandle}\" and drop me a line. And I promise that I will change the example. I don't want any trouble. And I've had more than my fair share.) Now that we gotten that out of the way... (Geez) Example: Hey, {TestHandle} wanna grab a sweet frappuccino?]";
         private TextWriter? textout;
         private void Run()
         {
@@ -133,7 +135,7 @@ namespace SymbolTest
             }
             var padnum = (int v) => {
             var s = $"{v}";
-            while (s.Length < 3)
+            while (s.Length < 4)
             {
                 s = $"0{s}";
             }
@@ -149,7 +151,7 @@ namespace SymbolTest
             .Sum();
 
             Directory.CreateDirectory("RecognizerTest");
-            var tfosFavoriteRemSongTitle = "It's the End of the World as We Know It (And I Feel Fine) - R.E.M ©️ 1987";
+            var tfosFavoriteRemSongTitle = AtlasText;
             var testItems = new [] {tfosFavoriteRemSongTitle};
             var file_original_write_op_count = testItems
             .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
@@ -196,11 +198,11 @@ namespace SymbolTest
             .Sum();
             MultiPrintLine($"TestRecognizer: Wrote {file_original_write_op_count} Items.");
             var rec = new Recognizer.Recognizer();
-        var decode_count = Enumerable.Range(0,1000)
+        var decode_count = Enumerable.Range(0,10000)
         .Select(r => padnum(r))
         .Where(r => Directory.GetFiles("RecognizerTest")
         .Where(f => f.Contains($"RecognizerTest/FilledTokens_Row_{r}_")).Any())
-        .Select(r => Enumerable.Range(0,1000).Select(c => (RowName:r,ColumnName:padnum(c)))
+        .Select(r => Enumerable.Range(0,10000).Select(c => (RowName:r,ColumnName:padnum(c)))
         .Where(c => Directory.GetFiles("RecognizerTest")
         .Where(f => f.Contains($"RecognizerTest/FilledTokens_Row_{c.RowName}_Column_{c.ColumnName}.")).Any()))
         .Select(r => r.Select(c=> $"RecognizerTest/FilledTokens_Row_{c.RowName}_Column_{c.ColumnName}.png"))
@@ -388,7 +390,7 @@ namespace SymbolTest
             .Sum();
 
             Directory.CreateDirectory("LinerJoinerTest");
-            var tfosFavoriteRemSongTitle = "It's the End of the World as We Know It (And I Feel Fine) - R.E.M ©️ 1987";
+            var tfosFavoriteRemSongTitle = AtlasText;
             var testItems = new [] {tfosFavoriteRemSongTitle};
             var file_original_write_op_count = testItems
             .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
