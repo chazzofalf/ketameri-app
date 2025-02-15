@@ -10,14 +10,11 @@ public class Phonetics
     private Dictionary<string,string>? _PartialMappingDictionary;
     private Dictionary<string,string> PartialMappingDictionary => _PartialMappingDictionary = _PartialMappingDictionary ?? GeneratePartialMappingDictionary();
 
-    private Dictionary<string,string>? _PartialReversedMappingDictionary;
+    
 
-    private Dictionary<string,string> PartialReversedMappingDictionary => _PartialReversedMappingDictionary = _PartialReversedMappingDictionary ?? GeneratePartialReversedMappingDictionary();
+    
 
-    private Dictionary<string, string> GeneratePartialReversedMappingDictionary()
-    {
-        return  PartialMappingDictionary.Keys.Select(s => (K: PartialMappingDictionary[s], V: s)).ToDictionary(s => s.K, s => s.V);
-    }
+    
     private Dictionary<string,string>? _FullMappingDictionary;
     private Dictionary<string,string> FullMappingDictionary => _FullMappingDictionary = _FullMappingDictionary ?? GenerateFullMappingDictionary();
 

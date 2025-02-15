@@ -265,8 +265,7 @@ class LetterSymbol : Symbol
     }
     private LetterSymbol[]? _AllOrientations;
 
-    public int NumberOfOrientations => AllOrientations.Length;
-    public LetterSymbol OrientationAtIndex(int index) => AllOrientations[index];    
+       
     private LetterSymbol[] AllOrientations => _AllOrientations = _AllOrientations ??
         Enumerable.Empty<LetterSymbol>()
         .Append(Identity())

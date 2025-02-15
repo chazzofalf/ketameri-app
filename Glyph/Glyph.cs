@@ -79,10 +79,6 @@ public class Glyph
     .ToArray();
     public static int NumberOfGlyphs => Glyphs.Length;
     public static Glyph GetGlyphAtIndex(int index) => Glyphs[index];
-    public static Glyph GetGlyphWithNumber(int number) => Glyphs.Where(s => s.Number == number).First();
-    public static bool HasGlyphWithNumber(int number) => Glyphs.Where(s => s.Number == number).Any();
-    public static Glyph GetGlyphWithLetter(string letter) => Glyphs.Where(s=> s.Letter == letter).First();
-    public static bool HasGlyphWithLetter(string letter) => Glyphs.Where(s=> s.Letter == letter).Any();
     public string Letter {get;}
     public bool IsNumber {get;}
     public bool IsSpecial {get;}
@@ -106,7 +102,5 @@ public class Glyph
     public bool ReadBitMap(int row,int column)
     {
         return Symbol.ReadBitMap(row,column);
-    }
-    public int NumberOfBits => Symbol.NumberOfBits;
-    public bool GetBit(int index) => Symbol.GetBit(index);
+    }    
 }

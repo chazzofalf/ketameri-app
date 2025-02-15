@@ -45,33 +45,24 @@ class ForwardTokenizer
     Letters
     .Where(char.IsUpper)
     .ToArray();
-    private char[]? _Lowers = null;
-    private char[] Lowers => _Lowers = _Lowers ??
-    Letters
-    .Where(char.IsLower)
-    .ToArray();
+    
+   
     private char[]? _Vowels = null;
     private char[] Vowels => _Vowels = _Vowels ?? "aeiouy".ToArray();
     private char[]? _UpperVowels = null;
     private char[] UpperVowels => _UpperVowels = _UpperVowels ?? Vowels.Select(char.ToUpper).ToArray();
-    private char[]? _Consonants = null;
-    private char[] Consonants => _Consonants = _Consonants ?? 
-    Lowers
-    .Where(ch => !Vowels.Contains(ch))
-    .ToArray();
-    private char[]? _UpperConsonants = null;
-    private char[] UpperConsonants => _UpperConsonants = _UpperConsonants ?? Consonants
-    .Select(ch => char.ToUpperInvariant(ch))
-    .ToArray();
-    private char[]? _Space = null;
-    private char[] Space => _Space = _Space ?? " ".ToArray();
+    
+    
+    
+    
+    
+    
 
      
 
     private bool IsSupportedCharacter(char c) => SupportedCharacters.Contains(c);
     private bool IsCapital(char c) => Capitals.Contains(c);
-    private bool IsNumber(char c) => Digits.Contains(c);    
-    private bool IsSpace(char c) => Space.Contains(c);
+    private bool IsNumber(char c) => Digits.Contains(c);        
     private bool IsVowel(char c) => Vowels.Contains(c) || UpperVowels.Contains(c);
     private bool IsLetter(char c) => Letters.Contains(c);
     private List<char> buffer = new List<char>();
@@ -87,10 +78,8 @@ class ForwardTokenizer
     private Graphic.Graphic[] SpecialCharacter => _SpecialCharacter = _SpecialCharacter = 
     
         Enumerable.Repeat(Graphic.Graphic.GetGraphicForSpecial(),1).ToArray();
-    private Graphic.Graphic[]? _SpaceCharacter = null;
-    private Graphic.Graphic[] SpaceCharacter => _SpaceCharacter = _SpaceCharacter = 
     
-         Enumerable.Repeat(Graphic.Graphic.GetGraphicWithLetter(" "),1).ToArray();
+   
     
     private Graphic.Graphic[] ConvertStrangeCharacter(char strange)
     {
@@ -126,38 +115,6 @@ class ForwardTokenizer
             return x;
         }
     }
-    
-
-    
-
-
-    private bool IsOneTrue(char args,params Func<char,bool>[] checks)
-    {
-        foreach (var check in checks)
-        {
-            if (check(args))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-    private bool IsAllTrue(char args,params Func<char,bool>[] checks)
-    {
-        foreach (var check in checks)
-        {
-            if (!check(args))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    private Func<char,bool> NotFunc(Func<char,bool> check)
-    {
-        return (ch) => !check(ch);
-    }
-    
     private Graphic.Graphic[] SingleForLetter(char englishChar)
     {
         return Enumerable.Repeat(Graphic.Graphic.GetGraphicWithLetter($"{englishChar}"),1).ToArray();

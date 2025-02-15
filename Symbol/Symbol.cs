@@ -11,19 +11,8 @@ namespace Symbol
         
         private bool[][]? _Matrix = null;
         private bool[][] Matrix => _Matrix = _Matrix ?? GenerateMatrix();
-        private bool InRange(int v,int a,int b)
-    {
-        if (b < a)
-        {
-            return InRange(v,b,a);
-        }        
-        return v >= a && v <= b;
-    }
-    private bool InRect(int xv,int yv,int x1,int y1,int x2,int y2)
-    {
-        return InRange(xv,x1,x2) && InRange(yv,y1,y2);
-
-    }
+        
+    
         private bool[][] GenerateMatrix() =>
         
             // Enumerable.Range(0,11)

@@ -3,6 +3,18 @@ using SkiaSharp;
 
 namespace Graphic;
 
+public class CachedGraphic
+{
+    public string Letter {get;}
+    public bool IsNumber {get;}
+    public bool IsSpecial {get;}
+    public bool IsText {get;}
+    public int Number {get;}
+    public bool IsLetterSymbol {get;}
+    private bool[][] Bitmap {get;}
+    private byte[] SmallPNGData {get;}
+    private byte[] LargePNGData {get;}
+}
 public class Graphic
 {
     private global::Glyph.Glyph Glyph {get;}
@@ -12,9 +24,9 @@ public class Graphic
     public static Graphic GetGraphicAtIndex(int index) => AllGraphics[index];
     public static Graphic GetLetterGraphicWithNumber(int number) =>  AllGraphics.Where(s => s.Glyph.Number == number && s.Glyph.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
     public static Graphic GetNumberGraphicWithNumber(int number) =>  AllGraphics.Where(s => s.Glyph.Number == number && !s.Glyph.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
-    public static bool HasGraphicWithNumber(int number) => AllGraphics.Where(s => s.Glyph.Number == number).Any();
+    
     public static Graphic GetGraphicWithLetter(string letter) => AllGraphics.Where(s=> s.Glyph.Letter == letter).First();
-    public static bool HasGraphicWithLetter(string letter) => AllGraphics.Where(s=> s.Glyph.Letter == letter).Any();
+   
     public static Graphic GetGraphicForSpecial() => AllGraphics.Where(s => s.Glyph.IsSpecial).First();
 
     public string Letter => Glyph.Letter;
@@ -218,6 +230,5 @@ public class Graphic
         return ColorizeBitmap(SKColor.Parse(hex),useSmall);
     }
 
-    public int NumberOfBits => Glyph.NumberOfBits;
-    public bool GetBit(int index) => Glyph.GetBit(index);
+   
 }

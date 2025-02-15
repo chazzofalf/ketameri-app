@@ -58,53 +58,7 @@ namespace Symbol
         var glyph = Enumerable.Range(0,9)
         .Select(r => Enumerable.Range(0,9)
         .Select(c => c % 3 == 2 ? false : core[r/3][c/3]).ToArray()).ToArray();
-        // .Select(c => c < 3 || c > 5 || r < 3 || r > 5 ? false : core[r-3][c-3] ).ToArray()).ToArray();
-        // var _ = 0;
-        // _ = Enumerable.Range(0,9)
-        // .Select(i => {
-        //     glyph[0][i] = true;
-        //     return 1;
-        // }).Sum();
-        // _ = Enumerable.Range(0,9)
-        // .Select(i => {
-        //     glyph[i][8] = true;
-        //     return 1;
-        // }).Sum();
-        // _ = Enumerable.Range(0,9)
-        // .Select(i => {
-        //     glyph[8][i] = true;
-        //     return 1;
-        // }).Sum();
-        // _ = Enumerable.Range(0,9)
-        // .Select(i => {
-        //     glyph[i][0] = true;
-        //     return 1;
-        // }).Sum();
-        // _ = Enumerable.Range(0,3)
-        // .Select(i => {
-        //     //glyph[1][3+i] = core[0][i];
-        //     glyph[1][3+i] = true;
-        //     return 1;
-        // }).Sum();
-        // _ = Enumerable.Range(0,3)
-        // .Select(i => {
-        //     //glyph[3+i][7] = core[i][2];
-        //     glyph[3+i][7] = true;
-        //     return 1;
-        // }).Sum();
-        // _ = Enumerable.Range(0,3)
-        // .Select(i => {
-        //     //glyph[7][3+i] = core[2][i];
-        //     glyph[7][3+i] = true;
-        //     return 1;
-        // }).Sum();
-        // _ = Enumerable.Range(0,3)
-        // .Select(i => {
-            
-        //     //glyph[3+i][1] = core[i][0];
-        //     glyph[3+i][1] = true;
-        //     return 1;
-        // }).Sum();
+        
         return glyph;
         } 
        

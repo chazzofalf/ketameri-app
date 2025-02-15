@@ -18,33 +18,6 @@ public static class Extensions
 }
 public class Recognizer
 {
-    
-    public interface IRecognizedOrientation
-    {
-        public bool IsVerticallyFlipped {get;}
-        public bool IsHorizontallyFlipped {get;}
-        public bool IsRotated {get;}
-        
-        
-    }
-    private class RecognizedOrientation : IRecognizedOrientation
-    {
-        
-    
-        public bool IsVerticallyFlipped {get;}
-        public bool IsHorizontallyFlipped {get;}
-        public bool IsRotated {get;}
-        public RecognizedOrientation(bool vflip,bool hflip,bool rotate)
-        {
-            IsVerticallyFlipped = vflip;
-            IsHorizontallyFlipped = hflip;
-            IsRotated = rotate;
-        }
-    
-    }
-    private object orientationCheckLock = new object();
-    private object recognizerLock = new object();
-
     // public IRecognizedOrientation DetermineGlyphOrientation(SKBitmap glyphImage)
     // {
     //     lock (orientationCheckLock)
@@ -136,8 +109,7 @@ public class Recognizer
     public Graphic.Graphic Recognize(SKBitmap glyphImage)
     {
         Graphic.Graphic? recognizedGraphic = null;
-        lock (recognizerLock)
-        {
+        
             if (glyphImage.Height != glyphImage.Width) throw new Exception("Ketameri Glyphs are square. This is not!");
             // var ori = DetermineGlyphOrientation(glyphImage);
             // if (ori.IsHorizontallyFlipped || ori.IsVerticallyFlipped || ori.IsRotated) throw new Exception("Out of proper orientation. Please use DetermineGlyphOrientation(...) and orient the root graphic properly first.");
@@ -213,7 +185,7 @@ public class Recognizer
                 recognizedGraphic = Graphic.Graphic.GetLetterGraphicWithNumber(CoordsRaw);
             }
             
-        }
+        
         if (recognizedGraphic == null) throw new Exception("Couldn't recognize graphic");
         return recognizedGraphic;
         

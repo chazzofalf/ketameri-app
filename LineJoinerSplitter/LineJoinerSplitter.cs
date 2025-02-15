@@ -4,13 +4,24 @@ namespace LineJoinerSplitter;
 
 public class LineJoinerSplitter
 {
+    public Graphic.Graphic[] Split(SKBitmap line)
+    {
+        var fontsize = line.Height;
+        var line_width = line.Height / 9;
+        if (line.Width == line_width)
+        {
+            return Enumerable.Empty<Graphic.Graphic>().ToArray();
+        }
+        return null;
+        
+    }
     public SKBitmap Join(Graphic.Graphic[] glyphs,bool useLarge=true,bool useBackground=true,SKColor? color=null,SKColor? backgroundColor=null)
     {
         
         var realBackgroundColor = backgroundColor != null ? backgroundColor.Value : SKColors.Black;
         realBackgroundColor = realBackgroundColor.WithRed((byte)(realBackgroundColor.Red | 1));
         if (!glyphs.Any()) {
-            var o = new SKBitmap(1,useLarge ? 54 : 9,SKColorType.Rgba8888,SKAlphaType.Premul);
+            var o = new SKBitmap(useLarge ? 6 : 1,useLarge ? 54 : 9,SKColorType.Rgba8888,SKAlphaType.Premul);
             var c = new SKCanvas(o);
             if (useBackground)
             {
