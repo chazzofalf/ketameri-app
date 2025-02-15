@@ -29,18 +29,10 @@ public class Graphic
 
 
     private Graphic[]? _AllOrientations;
-    public int NumberOfOrientations => AllOrientations.Length;
-    public Graphic OrientationAtIndex(int index) => AllOrientations[index];
-    private Graphic[] AllOrientations => _AllOrientations = _AllOrientations ??
-        Enumerable.Range(0,Glyph.NumberOfOrientations)
-        .Select(s => Glyph.OrientationAtIndex(s))
-        .Select(s => new Graphic(s))
-        .ToArray();
+    
+    
 
-    public bool Similar(object? obj) 
-    {
-        return Glyph.Similar(obj);
-    }
+    
 
     private static Graphic[] AllGraphics => _AllGraphics = _AllGraphics ?? 
     Enumerable.Range(0,global::Glyph.Glyph.NumberOfGlyphs)
@@ -90,59 +82,75 @@ public class Graphic
         var black = new SKPaint();
         black.Color = SKColors.Black;        
         can.Clear();
-        foreach (var idx in Enumerable.Range(0,NumberOfBits))
+        if (IsLetterSymbol)
         {
-            if (GetBit(idx))
+            foreach (var idx in Enumerable.Range(0,NumberOfBits))
             {
-                if (idx == 0)
+                if (GetBit(idx))
                 {
-                    can.DrawLine(new SKPoint(4,0),new SKPoint(9,0),black);
-                }
-                else if (idx == 1)
+                    if (idx == 0)
+                    {
+                        can.DrawLine(new SKPoint(4,0),new SKPoint(9,0),black);
+                    }
+                    else if (idx == 1)
+                    {
+                        can.DrawLine(new SKPoint(8,0),new SKPoint(8,4),black);
+                    }
+                    else if (idx == 2)
+                    {
+                        can.DrawLine(new SKPoint(8,4),new SKPoint(8,9),black);
+                    }
+                    else if (idx == 3)
+                    {
+                        can.DrawLine(new SKPoint(4,8),new SKPoint(9,8),black);
+                    }
+                    else if (idx == 4)
+                    {
+                        can.DrawLine(new SKPoint(0,8),new SKPoint(4,8),black);
+                    }
+                    else if (idx == 5)
+                    {
+                        can.DrawLine(new SKPoint(0,4),new SKPoint(0,9),black);
+                    }
+                    else if (idx == 6)
+                    {
+                        can.DrawLine(new SKPoint(0,0),new SKPoint(0,4),black);                    
+                    }
+                    else if (idx == 7)
+                    {
+                        can.DrawLine(new SKPoint(0,0),new SKPoint(4,0),black);
+                    }
+                    else if (idx == 8)
+                    {
+                        can.DrawLine(new SKPoint(4,0),new SKPoint(4,4),black);                    
+                    }
+                    else if (idx == 9)
+                    {
+                        can.DrawLine(new SKPoint(4,4),new SKPoint(9,4),black);
+                    }
+                    else if (idx == 10)
+                    {
+                        can.DrawLine(new SKPoint(4,4),new SKPoint(4,9),black);
+                    }
+                    else if (idx == 11)
+                    {
+                        can.DrawLine(new SKPoint(0,4),new SKPoint(4,4),black);
+                    }
+                }            
+            }
+
+        }
+        else
+        {
+            var opts = Enumerable.Range(0,9)
+            .Select(r => Enumerable.Range(0,9)
+            .Select(c => {
+                if (ReadBitMap(r,c))
                 {
-                    can.DrawLine(new SKPoint(8,0),new SKPoint(8,4),black);
+                    bmp.SetPixel(c,r,SKColors.Black);
                 }
-                else if (idx == 2)
-                {
-                    can.DrawLine(new SKPoint(8,4),new SKPoint(8,9),black);
-                }
-                else if (idx == 3)
-                {
-                    can.DrawLine(new SKPoint(4,8),new SKPoint(9,8),black);
-                }
-                else if (idx == 4)
-                {
-                    can.DrawLine(new SKPoint(0,8),new SKPoint(4,8),black);
-                }
-                else if (idx == 5)
-                {
-                    can.DrawLine(new SKPoint(0,4),new SKPoint(0,9),black);
-                }
-                else if (idx == 6)
-                {
-                    can.DrawLine(new SKPoint(0,0),new SKPoint(0,4),black);                    
-                }
-                else if (idx == 7)
-                {
-                    can.DrawLine(new SKPoint(0,0),new SKPoint(4,0),black);
-                }
-                else if (idx == 8)
-                {
-                    can.DrawLine(new SKPoint(4,0),new SKPoint(4,4),black);                    
-                }
-                else if (idx == 9)
-                {
-                    can.DrawLine(new SKPoint(4,4),new SKPoint(9,4),black);
-                }
-                else if (idx == 10)
-                {
-                    can.DrawLine(new SKPoint(4,4),new SKPoint(4,9),black);
-                }
-                else if (idx == 11)
-                {
-                    can.DrawLine(new SKPoint(0,4),new SKPoint(4,4),black);
-                }
-            }            
+                return 1;
+            }).Sum()).Sum();
         }
         return bmp;
     }

@@ -52,18 +52,7 @@ namespace SymbolTest
                 MultiPrintLine();
                 MultiPrintLine($"Siblings:");
                 MultiPrintLine();
-                foreach (var sib in Enumerable.Range(0,symb.NumberOfOrientations).Select(s => symb.OrientationAtIndex(s)))
-                {
-                    MultiPrintLine($"    Graphic Number: {sib.Number}");
-                    MultiPrintLine();
-                    MultiPrintLine($"    Graphic Map:");
-                    MultiPrintLine("    " + string.Join("\n    ", Enumerable.Range(0, 5)
-                .Select(r => Enumerable.Range(0, 5)
-                .Select(c => sib.ReadBitMap(r, c) ? '#' : '.'))
-                .Select(r => string.Join("", r))));
-                MultiPrintLine();
-
-                }
+                
                 var idex = $"{idx}";
                 while (idex.Length < 3)
                 {
@@ -331,24 +320,15 @@ namespace SymbolTest
                 MultiPrintLine($"Is Text: {symb.IsText}");
                 MultiPrintLine();
                 MultiPrintLine($"Glyph Map:");
-                MultiPrintLine(string.Join("\n", Enumerable.Range(0, 5)
+                MultiPrintLine( symb.IsLetterSymbol ? string.Join("\n", Enumerable.Range(0, 5)
                 .Select(r => Enumerable.Range(0, 5)
                 .Select(c => symb.ReadBitMap(r, c) ? '#' : '.'))
-                .Select(r => string.Join("", r))));
+                .Select(r => string.Join("", r))) : string.Join("\n",Enumerable.Range(0,9)
+                .Select(r => Enumerable.Range(0,9)
+                .Select(c => symb.ReadBitMap(r,c) ))));
                 MultiPrintLine();
-                MultiPrintLine($"Siblings:");
-                MultiPrintLine();
-                foreach (var sib in Enumerable.Range(0,symb.NumberOfOrientations).Select(s => symb.OrientationAtIndex(s)))
-                {
-                    MultiPrintLine($"    Glyph Number: {sib.Number}");
-                    MultiPrintLine();
-                    MultiPrintLine($"    Glyph Map:");
-                    MultiPrintLine("    " + string.Join("\n    ", Enumerable.Range(0, 5)
-                .Select(r => Enumerable.Range(0, 5)
-                .Select(c => sib.ReadBitMap(r, c) ? '#' : '.'))
-                .Select(r => string.Join("", r))));
-                MultiPrintLine();
-                }
+                
+                
             }
         }
 
@@ -369,29 +349,23 @@ namespace SymbolTest
 
         private void TestSymbols()
         {
-            foreach (var symb in Symbol.LetterSymbol.All)
+            foreach (var symb in Symbol.Symbol.All)
             {
-                MultiPrintLine($"Symbol Number: {symb.Number}");
+                //var symb = Glyph.Glyph.GetGlyphAtIndex(idx);
+                MultiPrintLine($"Glyph Number: {symb.Number}");
+                
                 MultiPrintLine();
-                MultiPrintLine($"Symbol Map:");
-                MultiPrintLine(string.Join("\n", Enumerable.Range(0, 5)
+                MultiPrintLine($"Glyph Map:");
+                MultiPrintLine( symb.IsLetterSymbol ? string.Join("\n", Enumerable.Range(0, 5)
                 .Select(r => Enumerable.Range(0, 5)
                 .Select(c => symb.ReadBitMap(r, c) ? '#' : '.'))
-                .Select(r => string.Join("", r))));
+                .Select(r => string.Join("", r))) : string.Join("\n",Enumerable.Range(0,9)
+                .Select(r => Enumerable.Range(0,9)
+                .Select(c => symb.ReadBitMap(r,c) ? '#' : '.' ))
+                .Select(r => string.Join("",r))));
                 MultiPrintLine();
-                MultiPrintLine($"Siblings:");
-                MultiPrintLine();
-                foreach (var sib in Enumerable.Range(0,symb.NumberOfOrientations).Select(s => symb.OrientationAtIndex(s)))
-                {
-                    MultiPrintLine($"    Symbol Number: {sib.Number}");
-                    MultiPrintLine();
-                    MultiPrintLine($"    Symbol Map:");
-                    MultiPrintLine("    " + string.Join("\n    ", Enumerable.Range(0, 5)
-                .Select(r => Enumerable.Range(0, 5)
-                .Select(c => sib.ReadBitMap(r, c) ? '#' : '.'))
-                .Select(r => string.Join("", r))));
-                MultiPrintLine();
-                }
+                
+                
             }
         }
 

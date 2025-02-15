@@ -26,8 +26,8 @@ public class LetterSymbol : Symbol
     .Select(s => LetterSymbol.SymbolForNumber(s))
     .ToArray();
     public static LetterSymbol[] cachedAll = new LetterSymbol[4096];
-    public int NumberOfBits => Bits.Length;
-    public bool GetBit(int index) => Bits[index];
+    public  override int NumberOfBits => Bits.Length;
+    public override bool GetBit(int index) => Bits[index];
     private bool[]? bits;
     private bool[] Bits => bits = bits ?? Enumerable.Range(0,12)
     .Select(bi => (Number & (1 << (11-bi))) != 0)
@@ -141,11 +141,11 @@ public class LetterSymbol : Symbol
             throw new IndexOutOfRangeException();
         }
     }).ToArray()).ToArray();
-    public virtual bool ReadBitMap(int row,int column)
+    public override bool ReadBitMap(int row,int column)
     {
         return Map[row][column];
     }
-    public int Number { get;}
+    public override int Number { get;}
     public static LetterSymbol SymbolForNumber(int number)
     {
         if (cachedAll[number] == null)

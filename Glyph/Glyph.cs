@@ -75,7 +75,7 @@ public class Glyph
     .Concat(Punctuation.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Append((Text:"",IsNumber:false,IsSpecial:true,IsText:false))
     .ToArray();
-    private static Glyph[] Glyphs => _Glyphs = _Glyphs = Alphabet.Zip(global::Symbol.LetterSymbol.All,(txt,sym) => new Glyph(txt.Text,sym,txt.IsNumber,txt.IsSpecial,txt.IsText))
+    private static Glyph[] Glyphs => _Glyphs = _Glyphs = Alphabet.Zip(global::Symbol.Symbol.All,(txt,sym) => new Glyph(txt.Text,sym,txt.IsNumber,txt.IsSpecial,txt.IsText))
     .ToArray();
     public static int NumberOfGlyphs => Glyphs.Length;
     public static Glyph GetGlyphAtIndex(int index) => Glyphs[index];
@@ -87,8 +87,8 @@ public class Glyph
     public bool IsNumber {get;}
     public bool IsSpecial {get;}
     public bool IsText {get;}
-    private Symbol.LetterSymbol Symbol {get;}
-    private Glyph(string letter,Symbol.LetterSymbol symbol,bool isNumber,bool isSpecial,bool isText)
+    private Symbol.Symbol Symbol {get;}
+    private Glyph(string letter,Symbol.Symbol symbol,bool isNumber,bool isSpecial,bool isText)
     {
         Letter = letter;
         Symbol = symbol;   
@@ -96,17 +96,9 @@ public class Glyph
         IsSpecial = isSpecial;
         IsText = isText;
     }
-    public  bool Similar(object? obj) 
-    {
-        return Symbol.Similar(obj);
-    }
-    public int NumberOfOrientations => AllOrientations.Length;
-    public Glyph OrientationAtIndex(int index) => AllOrientations[index];
-    private Glyph[] AllOrientations => _AllOrientations = _AllOrientations ??
-        Enumerable.Range(0,Symbol.NumberOfOrientations)
-        .Select(s => Symbol.OrientationAtIndex(s))
-        .Select(s => new Glyph(Letter,s,IsNumber,IsSpecial,IsText))
-        .ToArray();
+    
+    
+    
         
     
     public int Number => Symbol.Number;
