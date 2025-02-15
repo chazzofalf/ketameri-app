@@ -2,11 +2,11 @@
 
 namespace Symbol;
 
-public class LetterSymbol : Symbol
+class LetterSymbol : Symbol
 {
     
     private static LetterSymbol[]? _All;
-    public new static LetterSymbol[] All => _All = _All ?? GenerateAll();
+    public  static LetterSymbol[] All => _All = _All ?? GenerateAll();
 
     private static LetterSymbol[] GenerateAll()
     {
@@ -33,118 +33,116 @@ public class LetterSymbol : Symbol
     .Select(bi => (Number & (1 << (11-bi))) != 0)
     .ToArray();
     private bool[][]? map;
-    private bool[][] Map => map = map ?? Enumerable.Range(0,5)
-    .Select(r => Enumerable.Range(0,5)
+    private bool InRange(int v,int a,int b)
+    {
+        if (b < a)
+        {
+            return InRange(v,b,a);
+        }        
+        return v >= a && v <= b;
+    }
+    private bool InRect(int xv,int yv,int x1,int y1,int x2,int y2)
+    {
+        return InRange(xv,x1,x2) && InRange(yv,y1,y2);
+
+    }
+    private bool[][] Map => map = map ?? Enumerable.Range(0,9)
+    .Select(r => Enumerable.Range(0,9)
     .Select(c => {
         if (r == 0 && c == 0)
         {
             return Bits[6] || Bits[7];
         }
-        else if (r == 0 && c == 1)
+        else if (r == 0 && InRange(c,1,3))
         {
             return Bits[7];
         }
-        else if (r == 0 && c == 2)
+        else if (r == 0 && c == 4)
         {
             return Bits[7] || Bits[8] || Bits[0];
         }
-        else if (r == 0 && c == 3)
+        else if (r == 0 && InRange(c,5,7))
         {
             return Bits[0];
         }
-        else if (r == 0 && c == 4)
+        else if (r == 0 && c == 8)
         {
             return Bits[0] || Bits[1];
         }
-        else if (r == 1 && c == 0)
+        else if (InRange(r,1,3) && c == 0)
         {
             return Bits[6];
-        }
-        else if (r == 1 && c == 1)
-        {
-            return false;
-        }
-        else if (r == 1 && c == 2)
+        }        
+        else if (InRange(r,1,3) && c == 4)
         {
             return Bits[8];
-        }
-        else if (r == 1 && c == 3)
-        {
-            return false;
-        }
-        else if (r == 1 && c == 4)
+        }        
+        else if (InRange(r,1,3)  && c == 8)
         {
             return Bits[1];
         }
-        else if (r == 2 && c == 0)
+        else if (r == 4 && c == 0)
         {
             return Bits[6] || Bits[11] || Bits[5];
         }
-        else if (r == 2 && c == 1)
+        else if (r == 4 && InRange(c,1,3))
         {
             return Bits[11];
         }
-        else if (r == 2 && c == 2) 
+        else if (r == 4 && c == 4) 
         {
             return Bits[8] || Bits[9] || Bits[10] || Bits[11];
         }
-        else if (r == 2 && c == 3) 
+        else if (r == 4 && InRange(c,5,7)) 
         {
             return Bits[9];
         }
-        else if (r == 2 && c == 4) 
+        else if (r == 4 && c == 8) 
         {
             return Bits[1] || Bits[9] || Bits[2];
         }
-        else if (r == 3 && c == 0) 
+        else if (InRange(r,5,7) && c == 0) 
         {
             return Bits[5];
         }
-        else if (r == 3 && c == 1)
-        {
-            return false;
-        }
-        else if (r == 3 && c == 2)
+        else if (InRange(r,5,7) && c == 4)
         {
             return Bits[10];
-        }
-        else if (r == 3 && c == 3)
-        {
-            return false;
-        }
-        else if (r == 3 && c == 4)
+        }        
+        else if (InRange(r,5,7) && c == 8)
         {
             return Bits[2];
         }
-        else if (r == 4 && c == 0)
+        else if (r == 8 && c == 0)
         {
             return Bits[5] || Bits[4];
         }
-        else if (r == 4 && c == 1)
+        else if (r == 8 && InRange(c,1,3))
         {
             return Bits[4];
         }
-        else if (r == 4 && c == 2)
+        else if (r == 8 && c == 4)
         {
             return Bits[4] || Bits[10] || Bits[3];
         }
-        else if (r == 4 && c == 3)
+        else if (r == 8 && InRange(c,5,7))
         {
             return Bits[3];
         }
-        else if (r == 4 && c == 4)
+        else if (r == 8 && c == 8)
         {
             return Bits[2] || Bits[3];
+        }
+        else if (InRect(c,r,0,0,8,8))
+        {
+            return false;
         }
         else
         {
             throw new IndexOutOfRangeException();
         }
     }).ToArray()).ToArray();
-    public override bool ReadBitMap(int row,int column)
-    {
-        return Map[row][column];
-    }
+    
     public override int Number { get;}
     public static LetterSymbol SymbolForNumber(int number)
     {
@@ -284,6 +282,8 @@ public class LetterSymbol : Symbol
 
     public override bool IsLetterSymbol => true;
 
+    public override bool IsSpace => Number == 0;
+
     class CompareExactly : IEqualityComparer<LetterSymbol>
     {
         public bool Equals(LetterSymbol? x, LetterSymbol? y)
@@ -328,5 +328,10 @@ public class LetterSymbol : Symbol
         // .Where(c => c)
         // .Any();
         
+    }
+
+    protected override bool ReadBitMapInner(int row, int col)
+    {
+        return Map[row][col];
     }
 }

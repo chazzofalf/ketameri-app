@@ -75,7 +75,7 @@ public class Glyph
     .Concat(Punctuation.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Append((Text:"",IsNumber:false,IsSpecial:true,IsText:false))
     .ToArray();
-    private static Glyph[] Glyphs => _Glyphs = _Glyphs = Alphabet.Zip(global::Symbol.Symbol.All,(txt,sym) => new Glyph(txt.Text,sym,txt.IsNumber,txt.IsSpecial,txt.IsText))
+    private static Glyph[] Glyphs => _Glyphs = _Glyphs ?? Alphabet.Zip(Enumerable.Range(0,global::Symbol.Symbol.NumberOfSymbols).Select(idx => global::Symbol.Symbol.GetSymbolAt(idx)),(txt,sym) => new Glyph(txt.Text,sym,txt.IsNumber,txt.IsSpecial,txt.IsText))
     .ToArray();
     public static int NumberOfGlyphs => Glyphs.Length;
     public static Glyph GetGlyphAtIndex(int index) => Glyphs[index];

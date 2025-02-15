@@ -1,9 +1,9 @@
 namespace Symbol
 {
-    public class NumberSymbol : Symbol
+    class NumberSymbol : Symbol
     {
         private static NumberSymbol[]? _All;
-        public new static NumberSymbol[] All => _All = _All ?? GenerateAll();
+        public  static NumberSymbol[] All => _All = _All ?? GenerateAll();
 
         public override bool IsLetterSymbol => false;
 
@@ -21,6 +21,8 @@ namespace Symbol
         public override int Number {get;}
 
         public override int NumberOfBits => 0;
+
+        public override bool IsSpace => false;
 
         private bool[][] BuildGlyph() 
         {
@@ -63,17 +65,17 @@ namespace Symbol
         }).Sum();
         _ = Enumerable.Range(0,9)
         .Select(i => {
-            glyph[i][8] = (i != 9/2-1 && i != 9/2+1);
+            glyph[i][8] = true;
             return 1;
         }).Sum();
         _ = Enumerable.Range(0,9)
         .Select(i => {
-            glyph[8][i] = ( i != 9/2);
+            glyph[8][i] = true;
             return 1;
         }).Sum();
         _ = Enumerable.Range(0,9)
         .Select(i => {
-            glyph[i][0] = (i != 9/2-2 && i != 9/2 && i != 9/2 + 2);
+            glyph[i][0] = true;
             return 1;
         }).Sum();
         _ = Enumerable.Range(0,3)
@@ -102,7 +104,7 @@ namespace Symbol
        
 
         
-        public override bool ReadBitMap(int row,int column) => Matrix[row][column];
+        protected override bool ReadBitMapInner(int row,int column) => Matrix[row][column];
 
         private NumberSymbol(int number,int orientation=0,bool hflipped=false,bool vflipped=false) 
         {
