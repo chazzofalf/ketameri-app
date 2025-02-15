@@ -58,7 +58,7 @@ public class Glyph
     private static string[] UpperConsonantVowels => _UpperConsonantVowels = _UpperConsonantVowels ?? LowerConsonantVowels
     .Select(s => ($"{char.ToUpperInvariant(s[0])}{s[1]}"))
     .ToArray();
-    private static string[] Punctuation => _Punctuation = _Punctuation ?? ".!?,'\":;()=<>+-/*^[]{}"
+    private static string[] Punctuation => _Punctuation = _Punctuation ?? ".!?,'\":;()=<>+-/*^[]{}`~@#$%&_|\\°≤≥≠"
     .Select(s => $"{s}")
     .ToArray();
     private static (string Text,bool IsNumber,bool IsSpecial,bool IsText) [] Alphabet => _Alphabet = _Alphabet ?? 

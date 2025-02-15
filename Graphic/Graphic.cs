@@ -28,7 +28,7 @@ public class Graphic
     }
 
 
-    private Graphic[]? _AllOrientations;
+    
     
     
 
@@ -76,83 +76,101 @@ public class Graphic
     }
 
     private SKBitmap GenerateSmallBitmap()
-    {
-        var bmp = new SKBitmap(9,9);
-        var can = new SKCanvas(bmp);
-        var black = new SKPaint();
-        black.Color = SKColors.Black;        
-        can.Clear();
+    {       
         if (IsLetterSymbol)
         {
-            foreach (var idx in Enumerable.Range(0,NumberOfBits))
+            var bmps = new SKBitmap(5,5);
+            var _ = Enumerable.Range(0,5)
+            .Select(r => Enumerable.Range(0,5)
+            .Select(c => 
             {
-                if (GetBit(idx))
+                if (ReadBitMap(r,c))
                 {
-                    if (idx == 0)
-                    {
-                        can.DrawLine(new SKPoint(4,0),new SKPoint(9,0),black);
-                    }
-                    else if (idx == 1)
-                    {
-                        can.DrawLine(new SKPoint(8,0),new SKPoint(8,4),black);
-                    }
-                    else if (idx == 2)
-                    {
-                        can.DrawLine(new SKPoint(8,4),new SKPoint(8,9),black);
-                    }
-                    else if (idx == 3)
-                    {
-                        can.DrawLine(new SKPoint(4,8),new SKPoint(9,8),black);
-                    }
-                    else if (idx == 4)
-                    {
-                        can.DrawLine(new SKPoint(0,8),new SKPoint(4,8),black);
-                    }
-                    else if (idx == 5)
-                    {
-                        can.DrawLine(new SKPoint(0,4),new SKPoint(0,9),black);
-                    }
-                    else if (idx == 6)
-                    {
-                        can.DrawLine(new SKPoint(0,0),new SKPoint(0,4),black);                    
-                    }
-                    else if (idx == 7)
-                    {
-                        can.DrawLine(new SKPoint(0,0),new SKPoint(4,0),black);
-                    }
-                    else if (idx == 8)
-                    {
-                        can.DrawLine(new SKPoint(4,0),new SKPoint(4,4),black);                    
-                    }
-                    else if (idx == 9)
-                    {
-                        can.DrawLine(new SKPoint(4,4),new SKPoint(9,4),black);
-                    }
-                    else if (idx == 10)
-                    {
-                        can.DrawLine(new SKPoint(4,4),new SKPoint(4,9),black);
-                    }
-                    else if (idx == 11)
-                    {
-                        can.DrawLine(new SKPoint(0,4),new SKPoint(4,4),black);
-                    }
-                }            
-            }
+                    bmps.SetPixel(c,r,SKColors.Black);
+                    
+                }
+                return 1;
+            }).Sum()).Sum();
+            var vs_left_orig = new SKBitmap(1,5);
+            var vs_mid_left_orig = new SKBitmap(1,5);
+            var vs_mid_orig = new SKBitmap(1,5);
+            var vs_mid_right_orig = new SKBitmap(1,5);
+            var vs_right_orig = new SKBitmap(1,5);
+            var c = new SKCanvas(vs_left_orig);
+            c.DrawBitmap(bmps,new SKRect(0,0,1,5),new SKRect(0,0,1,5));
+            c = new SKCanvas(vs_mid_left_orig);
+            c.DrawBitmap(bmps,new SKRect(1,0,2,5),new SKRect(0,0,1,5));
+            c = new SKCanvas(vs_mid_orig);
+            c.DrawBitmap(bmps,new SKRect(2,0,3,5),new SKRect(0,0,1,5));
+            c = new SKCanvas(vs_mid_right_orig);
+            c.DrawBitmap(bmps,new SKRect(3,0,4,5),new SKRect(0,0,1,5));
+            c = new SKCanvas(vs_right_orig);
+            c.DrawBitmap(bmps,new SKRect(4,0,5,5),new SKRect(0,0,1,5));
+            
+        
+            var vs_mid_left = new SKBitmap(3,5);
+            var vs_mid_right = new SKBitmap(3,5);
+            vs_mid_left_orig.ScalePixels(vs_mid_left,SKSamplingOptions.Default);
+            vs_mid_right_orig.ScalePixels(vs_mid_right,SKSamplingOptions.Default);
+            var stretched_horz = new SKBitmap(9,5);
+            c = new SKCanvas(stretched_horz);
+            c.DrawBitmap(vs_left_orig,0,0);
+            c.DrawBitmap(vs_mid_left,1,0);
+            c.DrawBitmap(vs_mid_orig,4,0);
+            c.DrawBitmap(vs_mid_right,5,0);
+            c.DrawBitmap(vs_right_orig,8,0);
+            var hs_top_orig = new SKBitmap(9,1);
+            var hs_mid_top_orig = new SKBitmap(9,1);
+            var hs_mid_orig = new SKBitmap(9,1);
+            var hs_mid_bottom_orig = new SKBitmap(9,1);
+            var hs_bottom_orig = new SKBitmap(9,1);
+            c = new SKCanvas(hs_top_orig);
+            c.DrawBitmap(stretched_horz,new SKRect(0,0,9,1),new SKRect(0,0,9,1));
+            c = new SKCanvas(hs_mid_top_orig);
+            c.DrawBitmap(stretched_horz,new SKRect(0,1,9,2),new SKRect(0,0,9,1));
+            c = new SKCanvas(hs_mid_orig);
+            c.DrawBitmap(stretched_horz,new SKRect(0,2,9,3),new SKRect(0,0,9,1));
+            c = new SKCanvas(hs_mid_bottom_orig);
+            c.DrawBitmap(stretched_horz,new SKRect(0,3,9,4),new SKRect(0,0,9,1));
+            c = new SKCanvas(hs_bottom_orig);
+            c.DrawBitmap(stretched_horz,new SKRect(0,4,9,5),new SKRect(0,0,9,1));
+            var hs_mid_top_scaled = new SKBitmap(9,3);
+            var hs_mid_bottom_scaled = new SKBitmap(9,3);
+            hs_mid_top_orig.ScalePixels(hs_mid_top_scaled,SKSamplingOptions.Default);
+            hs_mid_bottom_orig.ScalePixels(hs_mid_bottom_scaled,SKSamplingOptions.Default);
+            var o = new SKBitmap(9,9);
+            c = new SKCanvas(o);
+            c.DrawBitmap(hs_top_orig,0,0);
+            c.DrawBitmap(hs_mid_top_scaled,0,1);
+            c.DrawBitmap(hs_mid_orig,0,4);
+            c.DrawBitmap(hs_mid_bottom_scaled,0,5);
+            c.DrawBitmap(hs_bottom_orig,0,8);
+            return o;
 
-        }
+
+            
+        } 
         else
         {
+            var bmpx = new SKBitmap(9,9);
+            var canx = new SKCanvas(bmpx);
+            var blackx = new SKPaint();
+            blackx.Color = SKColors.Black;        
+            canx.Clear();
             var opts = Enumerable.Range(0,9)
             .Select(r => Enumerable.Range(0,9)
             .Select(c => {
                 if (ReadBitMap(r,c))
                 {
-                    bmp.SetPixel(c,r,SKColors.Black);
+                    bmpx.SetPixel(c,r,SKColors.Black);
                 }
                 return 1;
             }).Sum()).Sum();
+            return bmpx;
         }
-        return bmp;
+        
+
+        
     }
     public SKBitmap ColorizeBitmap(SKColor? color=null,bool useSmall=false)
     {
