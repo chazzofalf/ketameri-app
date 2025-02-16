@@ -25,9 +25,9 @@ namespace SymbolTest
             }
             using (textout = new StreamWriter(File.OpenWrite("Symboltest.txt")))
             {
-                TestSymbols();
-                TestPhonetics();
-                TestGlyphs();
+                // TestSymbols();
+                // TestPhonetics();
+                // TestGlyphs();
                 TestGraphics();
                 TestTokenizer();
                 TestRecognizer();
@@ -37,7 +37,7 @@ namespace SymbolTest
 
         private void TestGraphics()
         {
-            foreach (var idx in Enumerable.Range(0,Glyph.Glyph.NumberOfGlyphs))
+            foreach (var idx in Enumerable.Range(0,Graphic.CachedGraphic.NumberOfGlyphs))
             {
                 var symb = global:: Graphic.CachedGraphic.GetGraphicAtIndex(idx);
                 MultiPrintLine($"Graphic Number: {symb.Number}");
