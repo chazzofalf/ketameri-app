@@ -9,8 +9,8 @@ class ForwardTokenizer
 {
     private char[]? _SupportedCharacters = null;
     private string[]? _allGraphicLetters = null;
-    private string[] AllGraphicLetters => _allGraphicLetters = _allGraphicLetters ?? Enumerable.Range(0,Graphic.Graphic.NumberOfGlyphs)
-    .Select(n => Graphic.Graphic.GetGraphicAtIndex(n))
+    private string[] AllGraphicLetters => _allGraphicLetters = _allGraphicLetters ?? Enumerable.Range(0,Graphic.CachedGraphic.NumberOfGlyphs)
+    .Select(n => Graphic.CachedGraphic.GetGraphicAtIndex(n))
     .Select(g => g.Letter)
     .OrderBy(g => g)
     .OrderByDescending(g => g.Length)
@@ -66,33 +66,33 @@ class ForwardTokenizer
     private bool IsVowel(char c) => Vowels.Contains(c) || UpperVowels.Contains(c);
     private bool IsLetter(char c) => Letters.Contains(c);
     private List<char> buffer = new List<char>();
-    private List<Graphic.Graphic> cbuffer = new List<Graphic.Graphic>();
+    private List<Graphic.CachedGraphic> cbuffer = new List<Graphic.CachedGraphic>();
     
-    private Graphic.Graphic[] ConvertNumberInBuffer()
+    private Graphic.CachedGraphic[] ConvertNumberInBuffer()
     {
         var outx = ConvertNumberInObject(buffer);
         buffer.Clear();
         return outx;
     }
-    private Graphic.Graphic[]? _SpecialCharacter = null;
-    private Graphic.Graphic[] SpecialCharacter => _SpecialCharacter = _SpecialCharacter = 
+    private Graphic.CachedGraphic[]? _SpecialCharacter = null;
+    private Graphic.CachedGraphic[] SpecialCharacter => _SpecialCharacter = _SpecialCharacter = 
     
-        Enumerable.Repeat(Graphic.Graphic.GetGraphicForSpecial(),1).ToArray();
+        Enumerable.Repeat(Graphic.CachedGraphic.GetGraphicForSpecial(),1).ToArray();
     
    
     
-    private Graphic.Graphic[] ConvertStrangeCharacter(char strange)
+    private Graphic.CachedGraphic[] ConvertStrangeCharacter(char strange)
     {
         var strange_ord = $"{(int)(ushort)strange}".ToArray();
         return SpecialCharacter.Concat(ConvertNumberInObject(strange_ord))
         .Concat(SpecialCharacter)
         .ToArray();
     }
-    private Graphic.Graphic[] ConvertNumberInObject(IEnumerable<char> english)
+    private Graphic.CachedGraphic[] ConvertNumberInObject(IEnumerable<char> english)
     {
         if (english == null || english.Count() == 0)
         {
-            return Enumerable.Empty<Graphic.Graphic>().ToArray();
+            return Enumerable.Empty<Graphic.CachedGraphic>().ToArray();
         }
         else
         {
@@ -110,18 +110,18 @@ class ForwardTokenizer
             }
             ketameriNumber = ketameriNumber.Reverse();
             var x =ketameriNumber.Select(s => $"{s}")
-            .Select(Graphic.Graphic.GetGraphicWithLetter)
+            .Select(Graphic.CachedGraphic.GetGraphicWithLetter)
             .ToArray();
             return x;
         }
     }
-    private Graphic.Graphic[] SingleForLetter(char englishChar)
+    private Graphic.CachedGraphic[] SingleForLetter(char englishChar)
     {
-        return Enumerable.Repeat(Graphic.Graphic.GetGraphicWithLetter($"{englishChar}"),1).ToArray();
+        return Enumerable.Repeat(Graphic.CachedGraphic.GetGraphicWithLetter($"{englishChar}"),1).ToArray();
     }
     public void Put(char englishChar)
     {
-        var outx = Enumerable.Empty<Graphic.Graphic>().ToList();
+        var outx = Enumerable.Empty<Graphic.CachedGraphic>().ToList();
         var last = buffer.Any() ? buffer.Last() : (char?)null;
         
         (
@@ -155,7 +155,7 @@ class ForwardTokenizer
             }
             else if (!special_english)            
             {                
-                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{englishChar}"));
+                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{englishChar}"));
             }
             else
             {
@@ -176,7 +176,7 @@ class ForwardTokenizer
             else if (!special_english)
             {
                 outx.AddRange(ConvertNumberInBuffer());
-                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{englishChar}"));
+                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{englishChar}"));
             }
             else
             {
@@ -188,7 +188,7 @@ class ForwardTokenizer
         {
             if (numeric_english)
             {
-                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}"));
+                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}"));
                 buffer.Clear();
                 buffer.Add(englishChar);
             }
@@ -202,12 +202,12 @@ class ForwardTokenizer
                         {
                             if (!vowel_english)
                             {
-                                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}{englishChar}"));
+                                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}{englishChar}"));
                                 buffer.Clear();
                             }
                             else
                             {
-                                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}"));
+                                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}"));
                                 buffer.Clear();
                                 buffer.Add(englishChar);
                             }
@@ -216,12 +216,12 @@ class ForwardTokenizer
                         {
                             if (vowel_english)
                             {
-                                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}{englishChar}"));
+                                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}{englishChar}"));
                                 buffer.Clear();
                             }
                             else
                             {
-                                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}"));     
+                                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}"));     
                                 buffer.Clear();
                                 buffer.Add(englishChar);
                             }
@@ -229,7 +229,7 @@ class ForwardTokenizer
                     }
                     else
                     {
-                        outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}"));     
+                        outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}"));     
                         buffer.Clear();
                         buffer.Add(englishChar);
                     }
@@ -242,12 +242,12 @@ class ForwardTokenizer
                         {
                             if (!vowel_english)
                             {
-                                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}{englishChar}"));
+                                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}{englishChar}"));
                                 buffer.Clear();
                             }
                             else
                             {
-                                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}"));
+                                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}"));
                                 buffer.Clear();
                                 buffer.Add(englishChar);
                             }
@@ -256,12 +256,12 @@ class ForwardTokenizer
                         {
                             if (vowel_english)
                             {
-                                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}{englishChar}"));
+                                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}{englishChar}"));
                                 buffer.Clear();
                             }
                             else
                             {
-                                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}"));     
+                                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}"));     
                                 buffer.Clear();
                                 buffer.Add(englishChar);
                             }
@@ -269,7 +269,7 @@ class ForwardTokenizer
                     }
                     else
                     {
-                        outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}"));     
+                        outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}"));     
                         buffer.Clear();
                         buffer.Add(englishChar);
                     }
@@ -277,22 +277,22 @@ class ForwardTokenizer
             }
             else if (!special_english)
             {
-                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}"));  
+                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}"));  
                 buffer.Clear();
-                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{englishChar}"));
+                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{englishChar}"));
             }
             else
             {
-                outx.Add(Graphic.Graphic.GetGraphicWithLetter($"{last}"));  
+                outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}"));  
                 buffer.Clear();
                 outx.AddRange(ConvertStrangeCharacter(englishChar));
             }
         }  
         cbuffer.AddRange(outx);
     }
-    public Graphic.Graphic[] Finish()
+    public Graphic.CachedGraphic[] Finish()
     {
-        var outx = Enumerable.Empty<Graphic.Graphic>().ToList();
+        var outx = Enumerable.Empty<Graphic.CachedGraphic>().ToList();
         var last = buffer.Any() ? buffer.Last() : (char?)null;
         
         (

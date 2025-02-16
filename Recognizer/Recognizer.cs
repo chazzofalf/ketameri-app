@@ -106,9 +106,9 @@ public class Recognizer
     //     return lastDeterminedOrientation;
         
     // }
-    public Graphic.Graphic Recognize(SKBitmap glyphImage)
+    public Graphic.CachedGraphic Recognize(SKBitmap glyphImage)
     {
-        Graphic.Graphic? recognizedGraphic = null;
+        Graphic.CachedGraphic? recognizedGraphic = null;
         
             if (glyphImage.Height != glyphImage.Width) throw new Exception("Ketameri Glyphs are square. This is not!");
             // var ori = DetermineGlyphOrientation(glyphImage);
@@ -150,7 +150,7 @@ public class Recognizer
                     }
                     return 1;
                 }).Sum();
-                recognizedGraphic = Graphic.Graphic.GetNumberGraphicWithNumber(num);               
+                recognizedGraphic = Graphic.CachedGraphic.GetNumberGraphicWithNumber(num);               
                 
 
             }
@@ -182,7 +182,7 @@ public class Recognizer
                 .Select(c =>  c.Bit)
                 .Select(c => c ? 1 : 0)
                 .Aggregate(0,(p,c) => p*2+c);
-                recognizedGraphic = Graphic.Graphic.GetLetterGraphicWithNumber(CoordsRaw);
+                recognizedGraphic = Graphic.CachedGraphic.GetLetterGraphicWithNumber(CoordsRaw);
             }
             
         

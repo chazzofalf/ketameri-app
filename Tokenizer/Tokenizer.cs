@@ -12,14 +12,14 @@ public class Tokenizer
         {
             ForwardTokenizer.Put(vc);
         }
-        else if (value is Graphic.Graphic token)
+        else if (value is Graphic.CachedGraphic token)
         {
             ReverseTokenizer.Put(token);
         }
     }
     public T Finish<T>()
     {
-        if (typeof(T) == typeof(Graphic.Graphic[]))
+        if (typeof(T) == typeof(Graphic.CachedGraphic[]))
         {
             return (T)(object)ForwardTokenizer.Finish();
         }

@@ -8,10 +8,10 @@ class ReverseTokenizer
 {
     private bool _Is_SpecialMode;
     private bool _Is_NumericMode;
-    private List<Graphic.Graphic> buffer = new List<Graphic.Graphic>();
+    private List<Graphic.CachedGraphic> buffer = new List<Graphic.CachedGraphic>();
     private List<char> cbuffer = new List<char>();
      
-    public void Put(Graphic.Graphic token)
+    public void Put(Graphic.CachedGraphic token)
     {
         if (_Is_SpecialMode)
         {

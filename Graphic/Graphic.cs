@@ -11,11 +11,107 @@ public class CachedGraphic
     public bool IsText {get;}
     public int Number {get;}
     public bool IsLetterSymbol {get;}
-    private bool[][] Bitmap {get;}
     private byte[] SmallPNGData {get;}
     private byte[] LargePNGData {get;}
+    
+    private bool[][] Matrix {get;}
+    public bool ReadBitMap(int row,int column)
+    {
+        return Matrix[row][column];
+    }
+    private SKBitmap? _SmallTemplate;
+    private SKBitmap SmallTemplate => _SmallTemplate = _SmallTemplate ?? SKBitmap.Decode(SmallPNGData);
+    public SKBitmap Small => SmallTemplate.Copy();
+    private SKBitmap? _LargeTemplate;
+    private SKBitmap LargeTemplate => _LargeTemplate = _LargeTemplate ?? SKBitmap.Decode(LargePNGData);
+    public SKBitmap Large => LargeTemplate.Copy();
+    private static CachedGraphic[]? _All = null;
+    private static CachedGraphic[] All => _All = _All ?? Generate();
+    public static int NumberOfGlyphs => All.Length;
+    public static CachedGraphic  GetGraphicAtIndex(int index) => All[index];
+    private static CachedGraphic[]? GenerateFromJSONCache()
+    {
+        return null;
+    }
+    private static CachedGraphic[] Regenerate()
+    =>
+        Enumerable.Range(0,Graphic.NumberOfGlyphs)
+        .Select(s => Graphic.GetGraphicAtIndex(s))
+        .Select(s => new CachedGraphic(s))
+        .ToArray();
+    
+    private static CachedGraphic[] Generate()
+    {
+        return GenerateFromJSONCache() ?? Regenerate();
+    }
+    private CachedGraphic(Graphic original)
+    {
+        Letter = original.Letter;
+        IsNumber = original.IsNumber;
+        IsSpecial = original.IsSpecial;
+        IsText = original.IsText;
+        Number = original.Number;
+        IsLetterSymbol = original.IsLetterSymbol;
+        SmallPNGData = original.Small.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray();
+        LargePNGData = original.Large.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray();
+        Matrix = Enumerable.Range(0,9)
+        .Select(r => Enumerable.Range(0,9)
+        .Select(c => original.ReadBitMap(r,c)).ToArray()).ToArray();
+    }
+    public SKBitmap ColorizeBitmap(SKColor? color=null,bool useSmall=false)
+    {
+        var real_color = color is SKColor colorx ? colorx : SKColors.Turquoise;
+        real_color = new SKColor((byte)(real_color.Red & 0xfe),real_color.Green,real_color.Blue,real_color.Alpha);
+        var original = useSmall ? Small : Large;
+        using (var canvas = new SKCanvas(original))
+        {
+            float[] invertColorMatrix = {
+                -1,  0,  0,  0, 255,
+                 0, -1,  0,  0, 255,
+                 0,  0, -1,  0, 255,
+                 0,  0,  0,  1,   0,
+            };
+            float[] turquoiseColorMatrix = {
+               ((float)real_color.Red)/(255.0f), 0,     0,     0, 0,  // R 
+                0,     ((float)real_color.Green)/(255.0f), 0,     0, 0,  // G
+                0,     0,     ((float)real_color.Blue)/(255.0f), 0, 0,  // B
+                0,     0,     0,     ((float)real_color.Alpha)/(255.0f), 0   // A
+
+            };
+            using (var colorFilter = SKColorFilter.CreateColorMatrix(invertColorMatrix))
+            {
+                using (var turquoiseFilter = SKColorFilter.CreateColorMatrix(turquoiseColorMatrix))
+                {
+                    using (var paint = new SKPaint())
+                    {
+                        paint.ColorFilter = colorFilter;
+                        canvas.DrawBitmap(original, 0, 0, paint);
+                        canvas.Flush();
+                        paint.ColorFilter = turquoiseFilter;
+                        canvas.DrawBitmap(original,0,0,paint);
+                    }
+                }
+                
+            }
+        }
+        
+
+        return original; // TODO: You're here!
+    }
+    public SKBitmap ColorizeBitmap(string hex,bool useSmall=false)
+    {
+        return ColorizeBitmap(SKColor.Parse(hex),useSmall);
+    }
+
+    public static CachedGraphic GetLetterGraphicWithNumber(int number) =>  All.Where(s => s.Number == number && s.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
+    public static CachedGraphic GetNumberGraphicWithNumber(int number) =>  All.Where(s => s.Number == number && !s.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
+    
+    public static CachedGraphic GetGraphicWithLetter(string letter) => All.Where(s=> s.Letter == letter).First();
+   
+    public static CachedGraphic GetGraphicForSpecial() => All.Where(s => s.IsSpecial).First();
+
 }
-public class Graphic
+class Graphic
 {
     private global::Glyph.Glyph Glyph {get;}
     private static Graphic[]? _AllGraphics;

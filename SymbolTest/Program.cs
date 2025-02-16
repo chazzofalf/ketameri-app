@@ -39,7 +39,7 @@ namespace SymbolTest
         {
             foreach (var idx in Enumerable.Range(0,Glyph.Glyph.NumberOfGlyphs))
             {
-                var symb = global:: Graphic.Graphic.GetGraphicAtIndex(idx);
+                var symb = global:: Graphic.CachedGraphic.GetGraphicAtIndex(idx);
                 MultiPrintLine($"Graphic Number: {symb.Number}");
                 MultiPrintLine($"Graphic Letter: {symb.Letter}");
                 MultiPrintLine($"Is Number: {symb.IsNumber}");
@@ -146,7 +146,7 @@ namespace SymbolTest
             throw new NullReferenceException();
         };
         var tokenizer = new Tokenizer.Tokenizer();
-            var reverse_cnt_func = (Graphic.Graphic[] g) =>
+            var reverse_cnt_func = (Graphic.CachedGraphic[] g) =>
             g.Select(gs => {tokenizer.Put(gs); return 1;})
             .Sum();
 
@@ -169,7 +169,7 @@ namespace SymbolTest
                  
             var tokenized_graphic_sets = testItems
             .Select(s => { var cnt1 = cnt_func(s);
-            return tokenizer.Finish<Graphic.Graphic[]>();
+            return tokenizer.Finish<Graphic.CachedGraphic[]>();
 
             
         })
@@ -253,12 +253,12 @@ namespace SymbolTest
             var cnt_func = (string s) => 
             s.Select(ch => {tokenizer.Put(ch); return 1;})
             .Sum();
-            var reverse_cnt_func = (Graphic.Graphic[] g) =>
+            var reverse_cnt_func = (Graphic.CachedGraphic[] g) =>
             g.Select(gs => {tokenizer.Put(gs); return 1;})
             .Sum();        
             var tokenized_graphic_sets = testItems
             .Select(s => { var cnt1 = cnt_func(s);
-            return tokenizer.Finish<Graphic.Graphic[]>();
+            return tokenizer.Finish<Graphic.CachedGraphic[]>();
             
         })
         .ToArray();
@@ -385,7 +385,7 @@ namespace SymbolTest
         };
         var linerJoiner = new LineJoinerSplitter.LineJoinerSplitter();
         var tokenizer = new Tokenizer.Tokenizer();
-            var reverse_cnt_func = (Graphic.Graphic[] g) =>
+            var reverse_cnt_func = (Graphic.CachedGraphic[] g) =>
             g.Select(gs => {tokenizer.Put(gs); return 1;})
             .Sum();
 
@@ -408,7 +408,7 @@ namespace SymbolTest
                  
             var tokenized_graphic_sets = testItems
             .Select(s => { var cnt1 = cnt_func(s);
-            return tokenizer.Finish<Graphic.Graphic[]>();
+            return tokenizer.Finish<Graphic.CachedGraphic[]>();
 
             
         })
