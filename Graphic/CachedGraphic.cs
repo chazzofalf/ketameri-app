@@ -57,7 +57,7 @@ public class CachedGraphic
         var outx = (DataClass[]?)null;
         try
         {
-            using (var fio = File.OpenRead("Cache/Glyphs.json.gz"))
+            using (var fio = Resources.Resources.GlyphResource)
             {
                 using (var gzio = new GZipStream(fio,CompressionMode.Decompress))
                 {
@@ -85,7 +85,7 @@ public class CachedGraphic
         //if (!File.Exists("Cache/Glyphs.json.gz"))
 
         
-            using (var fio = Resources.Resources.GlyphResource)
+            using (var fio = File.OpenWrite("Cache/Glyphs.json.gz"))
             {
                 using (var gzio = new GZipStream(fio,CompressionLevel.Optimal))
                 {
