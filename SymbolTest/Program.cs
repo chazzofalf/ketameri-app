@@ -7,9 +7,8 @@ using SkiaSharp;
 namespace SymbolTest
 {
     public class Program
-    {
-        public string TestHandle => "@liv5be4wise"; //Nobody in the multiverse should have this handle, hopefully... Change it immediately upon finding out otherwise.
-        public string AtlasText => $"🦋🦋🦋It's the End of the World as We Know It (And I Feel Fine) - R.E.M ©️ 1987 [54 666 911 2105: My bad numbers that I associate with trouble. Really this was me seeing if I can break this with a sequence of numbers. That's all. Oh and handle to see if numbers in a word can break this. (DISCLAIMER: Before deciding that you must commit untoward action against me on this, remember that I Pulled this one totally out of my ass. I swear to The Three As One, The Favored One, and On My Mother's Grave that Any existence of any persons or entities holding this handle in any reality within the multiverse is coincidental and any implied references to such persons or entities are purely unintentional. Yes. Yes. I know. I had to borrow from the MPAA's statement about their movies, but I felt, for my personal safety, that I should be explicit about the fact, that it applies here and I am just messing around. Again. I swear to God I know of nobody with this handle, if I did, I wouldn't have used it here. If you just so happen to have this handle, than I am sorry it was an accident, perhaps you could drop me a email at chazzofalf@gmail.com with the subject \"Hello, I am {TestHandle}\" and drop me a line. And I promise that I will change the example. I don't want any trouble. And I've had more than my fair share.) Now that we gotten that out of the way... (Geez) Example: Hey, {TestHandle} wanna grab a sweet frappuccino?]🦋🦋🦋";
+    {        
+        public string AtlasText => Resources.Resources.Testing_LetThereBeLightNoLines;
         private TextWriter? textout;
         private void Run()
         {
@@ -32,7 +31,25 @@ namespace SymbolTest
                 TestTokenizer();
                 TestRecognizer();
                 TestLinerJoinerSplitter();
+                TestPageJoinerSplitter();
             }
+        }
+
+        private void TestPageJoinerSplitter()
+        {
+            var text1 = Resources.Resources.Testing_LetThereBeLight;
+            var text2 = Resources.Resources.Testing_PowerInFaith;
+            var background = GetBackground();
+            
+            var lineJoinerSplitter = new LineJoinerSplitter.LineJoinerSplitter();
+            var tokenizer = new Tokenizer.Tokenizer();
+            // TODO: YOU are here 20250216_0752
+            
+        }
+
+        private SKBitmap GetBackground()
+        {
+            return SKBitmap.Decode(Resources.Resources.Testing_ScoutTestResource);
         }
 
         private void TestGraphics()
@@ -232,13 +249,8 @@ namespace SymbolTest
             }
             
             Directory.CreateDirectory("TokenizerTest");
-            
-            var bOs = "Zethana";
-            var bOL = "Declán";
-            var warning = "Watch out! Those two are going to quite literally rock your (the) entire world! Don't say I didn't warn you.";
-            var bOsDOB = "Zethana - 2/23/9852 BCE - 7/3/2032 CE";
-            var bOLDOB = "Declán - 6/6/2006 - 7/3/2032";
-            var testItems = new [] {bOs,bOL,bOsDOB,bOLDOB,warning};
+                        
+            var testItems = new [] {Resources.Resources.Testing_LetThereBeLightNoLines,Resources.Resources.Testing_PowerInFaithNoLines};
             var file_original_write_op_count = testItems
             .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
             .Select(itm => (IndexName:string.Join("",$"{itm.Index}".Reverse().Concat("00").Reverse().Take(3)),Item:itm.Item))

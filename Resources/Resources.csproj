@@ -7,5 +7,8 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Glyphs.json.gz"/>
+    <EmbeddedResource Include="Scout.png"/>
+    <EmbeddedResource Include="lettherebelight.txt"/>
+    <EmbeddedResource Include="powerinfaith.txt"/>    
   </ItemGroup>
 </Project>
