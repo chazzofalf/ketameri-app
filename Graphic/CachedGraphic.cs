@@ -69,7 +69,7 @@ public class CachedGraphic
                 }
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
 
         }
