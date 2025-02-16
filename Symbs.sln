@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineJoinerSplitter", "LineJ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resources", "Resources\Resources.csproj", "{8E32719D-4C3C-403A-B1E7-16F39D0F00FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PageJoinerSpliter", "PageJoinerSpliter\PageJoinerSpliter.csproj", "{3976488A-53D5-4B17-A13E-0FA59C55EE36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,18 @@ Global
 		{8E32719D-4C3C-403A-B1E7-16F39D0F00FF}.Release|x64.Build.0 = Release|Any CPU
 		{8E32719D-4C3C-403A-B1E7-16F39D0F00FF}.Release|x86.ActiveCfg = Release|Any CPU
 		{8E32719D-4C3C-403A-B1E7-16F39D0F00FF}.Release|x86.Build.0 = Release|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Debug|x64.Build.0 = Debug|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Debug|x86.Build.0 = Debug|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Release|x64.ActiveCfg = Release|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Release|x64.Build.0 = Release|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Release|x86.ActiveCfg = Release|Any CPU
+		{3976488A-53D5-4B17-A13E-0FA59C55EE36}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

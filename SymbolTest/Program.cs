@@ -413,7 +413,7 @@ namespace SymbolTest
             
         })
         .Select(r => {
-            return linerJoiner.Join(r);
+            return linerJoiner.Join(r,backgroundColor:SKColors.Black);
         })
         
         .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))

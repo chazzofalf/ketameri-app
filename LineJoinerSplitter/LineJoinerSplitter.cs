@@ -31,8 +31,8 @@ public class LineJoinerSplitter
     public SKBitmap Join(Graphic.CachedGraphic[] glyphs,bool useLarge=true,bool useBackground=true,SKColor? color=null,SKColor? backgroundColor=null)
     {
         
-        var realBackgroundColor = backgroundColor != null ? backgroundColor.Value : SKColors.Black;
-        realBackgroundColor = realBackgroundColor.WithRed((byte)(realBackgroundColor.Red | 1));
+        var realBackgroundColor = backgroundColor != null ? backgroundColor.Value : SKColors.Transparent;
+        realBackgroundColor = backgroundColor != null ? realBackgroundColor.WithRed((byte)(realBackgroundColor.Red | 1)) : realBackgroundColor;
         if (!glyphs.Any()) {
             var o = new SKBitmap(useLarge ? 6 : 1,useLarge ? 54 : 9,SKColorType.Rgba8888,SKAlphaType.Premul);
             var c = new SKCanvas(o);
