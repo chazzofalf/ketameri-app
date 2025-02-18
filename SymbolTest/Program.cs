@@ -39,11 +39,37 @@ namespace SymbolTest
         {
             var text1 = Resources.Resources.Testing_LetThereBeLight;
             var text2 = Resources.Resources.Testing_PowerInFaith;
+            var text1Lines = text1.Split("\n");
+            var text2Lines = text2.Split("\n");
             var background = GetBackground();
-            
+            var pageJoiner = new PageJoinerSpliter.PageJoinerSpliter();
             var lineJoinerSplitter = new LineJoinerSplitter.LineJoinerSplitter();
             var tokenizer = new Tokenizer.Tokenizer();
-            // TODO: YOU are here 20250216_0752
+            var text1Tokens = text1Lines.Select(line => line
+            .Aggregate((object?)null,(ign,ch) => {
+                tokenizer.Put(ch);
+                return ign;
+            },(ign) => {
+                return tokenizer.Finish<Graphic.CachedGraphic[]>();
+            }).ToArray()).ToArray();
+            var text2Tokens = text2Lines.Select(line => line
+            .Aggregate((object?)null,(ign,ch) => {
+                tokenizer.Put(ch);
+                return ign;
+            },(ign) => {
+                return tokenizer.Finish<Graphic.CachedGraphic[]>();
+            }).ToArray()).ToArray();
+            var text1GraphicalLines = text1Tokens.Select(line => lineJoinerSplitter.Join(line)).ToArray();
+            var text2GraphicalLines = text2Tokens.Select(line => lineJoinerSplitter.Join(line)).ToArray();
+            var text1Page = pageJoiner.Join(text1GraphicalLines,false,SKColors.Black,null);
+            var text2Page = pageJoiner.Join(text2GraphicalLines,true,backgroundimg:background);
+            if (Directory.Exists(""))
+            {
+                Directory.Delete("PageJoinerSplitterTest",true);
+            }
+            Directory.CreateDirectory("PageJoinerSplitterTest");
+            File.WriteAllBytes("PageJoinerSplitterTest/Page1.png",text1Page.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
+            File.WriteAllBytes("PageJoinerSplitterTest/Page2.png",text2Page.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
             
         }
 

@@ -48,7 +48,7 @@ namespace Symbol
         },(fin) => {
             return fin.Symbol;
         })
-        .Select(ch => ch == '|' ? new [] {true,true,true} : ch == '\'' ? new [] {true,true,false} : ch == ',' ? new [] {false,false,true} : throw new Exception(""))
+        .Select(ch => ch == '|' ? new [] {true,true} : ch == '\'' ? new [] {true,false} : ch == ',' ? new [] {false,true} : throw new Exception(""))
         .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (RowIndex:b,Row:a.Zip(Enumerable.Range(0,int.MaxValue),(c,d) => (ColumnIndex:d,Column:c))))
         .SelectMany(r => r.Row.Select(c => (RowIndex:r.RowIndex,ColumnIndex:c.ColumnIndex,Item:c.Column)))
         .OrderBy(i => i.ColumnIndex)
@@ -57,7 +57,9 @@ namespace Symbol
 
         var glyph = Enumerable.Range(0,9)
         .Select(r => Enumerable.Range(0,9)
-        .Select(c => c % 3 == 2 ? false : core[r/3][c/3]).ToArray()).ToArray();
+        .Select(c => c < 2 || c > 6 || (c - 2) % 2 == 1 ? false :  core[r <= 4 ? 0 : 1][(c - 2)/2])
+        .ToArray())
+        .ToArray();
         
         return glyph;
         } 

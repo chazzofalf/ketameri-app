@@ -120,34 +120,37 @@ public class Recognizer
             var borderless = glyphImage;
             var borderless_mini = new SKBitmap(9,9);
             borderless.ScalePixels(borderless_mini,SKSamplingOptions.Default);
-            var is_number = (borderless_mini.GetPixel(1,1).Red & 1) == 0;
+            var is_number = (borderless_mini.GetPixel(2,1).Red & 1) == 0;
             if (is_number)
             {
                 var num = 0;
                 var ops = Enumerable.Range(0,3)
-                .Select(s => s *3)
-                .Select(r => Enumerable.Range(0,3)
-                .Select(s => s * 3)
-                .Select(c => (borderless_mini.GetPixel(c,r).Red & 1) == 0))
-                .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (RowIndex:b,Row:a
-                .Zip(Enumerable.Range(0,int.MaxValue),(c,d) => (ColumnIndex:d,Item:c))))
-                .SelectMany(r => r.Row.Select(c => (r.RowIndex,c.ColumnIndex,c.Item)))
-                .GroupBy(s => s.ColumnIndex)
-                .Select(tr => tr.OrderBy(c => c.RowIndex))
-                .Select(r => r
-                .Select(c=> c.Item)
-                .Where(c=> c)
-                .Count())
+                .Select(s => 2 + 2*s)
+                .Select(c => Enumerable.Range(0,2)
+                .Select(s => s * 5)
+                .Select(r => (borderless_mini.GetPixel(c,r).Red & 1) == 0).ToArray())
+                // .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (RowIndex:b,Row:a
+                // .Zip(Enumerable.Range(0,int.MaxValue),(c,d) => (ColumnIndex:d,Item:c))))
+                // .SelectMany(r => r.Row.Select(c => (r.RowIndex,c.ColumnIndex,c.Item)))
+                // .GroupBy(s => s.ColumnIndex)
+                // .Select(tr => tr.OrderBy(c => c.RowIndex))
+                // .Select(r => r
+                // .Select(c=> c.Item)                
+                
                 .Select(cnt => {
                     num *= 3;
-                    if (cnt == 1)
+                    if (cnt[0] != cnt[1])
                     {
-                        num -= 1;
+                        if (cnt[0])
+                        {
+                            num += 1;
+                        }
+                        else
+                        {
+                            num -= 1;
+                        }
                     }
-                    else if (cnt == 2)
-                    {
-                        num += 1;
-                    }
+                    
                     return 1;
                 }).Sum();
                 recognizedGraphic = Graphic.CachedGraphic.GetNumberGraphicWithNumber(num);               

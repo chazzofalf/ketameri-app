@@ -12,6 +12,7 @@
     <ProjectReference Include="..\Tokenizer\Tokenizer.csproj" />
     <ProjectReference Include="..\Recognizer\Recognizer.csproj" />
     <ProjectReference Include="..\LineJoinerSplitter\LineJoinerSplitter.csproj" />
+    <ProjectReference Include="..\PageJoinerSpliter\PageJoinerSpliter.csproj" />
   </ItemGroup>
   
   <PropertyGroup>

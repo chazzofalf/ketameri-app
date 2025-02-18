@@ -28,10 +28,10 @@ public class PageJoinerSpliter
         var width = x.Max(s=> s.Item.Width);
         var height = x.Sum(s => s.Item.Height);
 
-        var outx = new SKBitmap(width,height);
+        var outx = new SKBitmap(width+6,height+6);
         var can = new SKCanvas(outx);
         var brush = new SKPaint();
-        brush.Color=onBackground;
+        brush.Color=realBackground;
         can.DrawRect(new SKRect(0,0,outx.Width,outx.Height),brush);
         if (backgroundimg != null)
         {
@@ -39,22 +39,135 @@ public class PageJoinerSpliter
             var ops = Enumerable.Range(0,filtered.Height)
             .Select(r => Enumerable.Range(0,filtered.Width)
             .Select(c => {
-                filtered.SetPixel(c,r,filtered.GetPixel(c,r).WithRed((byte)(filtered.GetPixel(r,c).Red | 1)));
+                filtered.SetPixel(c,r,filtered.GetPixel(c,r).WithRed((byte)(filtered.GetPixel(c,r).Red | 1)));
                 return 1;
             }).Sum()).Sum();
             can.DrawBitmap(filtered,new SKPoint(outx.Width/2-backgroundimg.Width/2,outx.Height/2-outx.Height/2));
         }
         var ops2 = x.Select(y => {
-            outx.SetPixel(y.X,y.Y,y.Item.GetPixel(y.X,y.Y).WithRed((byte)(y.Item.GetPixel(y.X,y.Y).Red & 0xfe)));
-            outx.SetPixel(y.X+y.Item.Width-1,y.Y,y.Item.GetPixel(y.X+y.Item.Width-1,y.Y).WithRed((byte)(y.Item.GetPixel(y.X+y.Item.Width-1,y.Y).Red & 0xfe)));
-            outx.SetPixel(y.X,y.Y+y.Item.Height+1,y.Item.GetPixel(y.X,y.Y+y.Item.Height+1).WithRed((byte)(y.Item.GetPixel(y.X,y.Y+y.Item.Height+1).Red & 0xfe)));
-            outx.SetPixel(y.X+y.Item.Width-1,y.Y+y.Item.Height+1,y.Item.GetPixel(y.X+y.Item.Width-1,y.Y+y.Item.Height+1).WithRed((byte)(y.Item.GetPixel(y.X+y.Item.Width-1,y.Y+y.Item.Height+1).Red & 0xfe)));
+            outx.SetPixel(3+y.X,3+y.Y,outx.GetPixel(3+y.X,3+y.Y).WithRed((byte)(outx.GetPixel(3+y.X,3+y.Y).Red & 0xfe)));
+            outx.SetPixel(3+y.X+y.Item.Width-1,3+y.Y,outx.GetPixel(3+y.X+y.Item.Width-1,3+y.Y).WithRed((byte)(outx.GetPixel(3+y.X+y.Item.Width-1,3+y.Y).Red & 0xfe)));
+            outx.SetPixel(3+y.X,3+y.Y+y.Item.Height-1,outx.GetPixel(3+y.X,3+y.Y+y.Item.Height-1).WithRed((byte)(outx.GetPixel(3+y.X,3+y.Y+y.Item.Height-1).Red & 0xfe)));
+            outx.SetPixel(3+y.X+y.Item.Width-1,3+y.Y+y.Item.Height-1,outx.GetPixel(3+y.X+y.Item.Width-1,3+y.Y+y.Item.Height-1).WithRed((byte)(outx.GetPixel(3+y.X+y.Item.Width-1,3+y.Y+y.Item.Height-1).Red & 0xfe)));
             return 1;
         }).Sum();
         ops2 = x.Select(y => {
-            can.DrawBitmap(y.Item,y.X,y.Y);
+            can.DrawBitmap(y.Item,3+y.X,3+y.Y);
             return 1;
         }).Sum();
+        ops2 = new [] {Enumerable.Range(0,outx.Width-2)
+        .Select(s => 
+        {
+            var pix = outx.GetPixel(1+s,1);
+            var red = pix.Red;
+            red &= 0xfe;
+            pix = pix.WithRed(red);
+            outx.SetPixel(1+s,1,pix);
+            return 1;
+        }
+        ).Sum(),
+        Enumerable.Range(0,outx.Width-2)
+        .Select(s => 
+        {
+            var pix = outx.GetPixel(1+s,outx.Height-1-1);
+            var red = pix.Red;            
+            red = s != outx.Width/2 ? (byte)(red & 0xfe) : (byte)(red | 1);
+            pix = pix.WithRed(red);
+            outx.SetPixel(1+s,outx.Height-1-1,pix);
+            
+            return 1;
+        }).Sum(),
+        Enumerable.Range(0,outx.Height-2)
+        .Select(s => {
+            var pix = outx.GetPixel(outx.Width-1-1,s+1);
+            var red = pix.Red;
+            red = s != outx.Height/2 - 1 && s != outx.Height/2 + 1 ? (byte)(red & 0xfe) : (byte)(red | 1);
+            pix = pix.WithRed(red);
+            outx.SetPixel(outx.Width-1-1,s+1,pix);
+            return 1;
+        }).Sum(),
+        Enumerable.Range(0,outx.Height-2)
+        .Select(s => {
+            var pix = outx.GetPixel(1,s+1);
+            var red = pix.Red;
+            red = s != outx.Height/2 && s != outx.Height/2 - 2 && s != outx.Height/2 + 2 ? (byte)(red & 0xfe) : (byte)(red | 1);
+            pix = pix.WithRed(red);
+            outx.SetPixel(1,s+1,pix);
+            return 1;
+        }).Sum(),
+        Enumerable.Range(0,outx.Width)
+        .Select(s => {
+            var pix = outx.GetPixel(s,0);
+            var red = pix.Red;
+            red &= 0xfe;
+            pix = pix.WithRed(red);
+            outx.SetPixel(s,0,pix);
+            return 1;
+        }).Sum(),
+        Enumerable.Range(0,outx.Width)
+        .Select(s => {
+            var pix = outx.GetPixel(s,outx.Height-1);
+            var red = pix.Red;
+            red &= 0xfe;
+            pix = pix.WithRed(red);
+            outx.SetPixel(s,outx.Height-1,pix);
+            return 1;
+        }).Sum(),
+        Enumerable.Range(0,outx.Height)
+        .Select(s => {
+            var pix = outx.GetPixel(0,s);
+            var red = pix.Red;
+            red &= 0xfe;
+            pix = pix.WithRed(red);
+            outx.SetPixel(0,s,pix);
+            return 1;
+        }).Sum(),
+        Enumerable.Range(0,outx.Height)
+        .Select(s => {
+            var pix = outx.GetPixel(outx.Width-1,s);
+            var red = pix.Red;
+            red &= 0xfe;
+            pix = pix.WithRed(red);
+            outx.SetPixel(outx.Width-1,s,pix);
+            return 1;
+        }).Sum(),        
+        Enumerable.Range(0,outx.Width-4)
+        .Select(s => {
+            var pix = outx.GetPixel(2+s,2);
+            var red = pix.Red;
+            red &= 0xfe;
+            pix = pix.WithRed(red);
+            outx.SetPixel(2+s,2,pix);
+            return 1;
+        }).Sum(),
+        Enumerable.Range(0,outx.Width-4)
+        .Select(s => {
+            var pix = outx.GetPixel(2+s,outx.Height-1-2);
+            var red = pix.Red;
+            red &= 0xfe;
+            pix = pix.WithRed(red);
+            outx.SetPixel(2+s,outx.Height-1-2,pix);
+            return 1;
+        }).Sum(),
+        Enumerable.Range(0,outx.Height-4)
+        .Select(s => {
+            var pix = outx.GetPixel(2,s+2);
+            var red = pix.Red;
+            red &= 0xfe;
+            pix = pix.WithRed(red);
+            outx.SetPixel(2,s+2,pix);
+            return 1;
+        }).Sum(),
+        Enumerable.Range(0,outx.Height-4)
+        .Select(s => {
+            var pix = outx.GetPixel(outx.Width-1-2,s+2);
+            var red = pix.Red;
+            red &= 0xfe;
+            pix = pix.WithRed(red);
+            outx.SetPixel(outx.Width-1-2,s+2,pix);
+            return 1;
+        }).Sum(),
+        }.Sum();
 
         return outx;         
     }
