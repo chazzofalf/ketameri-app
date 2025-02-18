@@ -54,7 +54,7 @@ public class CachedGraphic
     public static CachedGraphic  GetGraphicAtIndex(int index) => All[index];
     private static CachedGraphic[]? GenerateFromJSONCache()
     {
-        return null;
+        //return null;
         var outx = (DataClass[]?)null;
         try
         {
