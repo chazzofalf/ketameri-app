@@ -61,16 +61,20 @@ namespace SymbolTest
             }).ToArray()).ToArray();
             var text1GraphicalLines = text1Tokens.Select(line => lineJoinerSplitter.Join(line)).ToArray();
             var text2GraphicalLines = text2Tokens.Select(line => lineJoinerSplitter.Join(line)).ToArray();
+            var textInvGraphicalLines = text2Tokens.Select(line => lineJoinerSplitter.Join(line,color:SKColors.Black)).ToArray();
             var text1Page = pageJoiner.Join(text1GraphicalLines,false,SKColors.Black,null);
             var text2Page = pageJoiner.Join(text2GraphicalLines,true,backgroundimg:background);
+            var textInvPage = pageJoiner.Join(textInvGraphicalLines,true,background:SKColors.Black);
             if (Directory.Exists(""))
             {
                 Directory.Delete("PageJoinerSplitterTest",true);
-            }
+            }            
             Directory.CreateDirectory("PageJoinerSplitterTest");
+            File.WriteAllText("PageJoinerSplitterTest/Page1.txt",text1);
+            File.WriteAllText("PageJoinerSplitterTest/Page2.txt",text2);
             File.WriteAllBytes("PageJoinerSplitterTest/Page1.png",text1Page.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
             File.WriteAllBytes("PageJoinerSplitterTest/Page2.png",text2Page.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
-            
+            File.WriteAllBytes("PageJoinerSplitterTest/PageInv.png",textInvPage.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
         }
 
         private SKBitmap GetBackground()
