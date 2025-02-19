@@ -4,7 +4,7 @@ namespace SymbConvert;
 
 public class SymbConvert
 {
-    public SKBitmap Translate(string name,SKColor? fontColor=null,SKColor? highlightColor=null,SKColor? backgroundColor=null,SKBitmap? backgroundBitmap=null,bool useLarge=true,bool useHighlight=false,bool centered=false)
+    public SKBitmap Translate(string name,SKColor? fontColor=null,SKColor? highlightColor=null,SKColor? backgroundColor=null,SKBitmap? backgroundBitmap=null,bool useLarge=true,bool useHighlight=false,bool centered=false,bool isPartOfBook=false,SKColor? bookPlacerIndicatorColor=null)
     {
         var p = new Phonetics.Phonetics();
         var t = new Tokenizer.Tokenizer();
@@ -19,7 +19,7 @@ public class SymbConvert
             }).Sum();
             return t.Finish<Graphic.CachedGraphic[]>();
         })
-        .Select(line => l.Join(line,useLarge,useHighlight,fontColor,highlightColor)).ToArray(),centered,backgroundColor,backgroundBitmap);
+        .Select(line => l.Join(line,useLarge,useHighlight,fontColor,highlightColor)).ToArray(),centered,backgroundColor,backgroundBitmap,isPartOfBook,bookPlacerIndicatorColor);
     }
     public string ReverseTranslate(SKBitmap ketameri)
     {
