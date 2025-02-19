@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Recognizer\Recognizer.csproj" />
     <ProjectReference Include="..\LineJoinerSplitter\LineJoinerSplitter.csproj" />
     <ProjectReference Include="..\PageJoinerSpliter\PageJoinerSpliter.csproj" />
+    <ProjectReference Include="..\SymbConvert\SymbConvert.csproj" />
   </ItemGroup>
   
   <PropertyGroup>

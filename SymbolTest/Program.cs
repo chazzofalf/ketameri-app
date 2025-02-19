@@ -32,7 +32,44 @@ namespace SymbolTest
                 TestRecognizer();
                 TestLinerJoinerSplitter();
                 TestPageJoinerSplitter();
+                TestCompendium();
             }
+        }
+
+        private void TestCompendium() 
+        {
+            var name = nameof(TestCompendium);
+            if (Directory.Exists(name))
+            {
+                Directory.Delete(name,true);
+            }
+            var background = GetBackground();
+            Directory.CreateDirectory(name);
+            var symb = new SymbConvert.SymbConvert();
+            var text1 = Resources.Resources.Testing_LetThereBeLight;
+            var text2 = Resources.Resources.Testing_PowerInFaith;
+            File.WriteAllText($"{name}/text1.txt",text1);
+            File.WriteAllText($"{name}/text2.txt",text2);
+            var text1pic = symb.Translate(text1);
+            var text2pic = symb.Translate(text2,centered:true,backgroundBitmap:background);
+            File.WriteAllBytes($"{name}/text1pic.png",text1pic.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
+            File.WriteAllBytes($"{name}/text2pic.png",text2pic.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
+            TestCompendiumDecode();
+        }
+
+        private void TestCompendiumDecode()
+        {
+            var name = nameof(TestCompendium);
+            var text1pic = SKBitmap.Decode(File.ReadAllBytes($"{name}/text1pic.png"));
+            var text2pic = SKBitmap.Decode(File.ReadAllBytes($"{name}/text2pic.png"));
+            var symb = new SymbConvert.SymbConvert();
+            var text1out = symb.ReverseTranslate(text1pic);
+            var text2out = symb.ReverseTranslate(text2pic);
+            File.WriteAllText($"{name}/text1out.txt",text1out);
+            File.WriteAllText($"{name}/text2out.txt",text2out);
+            
+            
+            
         }
 
         private void TestPageJoinerSplitter()

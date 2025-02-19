@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Phonetics\Phonetics.csproj" />
+    <ProjectReference Include="..\Tokenizer\Tokenizer.csproj" />
+    <ProjectReference Include="..\LineJoinerSplitter\LineJoinerSplitter.csproj" />
+    <ProjectReference Include="..\PageJoinerSpliter\PageJoinerSpliter.csproj" />
+  </ItemGroup>
+</Project>
