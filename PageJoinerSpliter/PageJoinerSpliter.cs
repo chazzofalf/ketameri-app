@@ -1,7 +1,16 @@
-﻿using SkiaSharp;
+﻿using System.Drawing;
+using System.Runtime.Serialization;
+using SkiaSharp;
 
 namespace PageJoinerSpliter;
 
+enum Orientation
+{
+    None = 0,
+    Rotate = 1,    
+    Flip_Horizontally = Rotate << 1,
+    Flip_Vertically = Flip_Horizontally << 1
+}
 public class PageJoinerSpliter
 {
     public SKBitmap Join(SKBitmap[] lines,bool centered,SKColor? background=null,SKBitmap? backgroundimg=null)
@@ -170,5 +179,179 @@ public class PageJoinerSpliter
         }.Sum();
 
         return outx;         
+    }
+    class SplitState
+    {
+        public int? Top {get;set;}
+        public int? Left {get;set;}
+        public int? Bottom {get;set;}
+        public int? Right {get;set;}
+        public List<SKRect> Rectangles {get;} = new List<SKRect>();
+    }
+    public SKBitmap[] Split(SKBitmap page)
+    {
+        var debordered = new SKBitmap(page.Width-4,page.Height-4);
+        using (var canvas = new SKCanvas(debordered))
+        {
+            canvas.DrawBitmap(page,new SKRect(2,2,page.Width-2,page.Height-2),new SKRect(0,0,page.Width-4,page.Height-4));
+        }        
+        (var top,var bottom,var right,var left) = new [] {
+            Enumerable.Range(0,debordered.Width)
+            .Select(s => debordered.GetPixel(s,0))
+            .Select(s => s.Red)
+            .Select(s => s & 1)            
+            .Sum(),
+            Enumerable.Range(0,debordered.Width)
+            .Select(s => debordered.GetPixel(s,debordered.Height-1))
+            .Select(s => s.Red)
+            .Select(s => s & 1)            
+            .Sum(),
+            Enumerable.Range(0,debordered.Height)
+            .Select(s => debordered.GetPixel(debordered.Width-1,s))
+            .Select(s => s.Red)
+            .Select(s => s & 1)            
+            .Sum(),
+            Enumerable.Range(0,debordered.Height)
+            .Select(s => debordered.GetPixel(0,s))
+            .Select(s => s.Red)
+            .Select(s => s & 1)            
+            .Sum()
+        };
+        var temp = 0;
+        var orientations = Orientation.None;
+        if (top == 2 || top == 3)
+        {
+            temp = top;
+            top = right;
+            right = bottom;
+            bottom = left;
+            left = temp;
+            orientations |= Orientation.Rotate;
+        }
+        if (left == 2)
+        {
+            temp = left;
+            left = right;
+            right = temp;
+            orientations |= Orientation.Flip_Horizontally;
+        }
+        if (top == 1)
+        {
+            temp = top;
+            top = bottom;
+            bottom = temp;
+            orientations |= Orientation.Flip_Vertically;
+        }
+        if ((orientations & Orientation.Rotate) == Orientation.Rotate)
+        {
+            debordered = Rotate(debordered);
+        }
+        if ((orientations & Orientation.Flip_Horizontally) == Orientation.Flip_Horizontally)
+        {
+            debordered = HFlip(debordered);
+        }
+        if ((orientations & Orientation.Flip_Vertically) == Orientation.Flip_Vertically)
+        {
+            debordered = VFlip(debordered);
+        }
+        var stripped = new SKBitmap(debordered.Width-4,debordered.Height-4);
+        using (var canvas = new SKCanvas(stripped))
+        {
+            canvas.DrawBitmap(debordered,new SKRect(2,2,debordered.Width-2,debordered.Height-2),new SKRect(0,0,debordered.Width-4,debordered.Height-4));
+        }        
+        return Enumerable.Range(0,stripped.Height)
+        .SelectMany(r => Enumerable.Range(0,stripped.Width)
+        .Select(c => (Row:r,Column:c)))
+        .Aggregate(new SplitState(),(state,current) => {
+            if ((stripped.GetPixel(current.Column,current.Row).Red & 1) == 0)
+            {
+                if (state.Top == null)
+                {
+                    (state.Top,state.Left) = (current.Row,current.Column);
+                }
+                else if (state.Right == null && current.Row == state.Top)
+                {
+                    state.Right = current.Column;
+                }
+                else if (state.Right == null)
+                {
+                    throw new Exception("Open Ended Rectangle");
+                }
+                else if (state.Bottom == null && current.Column == state.Left)
+                {
+                    state.Bottom = current.Row;
+                }
+                else if (state.Bottom != null && state.Left != null && state.Right == current.Column)
+                {
+                    state.Rectangles.Add(new SKRect((float)state.Left,(float)state.Top,(float)state.Right,(float)state.Bottom));
+                    (state.Left,state.Top,state.Right,state.Bottom) = Wipe();
+                }
+            }
+            return state;
+        },(state) => {
+            return state.Rectangles;
+        })
+        .Select(r => new SKRect(r.Left+1,r.Top+1,r.Right,r.Bottom))
+        .Select(r => {
+            var segment = new SKBitmap((int)r.Width,(int)r.Height);
+            using (var canvas = new SKCanvas(segment))
+            {
+                canvas.DrawBitmap(stripped,new SKRect(r.Left,r.Top,r.Right,r.Bottom),new SKRect(0,0,r.Width,r.Height));                
+            }
+            return segment;
+        }).ToArray();
+
+    }
+    private (int? left,int? top, int? right, int? bottom) Wipe()
+    {
+        return (null,null,null,null);
+    }
+    
+    private static SKBitmap HFlip(SKBitmap bmp)
+    {
+        // Create a bitmap (to return)
+        var flipped = new SKBitmap(bmp.Width, bmp.Height, bmp.Info.ColorType, bmp.Info.AlphaType);
+
+        // Create a canvas to draw into the bitmap
+        using var canvas = new SKCanvas(flipped);
+
+        // Set a transform matrix which moves the bitmap to the right,
+        // and then "scales" it by -1, which just flips the pixels
+        // horizontally
+        canvas.Translate(bmp.Width, 0);
+        canvas.Scale(-1, 1);
+        canvas.DrawBitmap(bmp, 0, 0);
+        return flipped;
+    }
+    private static SKBitmap VFlip(SKBitmap bmp)
+    {
+        // Create a bitmap (to return)
+        var flipped = new SKBitmap(bmp.Width, bmp.Height, bmp.Info.ColorType, bmp.Info.AlphaType);
+
+        // Create a canvas to draw into the bitmap
+        using var canvas = new SKCanvas(flipped);
+
+        // Set a transform matrix which moves the bitmap to the right,
+        // and then "scales" it by -1, which just flips the pixels
+        // horizontally
+        canvas.Translate(0, bmp.Height);
+        canvas.Scale(1, -1);
+        canvas.DrawBitmap(bmp, 0, 0);
+        return flipped;
+    }
+    private static SKBitmap Rotate(SKBitmap bitmap)
+    {
+        
+        var rotated = new SKBitmap(bitmap.Height, bitmap.Width);
+
+        using (var surface = new SKCanvas(rotated))
+        {
+            surface.Translate(rotated.Width, 0);
+            surface.RotateDegrees(90);
+            surface.DrawBitmap(bitmap, 0, 0);
+        }
+
+        return rotated;
+        
     }
 }

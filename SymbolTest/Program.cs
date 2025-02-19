@@ -75,6 +75,34 @@ namespace SymbolTest
             File.WriteAllBytes("PageJoinerSplitterTest/Page1.png",text1Page.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
             File.WriteAllBytes("PageJoinerSplitterTest/Page2.png",text2Page.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
             File.WriteAllBytes("PageJoinerSplitterTest/PageInv.png",textInvPage.Encode(SKEncodedImageFormat.Png,100).AsSpan().ToArray());
+            TestPageJoinerSplitterDecode();
+        }
+
+        private void TestPageJoinerSplitterDecode()
+        {
+            var pageJoiner = new PageJoinerSpliter.PageJoinerSpliter();
+            var lineJoinerSplitter = new LineJoinerSplitter.LineJoinerSplitter();
+            var tokenizer = new Tokenizer.Tokenizer();
+            var x = new [] {
+                "PageJoinerSplitterTest/Page1.png",
+                "PageJoinerSplitterTest/Page2.png",
+                "PageJoinerSplitterTest/PageInv.png"
+            }.Select(s => (Graphic:SKBitmap.Decode(s),Filename:s))
+            .Select(s => (SplitGraphic:pageJoiner.Split(s.Graphic),s.Filename))
+            .Select(s => (Tokens:s.SplitGraphic.Select(ss => lineJoinerSplitter.Split(ss)),s.Filename))
+            .Select(s => (Lines:s.Tokens.Select(ss => {
+                var ops = ss.Select(ch => {
+                    tokenizer.Put(ch);
+                    return 1;
+                }).Sum();
+                return tokenizer.Finish<string>();
+            }),s.Filename))
+            .Select(s => (Text:string.Join("\n",s.Lines),s.Filename))
+            .Select(s => (s.Text,OutputName:$"{s.Filename}.out.txt"))
+            .Select(s => {
+                File.WriteAllText(s.OutputName,s.Text);
+                return 1;
+            }).Sum();
         }
 
         private SKBitmap GetBackground()
