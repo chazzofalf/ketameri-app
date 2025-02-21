@@ -2,23 +2,30 @@
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+	
 
 	public MainPage()
 	{
 		InitializeComponent();
+		if (App.Current is App app)
+		{
+			app.UserAppTheme = AppTheme.Dark;
+		}
+		
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
+    private void ShowTextViewButton_Clicked(object sender, EventArgs e)
+    {
+    }
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
+    private void ShowImageViewButton_Clicked(object sender, EventArgs e)
+    {
+    }
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+    private void ShowResultsViewButton_Clicked(object sender, EventArgs e)
+    {
+    }
+
+	
 }
 
