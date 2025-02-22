@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Symbs.MainPage">
+             x:Class="Symbs.MainPage"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -12,7 +13,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <ScrollView Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
-            <Grid>
+            <Grid ColumnSpacing="8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -41,7 +42,26 @@
         <Grid Grid.Row="0" Grid.Column="0" x:Name="ImageViewTab" IsVisible="False" BackgroundColor="White"/>
         <Grid Grid.Row="0" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False" BackgroundColor="Black"/>
         <Grid Grid.Row="0" Grid.Column="0" x:Name="AboutViewTab" IsVisible="False" BackgroundColor="Yellow"/>
-        <Grid Grid.Row="0" Grid.Column="0" x:Name="AlphabetViewTab" IsVisible="False" BackgroundColor="Turquoise"/>
+        <Grid Grid.Row="0" Grid.Column="0" x:Name="AlphabetViewTab" IsVisible="False" BackgroundColor="Turquoise">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>                
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ScrollView Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <skia:SKCanvasView HeightRequest="54" BackgroundColor="Black"></skia:SKCanvasView>
+                </Grid>
+                
+            </ScrollView>
+        </Grid>
     </Grid>
 
 </ContentPage>
