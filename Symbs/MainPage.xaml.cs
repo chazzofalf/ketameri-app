@@ -1,19 +1,94 @@
-﻿namespace Symbs;
+﻿using System.Threading.Tasks;
+using Android.Net.Nsd;
+using Graphic;
+using Java.Util.Concurrent;
+using SkiaSharp;
+
+namespace Symbs;
 
 public partial class MainPage : ContentPage
 {
-	
+    private SKBitmap? alphabetGraphicImage;
 
-	public MainPage()
+    public MainPage()
 	{
 		InitializeComponent();
 		if (App.Current is App app)
 		{
 			app.UserAppTheme = AppTheme.Dark;
 		}
-		
+		_ = Task.Run(LoadAlphabet)
+        .ContinueWith(AlphabetLoaded);
 	}
 
+    private async Task AlphabetLoaded(Task<SKBitmap> task)
+    {
+        if (task.IsCompletedSuccessfully)
+        {
+            await Dispatcher.DispatchAsync(() => AlphabetLoadedSync(task.Result));
+        }
+        else if (task.IsFaulted)
+        {
+            await Dispatcher.DispatchAsync(() => AlphabetLoadedException(task.Exception));
+        }
+    }
+    private void OnException(string reason,AggregateException aggregateException)
+    {
+        var excflat = aggregateException.Flatten();
+        System.Console.Error.WriteLine(reason);
+        foreach (var exec in excflat.InnerExceptions)
+        {
+            System.Console.Error.WriteLine(exec.GetType().FullName);
+            System.Console.Error.WriteLine(exec.Message);
+            System.Console.Error.WriteLine(exec.StackTrace);
+            System.Console.Error.WriteLine();
+        }
+        System.Console.Error.WriteLine(reason);
+    }
+    private void AlphabetLoadedException(AggregateException aggregateException)
+    {
+        OnException("Exception on Loading Alphabet Graphic",aggregateException);
+    }
+    private void AlphabetLoadedSync(SKBitmap result)
+    {
+        alphabetGraphicImage = result;
+        AlphabetGraphic.HeightRequest = (double)result.Height;
+        
+    }
+    private SKRect FontHeight(SKFont font,string text)
+    {
+        var rect = new SKRect();
+        var flt = font.MeasureText(text,out rect);
+        return rect;
+
+    }
+    private async Task<SKBitmap> LoadAlphabet()
+    {
+        var x = Enumerable.Range(0,Graphic.CachedGraphic.NumberOfGlyphs)
+        .Select(s=> Graphic.CachedGraphic.GetGraphicAtIndex(s))
+        .Select(s => (glyph:s.ColorizeBitmap(),title:s.Letter))
+        .Select(s => (font:new SKFont(),glyph:s.glyph,title:s.title))
+        .Select(s => (font:(Func<SKFont>)(() => { SKFont fnt = s.font; fnt.Size=54 ; return fnt; }),s.glyph,s.title))
+        .Select(s => (font:s.font(),s.glyph,s.title))
+        .Select(s => (font:s.font,rect:FontHeight(s.font,s.title),s.glyph,s.title))
+        .Select(s => (title:(Func<SKBitmap>)(() => {
+            var bmp = new SKBitmap((int)s.rect.Width,(int)s.rect.Height);
+            using (var can = new SKCanvas(bmp))
+            {
+                using (var pt = new SKPaint())
+                {
+                    pt.Color = SKColors.Black;
+                    can.DrawRect(new SKRect(0,0,bmp.Width,bmp.Height),pt);
+                    pt.Color = SKColors.Turquoise;
+                    can.DrawText(s.title,s.rect.Location,s.font,pt);
+                    
+                }
+            }
+            return bmp;
+        }),s.glyph))
+        .Select(s => (title:s.title(),s.glyph))
+        .Select(s => );
+    }
     private void ShowTextViewButton_Clicked(object sender, EventArgs e)
     {
         if (!TextViewTab.IsVisible)
