@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
-using Android.Net.Nsd;
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+
 using Graphic;
-using Java.Util.Concurrent;
+
 using SkiaSharp;
 
 namespace Symbs;
@@ -13,6 +15,7 @@ public partial class MainPage : ContentPage
     public MainPage()
 	{
 		InitializeComponent();
+        
 		if (App.Current is App app)
 		{
 			app.UserAppTheme = AppTheme.Dark;
@@ -64,13 +67,19 @@ public partial class MainPage : ContentPage
     }
     private async Task<SKBitmap> LoadAlphabet()
     {
+        await Task.Yield();
         var x = Enumerable.Range(0,Graphic.CachedGraphic.NumberOfGlyphs)
         .Select(s=> Graphic.CachedGraphic.GetGraphicAtIndex(s))
         .Select(s => (glyph:s.ColorizeBitmap(),title:s.Letter))
         .Select(s => (font:new SKFont(),glyph:s.glyph,title:s.title))
         .Select(s => (font:(Func<SKFont>)(() => { SKFont fnt = s.font; fnt.Size=54 ; return fnt; }),s.glyph,s.title))
         .Select(s => (font:s.font(),s.glyph,s.title))
-        .Select(s => (font:s.font,rect:FontHeight(s.font,s.title),s.glyph,s.title))
+        .Select(s => {
+            return (font:s.font,rect:FontHeight(s.font,s.title),s.glyph,s.title);
+            }
+        )
+        .Select(s => (font:s.font,rect:s.rect.Height == 0 || s.rect.Width == 0 ? new SKRect(0,0,1,1) : s.rect,s.glyph,s.title))
+        //.Select(s => (font:s.font,rect:new SKRect(0,0,s.rect.Width,s.rect.Height),s.glyph,s.title))
         .Select(s => (title:(Func<SKBitmap>)(() => {
             var bmp = new SKBitmap((int)s.rect.Width,(int)s.rect.Height);
             using (var can = new SKCanvas(bmp))
@@ -80,14 +89,71 @@ public partial class MainPage : ContentPage
                     pt.Color = SKColors.Black;
                     can.DrawRect(new SKRect(0,0,bmp.Width,bmp.Height),pt);
                     pt.Color = SKColors.Turquoise;
-                    can.DrawText(s.title,s.rect.Location,s.font,pt);
-                    
+                    can.DrawText(s.title,new SKPoint(-s.rect.Left,-s.rect.Top),s.font,pt);                    
                 }
             }
             return bmp;
         }),s.glyph))
         .Select(s => (title:s.title(),s.glyph))
-        .Select(s => );
+        .Select(s => (title:(Func<SKBitmap>)(() => {
+            var bmp = new SKBitmap(int.Max(s.title.Width,s.title.Height),int.Max(s.title.Width,s.title.Height));
+            using (var can = new SKCanvas(bmp))
+            {
+                can.DrawBitmap(s.title,new SKPoint((bmp.Width-s.title.Width)/2,(bmp.Height-s.title.Height)/2));
+
+            }
+            return bmp;
+        }),s.glyph))
+        .Select(s => (title:s.title(),s.glyph))
+        .Select(s => (title:(Func<SKBitmap>)(() => {
+            var bmp = new SKBitmap(54,54);
+            s.title.ScalePixels(bmp,SKSamplingOptions.Default);
+            return bmp;
+        }),s.glyph))
+        .Select(s => (title:s.title(),s.glyph))
+        .Select(s => (Func<SKBitmap>)(() => {
+            var bmp = new SKBitmap(54,135);
+            using (var can = new SKCanvas(bmp))
+            {
+                can.DrawBitmap(s.glyph,new SKPoint(0,0));
+                can.DrawBitmap(s.title,new SKPoint(0,81));
+            }
+            return bmp;
+        }))
+        .Select(s => s())
+        .Select(s => {
+            var bordered = new SKBitmap(s.Width+12,s.Height+12);
+            using (var can = new SKCanvas(bordered))
+            {
+                using (var p = new SKPaint())
+                {
+                    p.Color = SKColors.Turquoise;
+                    can.DrawRect(new SKRect(0,0,bordered.Width,bordered.Height),p);
+                    p.Color = SKColors.Black;
+                    can.DrawRect(new SKRect(1,1,bordered.Width-1,bordered.Height-1),p);
+                    can.DrawBitmap(s,6,6);
+                }
+            }
+            return bordered;
+        })        
+        .Aggregate((MaxWidth:0,SumHeight:0,Rerun:Enumerable.Empty<SKBitmap>()),(state,current) => 
+            (MaxWidth:int.Max(current.Width,state.MaxWidth),state.SumHeight+current.Height + (state.SumHeight > 0 ? 54 :0),state.Rerun.Append(current)),(fin) =>
+            {
+                var bmp = new SKBitmap(fin.MaxWidth,fin.SumHeight);
+                var y = 0;
+                using (var can = new SKCanvas(bmp))
+                {
+                    foreach (var img in fin.Rerun)
+                    {
+                        can.DrawBitmap(img,new SKPoint(0,y));
+                    y += 189;
+                    }
+                }
+                return bmp;
+            }
+        );
+        return x;
+        
     }
     private void ShowTextViewButton_Clicked(object sender, EventArgs e)
     {
@@ -177,6 +243,29 @@ public partial class MainPage : ContentPage
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkText"];
         }
+    }
+
+    private void AlphabetGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
+    {
+        if (alphabetGraphicImage is SKBitmap input)
+        {
+            var bmp = new SKBitmap(e.Info.Width,e.Info.Height);
+            var scale = (double)bmp.Height / (double)input.Height;
+            var scaled = new SKBitmap((int)(input.Width * scale),bmp.Height);
+            input.ScalePixels(scaled,SKSamplingOptions.Default);
+            using (var can = new SKCanvas(bmp))
+            {
+                can.DrawBitmap(scaled,new SKPoint((int)((bmp.Width-scaled.Width)/2),0));
+            }
+            e.Surface.Canvas.DrawBitmap(bmp,new SKPoint(0,0));
+        }
+        
+        
+    }
+
+    private void AlphabetGraphic_SizeChanged(object sender, EventArgs e)
+    {
+        AlphabetGraphic.InvalidateSurface();
     }
 
 	

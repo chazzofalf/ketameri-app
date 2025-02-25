@@ -57,7 +57,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <skia:SKCanvasView HeightRequest="54" BackgroundColor="Black" x:Name="AlphabetGraphic"></skia:SKCanvasView>
+                    <skia:SKCanvasView HeightRequest="54" BackgroundColor="Black" x:Name="AlphabetGraphic" PaintSurface="AlphabetGraphic_PaintSurface" SizeChanged="AlphabetGraphic_SizeChanged"></skia:SKCanvasView>
                 </Grid>
                 
             </ScrollView>
