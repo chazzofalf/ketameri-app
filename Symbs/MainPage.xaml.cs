@@ -251,6 +251,8 @@ public partial class MainPage : ContentPage
     {
         if (alphabetGraphicImages is SKBitmap[] input)
         {
+            
+            var hscale = e.Info.Height  / AlphabetGraphic.Height;
             var width = e.Info.Width-16;
             var seg_width = input.Select(s => s.Width).Max();
             var seg_height = input.Select(s => s.Height).Max();
@@ -260,9 +262,9 @@ public partial class MainPage : ContentPage
             var desired_height = (int)(seg_height*segs_per_height+27*(segs_per_height-1)) + 16;
             height += 16;
             width += 16;
-            if (desired_height > height)
+            if (desired_height/hscale > height)
             {
-                AlphabetGraphic.HeightRequest = desired_height;
+                AlphabetGraphic.HeightRequest = desired_height/hscale;
             }
             else
             {
