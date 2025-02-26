@@ -3,14 +3,15 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 using Graphic;
-
+using Microsoft.Maui.Layouts;
 using SkiaSharp;
 
 namespace Symbs;
 
 public partial class MainPage : ContentPage
 {
-    private SKBitmap? alphabetGraphicImage;
+    private SKBitmap[]? alphabetGraphicImages;
+    
 
     public MainPage()
 	{
@@ -24,7 +25,7 @@ public partial class MainPage : ContentPage
         .ContinueWith(AlphabetLoaded);
 	}
 
-    private async Task AlphabetLoaded(Task<SKBitmap> task)
+    private async Task AlphabetLoaded(Task<SKBitmap[]> task)
     {
         if (task.IsCompletedSuccessfully)
         {
@@ -52,10 +53,11 @@ public partial class MainPage : ContentPage
     {
         OnException("Exception on Loading Alphabet Graphic",aggregateException);
     }
-    private void AlphabetLoadedSync(SKBitmap result)
+    private void AlphabetLoadedSync(SKBitmap[] result)
     {
-        alphabetGraphicImage = result;
-        AlphabetGraphic.HeightRequest = (double)result.Height;
+        alphabetGraphicImages = result;
+        AlphabetGraphic.InvalidateSurface();
+        //AlphabetGraphic.HeightRequest = (double)result.Height;
         
     }
     private SKRect FontHeight(SKFont font,string text)
@@ -65,7 +67,7 @@ public partial class MainPage : ContentPage
         return rect;
 
     }
-    private async Task<SKBitmap> LoadAlphabet()
+    private async Task<SKBitmap[]> LoadAlphabet()
     {
         await Task.Yield();
         var x = Enumerable.Range(0,Graphic.CachedGraphic.NumberOfGlyphs)
@@ -135,8 +137,8 @@ public partial class MainPage : ContentPage
                 }
             }
             return bordered;
-        })        
-        .Aggregate((MaxWidth:0,SumHeight:0,Rerun:Enumerable.Empty<SKBitmap>()),(state,current) => 
+        });        
+        /*.Aggregate((MaxWidth:0,SumHeight:0,Rerun:Enumerable.Empty<SKBitmap>()),(state,current) => 
             (MaxWidth:int.Max(current.Width,state.MaxWidth),state.SumHeight+current.Height + (state.SumHeight > 0 ? 54 :0),state.Rerun.Append(current)),(fin) =>
             {
                 var bmp = new SKBitmap(fin.MaxWidth,fin.SumHeight);
@@ -151,8 +153,8 @@ public partial class MainPage : ContentPage
                 }
                 return bmp;
             }
-        );
-        return x;
+        );*/
+        return x.ToArray();
         
     }
     private void ShowTextViewButton_Clicked(object sender, EventArgs e)
@@ -247,17 +249,42 @@ public partial class MainPage : ContentPage
 
     private void AlphabetGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {
-        if (alphabetGraphicImage is SKBitmap input)
+        if (alphabetGraphicImages is SKBitmap[] input)
         {
-            var bmp = new SKBitmap(e.Info.Width,e.Info.Height);
-            var scale = (double)bmp.Height / (double)input.Height;
-            var scaled = new SKBitmap((int)(input.Width * scale),bmp.Height);
-            input.ScalePixels(scaled,SKSamplingOptions.Default);
-            using (var can = new SKCanvas(bmp))
+            var width = e.Info.Width-16;
+            var seg_width = input.Select(s => s.Width).Max();
+            var seg_height = input.Select(s => s.Height).Max();
+            var segs_per_width = width /seg_width;
+            var height = e.Info.Height-16;
+            var segs_per_height = Math.Ceiling((double)((double)input.Length/(double)segs_per_width));
+            var desired_height = (int)(seg_height*segs_per_height+27*(segs_per_height-1)) + 16;
+            height += 16;
+            width += 16;
+            if (desired_height > height)
             {
-                can.DrawBitmap(scaled,new SKPoint((int)((bmp.Width-scaled.Width)/2),0));
+                AlphabetGraphic.HeightRequest = desired_height;
             }
-            e.Surface.Canvas.DrawBitmap(bmp,new SKPoint(0,0));
+            else
+            {
+                var bmp = new SKBitmap(width,height);
+                var idx = 0;
+                using (var can = new SKCanvas(bmp))
+                {
+                    foreach (var img in input)
+                    {
+                        var x = idx % segs_per_width;
+                        var y = idx / segs_per_width;
+                        var ix = (x * seg_width) +8;
+                        var iy = (y * (seg_height+27)) +8;
+                        can.DrawBitmap(img,new SKPoint(ix,iy));
+                        idx += 1;
+                    }
+                }
+                e.Surface.Canvas.DrawBitmap(bmp,new SKPoint(0,0));
+            }
+            
+            
+            
         }
         
         
