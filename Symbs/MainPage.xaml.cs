@@ -272,15 +272,21 @@ public partial class MainPage : ContentPage
                 var idx = 0;
                 using (var can = new SKCanvas(bmp))
                 {
-                    foreach (var img in input)
+                    using (var paint = new SKPaint())
                     {
-                        var x = idx % segs_per_width;
-                        var y = idx / segs_per_width;
-                        var ix = (x * seg_width) +8;
-                        var iy = (y * (seg_height+27)) +8;
-                        can.DrawBitmap(img,new SKPoint(ix,iy));
-                        idx += 1;
+                        paint.Color = SKColors.Black;
+                        can.DrawRect(new SKRect(0,0,bmp.Width,bmp.Height),paint);
+                        foreach (var img in input)
+                        {
+                            var x = idx % segs_per_width;
+                            var y = idx / segs_per_width;
+                            var ix = (x * seg_width) +8;
+                            var iy = (y * (seg_height+27)) +8;
+                            can.DrawBitmap(img,new SKPoint(ix,iy));
+                            idx += 1;
+                        }
                     }
+                    
                 }
                 e.Surface.Canvas.DrawBitmap(bmp,new SKPoint(0,0));
             }
