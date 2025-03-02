@@ -70,17 +70,18 @@ public partial class MainPage : ContentPage
     private async Task<SKBitmap[]> LoadAlphabet()
     {
         await Task.Yield();
+        var pho = new Phonetics.Phonetics();
         var x = Enumerable.Range(0,Graphic.CachedGraphic.NumberOfGlyphs)
         .Select(s=> Graphic.CachedGraphic.GetGraphicAtIndex(s))
-        .Select(s => (glyph:s.ColorizeBitmap(),title:s.Letter))
-        .Select(s => (font:new SKFont(),glyph:s.glyph,title:s.title))
-        .Select(s => (font:(Func<SKFont>)(() => { SKFont fnt = s.font; fnt.Size=54 ; return fnt; }),s.glyph,s.title))
-        .Select(s => (font:s.font(),s.glyph,s.title))
+        .Select(s => (glyph:s.ColorizeBitmap(),title:s.Letter,transliteration:$"({pho.ReverseTranslateString(s.Letter)})"))
+        .Select(s => (font:new SKFont(), s.glyph, s.title,s.transliteration))
+        .Select(s => (font:(Func<SKFont>)(() => { SKFont fnt = s.font; fnt.Size=54 ; return fnt; }),s.glyph,s.title,s.transliteration))
+        .Select(s => (font:s.font(),s.glyph,s.title,s.transliteration))
         .Select(s => {
-            return (font:s.font,rect:FontHeight(s.font,s.title),s.glyph,s.title);
+            return (font:s.font,rect:FontHeight(s.font,s.title),transliterationRect:FontHeight(s.font,s.transliteration),s.glyph,s.title,s.transliteration);
             }
         )
-        .Select(s => (font:s.font,rect:s.rect.Height == 0 || s.rect.Width == 0 ? new SKRect(0,0,1,1) : s.rect,s.glyph,s.title))
+        .Select(s => (font:s.font,rect:s.rect.Height == 0 || s.rect.Width == 0 ? new SKRect(0,0,1,1) : s.rect,transliterationRect:s.transliterationRect.Height == 0 || s.transliterationRect.Width == 0 ? new SKRect(0,0,1,1) : s.transliterationRect,s.glyph,s.title,s.transliteration))
         //.Select(s => (font:s.font,rect:new SKRect(0,0,s.rect.Width,s.rect.Height),s.glyph,s.title))
         .Select(s => (title:(Func<SKBitmap>)(() => {
             var bmp = new SKBitmap((int)s.rect.Width,(int)s.rect.Height);
@@ -95,8 +96,22 @@ public partial class MainPage : ContentPage
                 }
             }
             return bmp;
+        }),
+        transliteration:(Func<SKBitmap>)(() => {
+            var bmp = new SKBitmap((int)s.transliterationRect.Width,(int)s.transliterationRect.Height);
+            using (var can = new SKCanvas(bmp))
+            {
+                using (var pt = new SKPaint())
+                {
+                    pt.Color = SKColors.Black;
+                    can.DrawRect(new SKRect(0,0,bmp.Width,bmp.Height),pt);
+                    pt.Color = SKColors.Turquoise;
+                    can.DrawText(s.transliteration,new SKPoint(-s.transliterationRect.Left,-s.transliterationRect.Top),s.font,pt);                    
+                }
+            }
+            return bmp;
         }),s.glyph))
-        .Select(s => (title:s.title(),s.glyph))
+        .Select(s => (title:s.title(),transliteration:s.transliteration(),s.glyph))
         .Select(s => (title:(Func<SKBitmap>)(() => {
             var bmp = new SKBitmap(int.Max(s.title.Width,s.title.Height),int.Max(s.title.Width,s.title.Height));
             using (var can = new SKCanvas(bmp))
@@ -105,20 +120,35 @@ public partial class MainPage : ContentPage
 
             }
             return bmp;
+        }),
+        transliteration:(Func<SKBitmap>)(() => {
+            var bmp = new SKBitmap(int.Max(s.transliteration.Width,s.transliteration.Height),int.Max(s.transliteration.Width,s.transliteration.Height));
+            using (var can = new SKCanvas(bmp))
+            {
+                can.DrawBitmap(s.transliteration,new SKPoint((bmp.Width-s.transliteration.Width)/2,(bmp.Height-s.transliteration.Height)/2));
+
+            }
+            return bmp;
         }),s.glyph))
-        .Select(s => (title:s.title(),s.glyph))
+        .Select(s => (title:s.title(),transliteration:s.transliteration(),s.glyph))
         .Select(s => (title:(Func<SKBitmap>)(() => {
             var bmp = new SKBitmap(54,54);
             s.title.ScalePixels(bmp,SKSamplingOptions.Default);
             return bmp;
+        })
+        ,transliteration:(Func<SKBitmap>)(() => {
+            var bmp = new SKBitmap(27,27);
+            s.transliteration.ScalePixels(bmp,SKSamplingOptions.Default);
+            return bmp;
         }),s.glyph))
-        .Select(s => (title:s.title(),s.glyph))
+        .Select(s => (title:s.title(),transliteration:s.transliteration(),s.glyph))
         .Select(s => (Func<SKBitmap>)(() => {
-            var bmp = new SKBitmap(54,135);
+            var bmp = new SKBitmap(54,175);
             using (var can = new SKCanvas(bmp))
             {
                 can.DrawBitmap(s.glyph,new SKPoint(0,0));
-                can.DrawBitmap(s.title,new SKPoint(0,81));
+                can.DrawBitmap(s.title,new SKPoint(0,54+27));
+                can.DrawBitmap(s.transliteration,new SKPoint(0,54+27+54+13));
             }
             return bmp;
         }))
