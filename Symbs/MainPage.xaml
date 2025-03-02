@@ -42,7 +42,7 @@
         <Grid Grid.Row="0" Grid.Column="0" x:Name="ImageViewTab" IsVisible="False" BackgroundColor="White"/>
         <Grid Grid.Row="0" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False" BackgroundColor="Black"/>
         <Grid Grid.Row="0" Grid.Column="0" x:Name="AboutViewTab" IsVisible="False" BackgroundColor="Yellow"/>
-        <Grid Grid.Row="0" Grid.Column="0" x:Name="AlphabetViewTab" IsVisible="False" BackgroundColor="Turquoise">
+        <Grid Grid.Row="0" Grid.Column="0" x:Name="AlphabetViewTab" IsVisible="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>                
             </Grid.RowDefinitions>

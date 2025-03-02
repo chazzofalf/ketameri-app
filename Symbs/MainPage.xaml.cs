@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Graphic;
 using Microsoft.Maui.Layouts;
+using Microsoft.VisualBasic;
 using SkiaSharp;
 
 namespace Symbs;
@@ -11,6 +12,7 @@ namespace Symbs;
 public partial class MainPage : ContentPage
 {
     private SKBitmap[]? alphabetGraphicImages;
+    private SKBitmap? alphabetGraphic;
     
 
     public MainPage()
@@ -148,7 +150,7 @@ public partial class MainPage : ContentPage
             {
                 can.DrawBitmap(s.glyph,new SKPoint(0,0));
                 can.DrawBitmap(s.title,new SKPoint(0,54+27));
-                can.DrawBitmap(s.transliteration,new SKPoint(0,54+27+54+13));
+                can.DrawBitmap(s.transliteration,new SKPoint(13,54+27+54+13));
             }
             return bmp;
         }))
@@ -276,49 +278,136 @@ public partial class MainPage : ContentPage
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkText"];
         }
     }
-
-    private void AlphabetGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
+    private SKBitmap? AlphabetGridHeaderGraphic(int realHeight,int realWidth,double controlHeight,double controlWidth, out double heightHint)
     {
+        var headerText = "Ketameri Alphabet";        
+        var subHeaderText = "(English equivalents are in parenthesis, the bigger letter values are Ketameri transliterations of those symbols)";
+        var headerFont = new SKFont() { Size=54};
+        var subHeaderFont = new SKFont() { Size=54};
+        var headerRect = FontHeight(headerFont,headerText);
+        var subHeaderRect = FontHeight(subHeaderFont,subHeaderText);
+        var headerGraphic = new SKBitmap((int)headerRect.Width,(int)headerRect.Height);
+        var subHeaderGraphic = new SKBitmap((int)subHeaderRect.Width,(int)subHeaderRect.Height);
+        var black = new SKPaint() { Color=SKColors.Black};
+        var turquoise = new SKPaint() { Color=SKColors.Turquoise};
+        var headerCanvas = new SKCanvas(headerGraphic);
+        var subHeaderCanvas = new SKCanvas(subHeaderGraphic);
+        
+            
+        headerCanvas.DrawRect(new SKRect(0,0,headerGraphic.Width,headerGraphic.Height),black);
+    
+    
+        headerCanvas.DrawText(headerText,new SKPoint(-headerRect.Left,-headerRect.Top),headerFont,turquoise);
+        
+
+    
+        subHeaderCanvas.DrawRect(new SKRect(0,0,subHeaderGraphic.Width,subHeaderGraphic.Height),black);
+    
+    
+        subHeaderCanvas.DrawText(subHeaderText,new SKPoint(-subHeaderRect.Left,-subHeaderRect.Top),headerFont,turquoise);
+                
+        
+        var hscale = realHeight  / controlHeight;
+        var width = realWidth-16;
+        var maxLineWidth = width*2/3;
+        var headerScale = (double)maxLineWidth/(double)headerGraphic.Width;
+        var scaledHeader = new SKBitmap((int)(headerGraphic.Width*headerScale),(int)(headerGraphic.Height*headerScale));
+        headerGraphic.ScalePixels(scaledHeader,SKSamplingOptions.Default);
+        var subHeaderScale = (double)maxLineWidth/(double)subHeaderGraphic.Width;
+        var scaledSubheader = new SKBitmap((int)(subHeaderGraphic.Width*subHeaderScale),(int)(subHeaderGraphic.Height*subHeaderScale));
+        subHeaderGraphic.ScalePixels(scaledSubheader,SKSamplingOptions.Default);
+        heightHint = (8+scaledHeader.Height+27+scaledSubheader.Height+27)/hscale;
+        var output = new SKBitmap(width,(int)heightHint);
+        var outputCanvas = new SKCanvas(output);
+        
+        
+        outputCanvas.DrawRect(new SKRect(0,0,output.Width,output.Height),black);
+            
+        outputCanvas.DrawBitmap(scaledHeader,new SKPoint((realWidth-scaledHeader.Width)/2,8));
+        outputCanvas.DrawBitmap(scaledSubheader,new SKPoint((realWidth-scaledSubheader.Width)/2,8+scaledHeader.Height+27));
+        
+        return output;
+    }
+    private SKBitmap? AlphabetGraphicFull(int realHeight,int realWidth,double controlHeight,double controlWidth,out double heightHint)
+    {
+        var heightHintHeader = (double)0;
+        var heightHintGrid = (double)0;
+        var header = AlphabetGridHeaderGraphic(realHeight,realWidth,controlHeight,controlWidth,out heightHintHeader);
+        var grid = AlphabetGridGraphic(realHeight,realWidth,controlHeight,controlWidth,out heightHintGrid);
+        var outx = new SKBitmap(realWidth,(int)(heightHintHeader+heightHintGrid));
+        using (var black = new SKPaint() { Color = SKColors.Black})
+        {
+            using (var blanker = new SKCanvas(outx))
+            {
+                blanker.DrawRect(new SKRect(0,0,outx.Width,outx.Height),black);
+                blanker.DrawBitmap(header,0,0);
+                blanker.DrawBitmap(grid,0,(int)heightHintHeader);
+            }
+        }
+        heightHint = heightHintHeader+heightHintGrid;
+        return outx;
+    }
+    private SKBitmap? AlphabetGridGraphic(int realHeight,int realWidth,double controlHeight,double controlWidth,out double heightHint)
+    {
+        
         if (alphabetGraphicImages is SKBitmap[] input)
         {
-            
-            var hscale = e.Info.Height  / AlphabetGraphic.Height;
-            var width = e.Info.Width-16;
+            var hscale = realHeight  / controlHeight;
+            var width = realWidth-16;
             var seg_width = input.Select(s => s.Width).Max();
             var seg_height = input.Select(s => s.Height).Max();
             var segs_per_width = width /seg_width;
-            var height = e.Info.Height-16;
+            int height = realHeight-16;
             var segs_per_height = Math.Ceiling((double)((double)input.Length/(double)segs_per_width));
             var desired_height = (int)(seg_height*segs_per_height+27*(segs_per_height-1)) + 16;
             height += 16;
             width += 16;
-            if (desired_height/hscale > height)
+            heightHint = desired_height/hscale;
+            var bmp = new SKBitmap(width,(int)heightHint);
+            var idx = 0;
+            using (var can = new SKCanvas(bmp))
             {
-                AlphabetGraphic.HeightRequest = desired_height/hscale;
+                using (var paint = new SKPaint())
+                {
+                    paint.Color = SKColors.Black;
+                    can.DrawRect(new SKRect(0,0,bmp.Width,bmp.Height),paint);
+                    foreach (var img in input)
+                    {
+                        var x = idx % segs_per_width;
+                        var y = idx / segs_per_width;
+                        var ix = (x * seg_width) +8;
+                        var iy = (y * (seg_height+27)) +8;
+                        can.DrawBitmap(img,new SKPoint(ix,iy));
+                        idx += 1;
+                    }
+                }
+                
+            }
+            return bmp;
+        }
+        else
+        {
+            heightHint = controlHeight;
+            return null;
+        }
+    }
+    
+    private void AlphabetGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
+    {        
+        if (alphabetGraphicImages is SKBitmap[] input)
+        {
+            var newHeight = (double)0;
+            var outtemp = AlphabetGraphicFull(e.Info.Height,e.Info.Width,AlphabetGraphic.Height,AlphabetGraphic.Width,out newHeight);      
+            
+            if (newHeight > e.Info.Height)
+            {
+                AlphabetGraphic.HeightRequest = newHeight;
+                alphabetGraphic = outtemp;
             }
             else
             {
-                var bmp = new SKBitmap(width,height);
-                var idx = 0;
-                using (var can = new SKCanvas(bmp))
-                {
-                    using (var paint = new SKPaint())
-                    {
-                        paint.Color = SKColors.Black;
-                        can.DrawRect(new SKRect(0,0,bmp.Width,bmp.Height),paint);
-                        foreach (var img in input)
-                        {
-                            var x = idx % segs_per_width;
-                            var y = idx / segs_per_width;
-                            var ix = (x * seg_width) +8;
-                            var iy = (y * (seg_height+27)) +8;
-                            can.DrawBitmap(img,new SKPoint(ix,iy));
-                            idx += 1;
-                        }
-                    }
-                    
-                }
-                e.Surface.Canvas.DrawBitmap(bmp,new SKPoint(0,0));
+                
+                e.Surface.Canvas.DrawBitmap(alphabetGraphic,new SKPoint(0,0));
             }
             
             

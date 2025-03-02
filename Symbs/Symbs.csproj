@@ -67,6 +67,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\SymbProcess\SymbProcess.csproj" />
+	  <ProjectReference Include="..\Graphic\Graphic.csproj" />
+	  <ProjectReference Include="..\Phonetics\Phonetics.csproj" />
 	</ItemGroup>
 
 </Project>
