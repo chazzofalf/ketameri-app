@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
-
+using CommunityToolkit.Maui.Storage;
 using Graphic;
 using Microsoft.Maui.Layouts;
 using Microsoft.VisualBasic;
@@ -420,6 +421,20 @@ public partial class MainPage : ContentPage
     private void AlphabetGraphic_SizeChanged(object sender, EventArgs e)
     {
         AlphabetGraphic.InvalidateSurface();
+    }
+    
+    private void SaveAlphabet_Clicked(object sender, EventArgs e)
+    {
+         if (alphabetGraphic != null)
+        {
+            var fileSaverResult =  FileSaver.Default.SaveAsync("alphabet.png", alphabetGraphic.Encode(SKEncodedImageFormat.Png,100).AsStream());
+            
+        }
+           
+            
+        
+        
+         
     }
 
 	

@@ -44,7 +44,8 @@
         <Grid Grid.Row="0" Grid.Column="0" x:Name="AboutViewTab" IsVisible="False" BackgroundColor="Yellow"/>
         <Grid Grid.Row="0" Grid.Column="0" x:Name="AlphabetViewTab" IsVisible="False">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>                
+                <RowDefinition Height="*"/>    
+                <RowDefinition Height="Auto"/>            
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -61,6 +62,7 @@
                 </Grid>
                 
             </ScrollView>
+            <Button Text="Save Graphic" x:Name="SaveAlphabet" Clicked="SaveAlphabet_Clicked" Grid.Column="0" Grid.Row="1"/>
         </Grid>
     </Grid>
 
