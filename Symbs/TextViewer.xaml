@@ -4,7 +4,26 @@
              x:Class="Symbs.TextViewer"
              Title="TextViewer">
              <Grid  x:Name="TextViewTab" Background="Black"> 
-                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ScrollView Grid.Column="0" Grid.Row="0" Orientation="Vertical">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Editor Grid.Row="0" Grid.Column="0" x:Name="TextEditor" TextColor="Turquoise"/>
+                    </Grid>
+                    
+                    
+                </ScrollView>
         
             </Grid>
 </ContentPage>
