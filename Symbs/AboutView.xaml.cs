@@ -12,6 +12,7 @@ public partial class AboutView : ContentView
 		InitializeComponent();
 
 	}
+	
 	private SKBitmap? about_img;
 	private double? hscale;
     private void AboutGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)

@@ -19,11 +19,25 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Editor Grid.Row="0" Grid.Column="0" x:Name="TextEditor" TextColor="Turquoise"/>
+                        <Editor Grid.Row="0" Grid.Column="0" x:Name="TextEditor" TextColor="Turquoise" TextChanged="TextEditor_TextChanged"/>
                     </Grid>
                     
                     
                 </ScrollView>
+                <Grid Grid.Row="1" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="SaveButton" Text="Save" Grid.Row="0" Grid.Column="0"/>
+                    <Button x:Name="LoadButton" Text="Load" Grid.Row="0" Grid.Column="1"/>
+                    <Button x:Name="NewButton" Text="New" Grid.Row="0" Grid.Column="2" Clicked="NewButton_Clicked"/>
+                    
+                </Grid>
         
             </Grid>
 </ContentPage>
