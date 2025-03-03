@@ -72,18 +72,23 @@ public partial class AboutView : ContentView
 					ocan.DrawBitmap(img,new SKPoint((obmp.Width-img.Width)/2,y));
 					y+=img.Height;
 				}
-				return obmp;
+				var width = image_width*9/10;
+				var ratio = (double)width/(double)obmp.Width;
+				var sbmp = new SKBitmap(width,(int)(obmp.Height*ratio));
+				obmp.ScalePixels(sbmp,SKSamplingOptions.Default);
+
+				return sbmp;
 			}));
 			about_img = mx.Result;
 		}
-		if (about_img.Height != AboutGraphic.Height || about_img.Width != AboutGraphic.Width)
+		if (about_img.Height != AboutGraphic.Height )
 		{
 			AboutGraphic.HeightRequest = about_img.Height;
-			AboutGraphic.WidthRequest = about_img.Width;
+			
 		}		
 		else
 		{
-			e.Surface.Canvas.DrawBitmap(about_img,new SKPoint(0,0));
+			e.Surface.Canvas.DrawBitmap(about_img,new SKPoint((e.RawInfo.Width-about_img.Width)/2,0));
 		}
     }
 	private int index = 0;
