@@ -25,15 +25,15 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <!-- <ColumnDefinition Width="Auto"/> -->
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Row="0" HeightRequest="16" Grid.Column="0" Grid.ColumnSpan="3"/>                
                 <Grid Grid.Row="2" HeightRequest="16" Grid.Column="0" Grid.ColumnSpan="3"/>
                 <Button Grid.Row="1" Text="Text" Grid.Column="0" x:Name="ShowTextViewButton" Clicked="ShowTextViewButton_Clicked" />
-                <Button Grid.Row="1" Text="Background" Grid.Column="1" x:Name="ShowImageViewButton" Clicked="ShowImageViewButton_Clicked" BackgroundColor="{StaticResource PrimaryDarkInactive}" TextColor="{StaticResource PrimaryDarkTextInactive}"/>
-                <Button Grid.Row="1" Text="Results" Grid.Column="2" x:Name="ShowResultsViewButton" Clicked="ShowResultsViewButton_Clicked" BackgroundColor="{StaticResource PrimaryDarkInactive}" TextColor="{StaticResource PrimaryDarkTextInactive}"/>
-                <Button Grid.Row="1" Text="About" Grid.Column="3" x:Name="ShowAboutViewButton" Clicked="ShowAboutViewButton_Clicked" BackgroundColor="{StaticResource PrimaryDarkInactive}" TextColor="{StaticResource PrimaryDarkTextInactive}"/>
-                <Button Grid.Row="1" Text="Alphabet" Grid.Column="4" x:Name="ShowAlphabetViewButton" Clicked="ShowAlphabetViewButton_Clicked" BackgroundColor="{StaticResource PrimaryDarkInactive}" TextColor="{StaticResource PrimaryDarkTextInactive}"/>
+                <!-- <Button Grid.Row="1" Text="Background" Grid.Column="1" x:Name="ShowImageViewButton" Clicked="ShowImageViewButton_Clicked" BackgroundColor="{StaticResource PrimaryDarkInactive}" TextColor="{StaticResource PrimaryDarkTextInactive}"/> -->
+                <Button Grid.Row="1" Text="Results" Grid.Column="1" x:Name="ShowResultsViewButton" Clicked="ShowResultsViewButton_Clicked" BackgroundColor="{StaticResource PrimaryDarkInactive}" TextColor="{StaticResource PrimaryDarkTextInactive}"/>
+                <Button Grid.Row="1" Text="About" Grid.Column="2" x:Name="ShowAboutViewButton" Clicked="ShowAboutViewButton_Clicked" BackgroundColor="{StaticResource PrimaryDarkInactive}" TextColor="{StaticResource PrimaryDarkTextInactive}"/>
+                <Button Grid.Row="1" Text="Alphabet" Grid.Column="3" x:Name="ShowAlphabetViewButton" Clicked="ShowAlphabetViewButton_Clicked" BackgroundColor="{StaticResource PrimaryDarkInactive}" TextColor="{StaticResource PrimaryDarkTextInactive}"/>
 
 
             
