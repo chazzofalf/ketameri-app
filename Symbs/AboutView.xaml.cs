@@ -13,6 +13,7 @@ public partial class AboutView : ContentView
 
 	}
 	private SKBitmap? about_img;
+	private double? hscale;
     private void AboutGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {
 		if (about_img == null)
@@ -24,7 +25,7 @@ public partial class AboutView : ContentView
 				AboutGraphic.Width,
 				(double)0
 			);
-			var hscale = image_height/control_height;
+			hscale = image_height/control_height;
 			var x = global::Resources.Resources.About_text.Split("\n")
 			.Select(s => Task.Run(async () => {await Task.Yield(); return s;}))
 			.Select(s => Task.Run(async () => {await Task.Yield(); var ss = await s; var sc = new SymbConvert.SymbConvert(); return (English:ss,Ketameri:sc.Translate(ss)); }))
@@ -130,6 +131,7 @@ public partial class AboutView : ContentView
     }
     private void AboutGraphic_SizeChanged(object sender, EventArgs e)
     {
+		
 		about_img = null;
 		AboutGraphic.InvalidateSurface();
     }

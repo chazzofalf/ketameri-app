@@ -317,7 +317,7 @@ public partial class MainPage : ContentPage
         var subHeaderScale = (double)maxLineWidth/(double)subHeaderGraphic.Width;
         var scaledSubheader = new SKBitmap((int)(subHeaderGraphic.Width*subHeaderScale),(int)(subHeaderGraphic.Height*subHeaderScale));
         subHeaderGraphic.ScalePixels(scaledSubheader,SKSamplingOptions.Default);
-        heightHint = (8+scaledHeader.Height+27+scaledSubheader.Height+27)/hscale;
+        heightHint = (8+scaledHeader.Height+27+scaledSubheader.Height+27);
         var output = new SKBitmap(width,(int)heightHint);
         var outputCanvas = new SKCanvas(output);
         
@@ -363,7 +363,7 @@ public partial class MainPage : ContentPage
             var desired_height = (int)(seg_height*segs_per_height+27*(segs_per_height-1)) + 16;
             height += 16;
             width += 16;
-            heightHint = desired_height/hscale;
+            heightHint = desired_height;
             var bmp = new SKBitmap(width,(int)heightHint);
             var idx = 0;
             using (var can = new SKCanvas(bmp))
@@ -378,7 +378,7 @@ public partial class MainPage : ContentPage
                         var y = idx / segs_per_width;
                         var ix = (x * seg_width) +8;
                         var iy = (y * (seg_height+27)) +8;
-                        can.DrawBitmap(img,new SKPoint(ix,iy));
+                        can.DrawBitmap(img,new SKPoint(ix,(int)iy));
                         idx += 1;
                     }
                 }

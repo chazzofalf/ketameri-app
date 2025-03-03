@@ -10,7 +10,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ScrollView Grid.Row="0" Grid.Column="0" Orientation="Both">
+        <ScrollView Grid.Row="0" Grid.Column="0" Orientation="Vertical">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
@@ -18,7 +18,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <skia:SKCanvasView HeightRequest="54"  BackgroundColor="Black" x:Name="AboutGraphic" PaintSurface="AboutGraphic_PaintSurface" SizeChanged="AboutGraphic_SizeChanged"></skia:SKCanvasView>
+                <skia:SKCanvasView Grid.Column="0" Grid.Row="0" HeightRequest="54"  BackgroundColor="Black" x:Name="AboutGraphic" PaintSurface="AboutGraphic_PaintSurface" SizeChanged="AboutGraphic_SizeChanged"></skia:SKCanvasView>
             </Grid>
         </ScrollView>
         
