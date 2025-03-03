@@ -9,6 +9,7 @@
     <EmbeddedResource Include="Glyphs.json.gz"/>
     <EmbeddedResource Include="Scout.png"/>
     <EmbeddedResource Include="lettherebelight.txt"/>
-    <EmbeddedResource Include="powerinfaith.txt"/>    
+    <EmbeddedResource Include="powerinfaith.txt"/>
+    <EmbeddedResource Include="about.txt"/>    
   </ItemGroup>
 </Project>

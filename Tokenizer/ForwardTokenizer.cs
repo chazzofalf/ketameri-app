@@ -101,13 +101,21 @@ class ForwardTokenizer
             
             var ketameriNumber /* Our ancient Ketameri brothers used a base-14 system with lucky number 13 [They loved magic and superstition way too much!] (3*(3*1))+1)+1) (sometimes style-listically (''' / sky sky sky)). The Favored One's two favorite numbers are ['|][''|] (sky water towards sky sky water) and ['][',,]['|,] (sky water towards sky earth earth towards sky water earth) or 54 and 666. A note on the second favorite number last five bits of the binary representation of that number are the reverse inverse of the first five, this a number of conflict. And man (Homo Sapiens, human beings, male and female) are creatures of absolute conflict (we cannot live with out causing ourselves and each other conflict trouble!) Therefore 666 is the number of man! Solution of numerical riddle the beast of the sea and the beast of the land solved! Now as to what name of what unlucky person that conflicting number represents?...*/
             = Enumerable.Empty<BigInteger>();
-            while (arabicNumber > 0)
+            if (arabicNumber == 0)
             {
-                var modulus = arabicNumber % 14;
-                ketameriNumber = ketameriNumber.Append(modulus); 
-                arabicNumber -= modulus;
-                arabicNumber /= 14;                
+                ketameriNumber = ketameriNumber.Append(0);
             }
+            else
+            {
+                while (arabicNumber > 0)
+                {
+                    var modulus = arabicNumber % 14;
+                    ketameriNumber = ketameriNumber.Append(modulus); 
+                    arabicNumber -= modulus;
+                    arabicNumber /= 14;                
+                }
+            }
+            
             ketameriNumber = ketameriNumber.Reverse();
             var x =ketameriNumber.Select(s => $"{s}")
             .Select(Graphic.CachedGraphic.GetGraphicWithLetter)
