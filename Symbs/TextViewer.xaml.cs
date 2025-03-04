@@ -1,6 +1,6 @@
 namespace Symbs;
 
-public partial class TextViewer : ContentPage
+public partial class TextViewer : ContentView
 {
 	private bool hasChanged = false;
 	public TextViewer()
@@ -17,12 +17,23 @@ public partial class TextViewer : ContentPage
 		hasChanged = false;
 		
 	}
+	private Page? ParentPage 
+	{
+		get {
+			var view = Parent;
+			while (view is not Page && view != null)
+			{
+				view = view.Parent;
+			}
+			return view as Page;
+		}
+	}
     private void NewButton_Clicked(object sender, EventArgs e)
     {
 		
 		if (hasChanged)
 		{
-			DisplayAlert("Unsaved Changes", "Do you want to load a new document and discard current changes?", "Yes", "No")
+			ParentPage?.DisplayAlert("Unsaved Changes", "Do you want to load a new document and discard current changes?", "Yes", "No")
 			.ContinueWith(async (task) => {
 				if (task.IsCompletedSuccessfully)
 				{
