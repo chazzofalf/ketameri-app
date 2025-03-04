@@ -1,4 +1,5 @@
 
+
 using CommunityToolkit.Maui.Converters;
 using Resources;
 using SkiaSharp;
@@ -24,6 +25,17 @@ public partial class AboutView : ContentView
 			await Task.Delay(FPS);
 		}
 	}
+	private Page? ParentPage 
+	{
+		get {
+			var view = Parent;
+			while (view is not Page && view != null)
+			{
+				view = view.Parent;
+			}
+			return view as Page;
+		}
+	}
 	private async Task OffBuffer()
 	{
 		await Task.Yield();
@@ -44,8 +56,15 @@ public partial class AboutView : ContentView
 		#else
 		var hscale = 1;
 		#endif
-		//if (last_size == null || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height)
-		//{
+		if (last_size == null || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height)
+		{
+			await Dispatcher.DispatchAsync(() => {
+				if (ParentPage is MainPage parent)
+				{
+					parent.IsGraphicLoading = true;
+				}
+			});
+		}
 			
 			var x = global::Resources.Resources.About_text.Split("\n")
 			.Select(s => Task.Run(async () => {await Task.Yield(); return s;}))
@@ -105,6 +124,9 @@ public partial class AboutView : ContentView
 			scale = hscale;
 			last_size = new SKSize((float)control_width,(float)(about_img.Height / hscale));
 			await Dispatcher.DispatchAsync(() => AboutGraphic.InvalidateSurface());
+			await Dispatcher.DispatchAsync(() => {
+				
+			});
 		//}
 	}
 	private SKSize? last_size;
@@ -123,6 +145,13 @@ public partial class AboutView : ContentView
 			else
 			{
 				e.Surface.Canvas.DrawBitmap(about_img,new SKPoint((e.RawInfo.Width-about_img.Width)/2,0));
+				Dispatcher.Dispatch(() => {
+					if (ParentPage is MainPage parent)
+					{
+						parent.IsGraphicLoading = false;
+					}
+				});
+				
 			}
 		}
 		

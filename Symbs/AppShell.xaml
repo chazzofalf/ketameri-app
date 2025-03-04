@@ -5,9 +5,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Symbs"
     Shell.FlyoutBehavior="Flyout"
-    Title="Symbs">
+    Title="Symbs"
+    
+    >
 
     <ShellContent
+        
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />

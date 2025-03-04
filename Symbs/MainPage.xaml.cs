@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Storage;
@@ -430,7 +431,7 @@ public partial class MainPage : ContentPage
     {
         AlphabetGraphic.InvalidateSurface();
     }
-    
+    public bool IsGraphicLoading { get => Loader.IsVisible; set => Loader.IsVisible = Loader.IsRunning = value; }
     private void SaveAlphabet_Clicked(object sender, EventArgs e)
     {
          if (alphabetGraphic != null)
