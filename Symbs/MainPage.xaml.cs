@@ -346,12 +346,12 @@ public partial class MainPage : ContentPage
             }
         }
         #if IOS
-            var hscale = realHeight  / controlHeight;
-            #elif ANDROID
-            var hscale = realHeight  / controlHeight;
-            #else
-            var hscale = 1;
-            #endif
+        var hscale = realHeight  / controlHeight;
+        #elif ANDROID
+        var hscale = realHeight  / controlHeight;
+        #else
+        var hscale = 1;
+        #endif
         heightHint = (heightHintHeader+heightHintGrid) / hscale;
         return outx;
     }

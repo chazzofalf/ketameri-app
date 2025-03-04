@@ -17,16 +17,17 @@ public partial class AboutView : ContentView
 	private double? hscale;
     private void AboutGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {
-		if (about_img == null)
-		{
-			(var image_height,var image_width,var control_height,var control_width,var height_hint) = (
+		(var image_height,var image_width,var control_height,var control_width,var height_hint) = (
 				e.RawInfo.Height,
 				e.RawInfo.Width,
 				AboutGraphic.Height,
 				AboutGraphic.Width,
 				(double)0
 			);
-			hscale = image_height/control_height;
+		if (about_img == null)
+		{
+			
+			
 			var x = global::Resources.Resources.About_text.Split("\n")
 			.Select(s => Task.Run(async () => {await Task.Yield(); return s;}))
 			.Select(s => Task.Run(async () => {await Task.Yield(); var ss = await s; var sc = new SymbConvert.SymbConvert(); return (English:ss,Ketameri:sc.Translate(ss)); }))
@@ -83,9 +84,16 @@ public partial class AboutView : ContentView
 			}));
 			about_img = mx.Result;
 		}
-		if (about_img.Height != AboutGraphic.Height )
+		#if IOS
+        var hscale = image_height  / control_height;
+        #elif ANDROID
+        var hscale = image_height  / control_height;
+        #else
+        var hscale = 1;
+        #endif
+		if (about_img.Height / hscale!= AboutGraphic.Height )
 		{
-			AboutGraphic.HeightRequest = about_img.Height;
+			AboutGraphic.HeightRequest = about_img.Height /hscale;
 			
 		}		
 		else
