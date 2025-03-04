@@ -7,6 +7,10 @@ public partial class TextViewer : ContentPage
 	{
 		InitializeComponent();
 	}
+	public string Text {
+		get => TextEditor.Text;
+		set => TextEditor.Text = value;
+	}
 	private void DoNew()
 	{
 		TextEditor.Text = "";
