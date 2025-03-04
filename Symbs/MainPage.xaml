@@ -42,7 +42,7 @@
         <local:TextViewer Grid.Row="0" Grid.Column="0" x:Name="TextViewTab"/>
         
         <Grid Grid.Row="0" Grid.Column="0" x:Name="ImageViewTab" IsVisible="False" BackgroundColor="White"/>
-        <Grid Grid.Row="0" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False" BackgroundColor="Black"/>
+        <local:ImageViewer  Grid.Row="0" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False"/>
         
         <local:AboutView Grid.Row="0" Grid.Column="0" x:Name="AboutViewTab" IsVisible="False"/>
         <Grid Grid.Row="0" Grid.Column="0" x:Name="AlphabetViewTab" IsVisible="False">
