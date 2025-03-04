@@ -19,7 +19,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Editor Grid.Row="0" Grid.Column="0" x:Name="TextEditor" TextColor="Turquoise" TextChanged="TextEditor_TextChanged"/>
+                        <Editor Grid.Row="0" Grid.Column="0" x:Name="TextEditor" TextColor="Turquoise" TextChanged="TextEditor_TextChanged" AutoSize="TextChanges"/>
                     </Grid>
                     
                     
@@ -33,8 +33,8 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="SaveButton" Text="Save" Grid.Row="0" Grid.Column="0"/>
-                    <Button x:Name="LoadButton" Text="Load" Grid.Row="0" Grid.Column="1"/>
+                    <Button x:Name="SaveButton" Text="Save" Grid.Row="0" Grid.Column="0" Clicked="SaveButton_Clicked"/>
+                    <Button x:Name="LoadButton" Text="Load" Grid.Row="0" Grid.Column="1" Clicked="LoadButton_Clicked"/>
                     <Button x:Name="NewButton" Text="New" Grid.Row="0" Grid.Column="2" Clicked="NewButton_Clicked"/>
                     
                 </Grid>
