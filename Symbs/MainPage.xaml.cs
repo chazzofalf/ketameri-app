@@ -308,7 +308,7 @@ public partial class MainPage : ContentPage
         subHeaderCanvas.DrawText(subHeaderText,new SKPoint(-subHeaderRect.Left,-subHeaderRect.Top),headerFont,turquoise);
                 
         
-        var hscale = realHeight  / controlHeight;
+        
         var width = realWidth-16;
         var maxLineWidth = width*2/3;
         var headerScale = (double)maxLineWidth/(double)headerGraphic.Width;
@@ -345,7 +345,14 @@ public partial class MainPage : ContentPage
                 blanker.DrawBitmap(grid,0,(int)heightHintHeader);
             }
         }
-        heightHint = heightHintHeader+heightHintGrid;
+        #if IOS
+            var hscale = realHeight  / controlHeight;
+            #elif ANDROID
+            var hscale = realHeight  / controlHeight;
+            #else
+            var hscale = 1;
+            #endif
+        heightHint = (heightHintHeader+heightHintGrid) / hscale;
         return outx;
     }
     private SKBitmap? AlphabetGridGraphic(int realHeight,int realWidth,double controlHeight,double controlWidth,out double heightHint)
@@ -353,7 +360,8 @@ public partial class MainPage : ContentPage
         
         if (alphabetGraphicImages is SKBitmap[] input)
         {
-            var hscale = realHeight  / controlHeight;
+            
+            
             var width = realWidth-16;
             var seg_width = input.Select(s => s.Width).Max();
             var seg_height = input.Select(s => s.Height).Max();

@@ -24,7 +24,7 @@
 		<ApplicationTitle>Symbs</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.symbs</ApplicationId>
+		<ApplicationId>tkk.chazztheintrepid.Symbs</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
