@@ -37,7 +37,7 @@ public partial class MainPage : ContentPage
         while (true)
         {
             await AlphabetRenderingStep();
-            await Task.Delay(FPS);
+            await Task.Delay(dirty ? FPS : 1000);
         }
     }
     private Page? ParentPage 
