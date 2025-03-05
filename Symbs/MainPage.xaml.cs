@@ -28,7 +28,9 @@ public partial class MainPage : ContentPage
         
 		_ = Task.Run(LoadAlphabet)
         .ContinueWith(AlphabetLoaded);
+    #if WINDOWS
         ExtraWinSpace.IsVisible=true;
+    #endif
 	}
     private const int FPS = 1000/60;
     private async Task AlphabetRenderingLoop()
