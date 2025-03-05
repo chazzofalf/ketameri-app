@@ -1,4 +1,6 @@
-﻿namespace Symbs;
+﻿using System.Diagnostics;
+
+namespace Symbs;
 
 public partial class App : Application
 {
@@ -6,7 +8,24 @@ public partial class App : Application
 	{
 		InitializeComponent();
 	}
-
+	public void PostException(Exception e)
+	{
+		if (e is AggregateException ae)
+		{
+			ae.Flatten().InnerExceptions.Select(ie => (Action)(() => PostException(ie)))
+			.ToList()
+			.ForEach(exc_act => exc_act());
+		}
+		else
+		{
+			Debug.Print($"Exception Thrown: {e.GetType().FullName}");
+			Debug.Print($"    Exception Message: {e.Message}");
+			Debug.Print($"    StackTrace:");
+			Debug.Print(string.Join("\n",e.StackTrace?.Split("\n")
+			.Select(s => $"        {s}") ?? new [] {"Null Exception"}));
+			Debug.Flush();
+		}
+	}
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
 		return new Window(new AppShell());

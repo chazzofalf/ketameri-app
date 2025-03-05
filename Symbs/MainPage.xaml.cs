@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Storage;
+using Foundation;
 using Graphic;
 using Microsoft.Maui.Layouts;
 using Microsoft.VisualBasic;
@@ -25,19 +26,92 @@ public partial class MainPage : ContentPage
 		{
 			app.UserAppTheme = AppTheme.Dark;
 		}
+        
 		_ = Task.Run(LoadAlphabet)
         .ContinueWith(AlphabetLoaded);
 	}
-
+    private const int FPS = 1000/60;
+    private async Task AlphabetRenderingLoop()
+    {
+        await Task.Yield();
+        while (true)
+        {
+            await AlphabetRenderingStep();
+            await Task.Delay(FPS);
+        }
+    }
+    private Page? ParentPage 
+	{
+		get {
+			var view = Parent;
+			while (view is not Page && view != null)
+			{
+				view = view.Parent;
+			}
+			return view as Page;
+		}
+	}
+    private SKSize? last_size;
+	private double? scale;
+	private bool dirty = true;
+    private async Task AlphabetRenderingStep()
+    {
+        await Task.Yield();
+        if (AlphabetGraphic.CanvasSize.IsEmpty || AlphabetGraphic.Height == 0 || AlphabetGraphic.Width == 0) return;
+        var csz = AlphabetGraphic.CanvasSize;
+		var asz = new SKSize((float)AlphabetGraphic.Width,(float)AlphabetGraphic.Height);
+		(var image_height,var image_width,var control_height,var control_width,var height_hint) = (
+				csz.Height,
+				csz.Width,
+				AlphabetGraphic.Height,
+				AlphabetGraphic.Width,
+				(double)0
+			);
+		#if IOS
+		var hscale = image_height  / control_height;
+		#elif ANDROID
+		var hscale = image_height  / control_height;
+		#else
+		var hscale = 1;
+		#endif
+        if (last_size == null || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height || alphabetGraphic == null)
+		{
+            last_size = new SKSize(asz.Width,asz.Height);
+			await Dispatcher.DispatchAsync(() => {
+				if (ParentPage is MainPage parent)
+				{
+					parent.IsGraphicLoading = true;
+				}
+			});
+            var newHeight = (double)0;
+            var outtemp = AlphabetGraphicFull((int)image_height,(int)image_width,control_height,control_width,out newHeight);      
+            
+            
+                
+            alphabetGraphic = outtemp;
+            dirty = true;
+            await AlphabetGraphic.Dispatcher.DispatchAsync(() => AlphabetGraphic.HeightRequest = newHeight);
+            
+            scale = 1;
+		}
+        await AlphabetGraphic.Dispatcher.DispatchAsync(() => AlphabetGraphic.InvalidateSurface());
+    }
+    private App? ParentApplication => Application.Current as App;
+	private void PostException(Exception e)
+	{
+		ParentApplication?.PostException(e);
+	}
     private async Task AlphabetLoaded(Task<SKBitmap[]> task)
     {
         if (task.IsCompletedSuccessfully)
         {
-            await Dispatcher.DispatchAsync(() => AlphabetLoadedSync(task.Result));
+            alphabetGraphicImages = task.Result;
+            await AlphabetRenderingLoop();
         }
         else if (task.IsFaulted)
         {
-            await Dispatcher.DispatchAsync(() => AlphabetLoadedException(task.Exception));
+            
+            await Dispatcher.DispatchAsync(() => PostException(task.Exception));
         }
     }
     private void OnException(string reason,AggregateException aggregateException)
@@ -406,18 +480,10 @@ public partial class MainPage : ContentPage
     {        
         if (alphabetGraphicImages is SKBitmap[] input)
         {
-            var newHeight = (double)0;
-            var outtemp = AlphabetGraphicFull(e.Info.Height,e.Info.Width,AlphabetGraphic.Height,AlphabetGraphic.Width,out newHeight);      
-            
-            if (newHeight > e.Info.Height)
+            if (alphabetGraphic is SKBitmap alphabetGraphic_i && dirty)
             {
-                AlphabetGraphic.HeightRequest = newHeight;
-                alphabetGraphic = outtemp;
-            }
-            else
-            {
-                
-                e.Surface.Canvas.DrawBitmap(alphabetGraphic,new SKPoint(0,0));
+                dirty = false;
+                e.Surface.Canvas.DrawBitmap(alphabetGraphic_i,new SKPoint(0,0));
             }
             
             
@@ -434,8 +500,9 @@ public partial class MainPage : ContentPage
     public bool IsGraphicLoading { get => Loader.IsVisible; set => Loader.IsVisible = Loader.IsRunning = value; }
     private void SaveAlphabet_Clicked(object sender, EventArgs e)
     {
-         if (alphabetGraphic != null)
+         if (alphabetGraphic != null )
         {
+            
             var fileSaverResult =  FileSaver.Default.SaveAsync("alphabet.png", alphabetGraphic.Encode(SKEncodedImageFormat.Png,100).AsStream());
             
         }

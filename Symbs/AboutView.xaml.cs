@@ -1,5 +1,6 @@
 
 
+using System.Runtime.CompilerServices;
 using CommunityToolkit.Maui.Converters;
 using Resources;
 using SkiaSharp;
@@ -8,11 +9,19 @@ namespace Symbs;
 
 public partial class AboutView : ContentView
 {
+	private App? ParentApplication => Application.Current as App;
+	private void PostException(Exception e)
+	{
+		ParentApplication?.PostException(e);
+	}
 	public AboutView()
 	{
 		InitializeComponent();
 		OffBufferLoop()
-		.ContinueWith((task) => {});
+		.ContinueWith((task) => {if (task.IsFaulted)
+		{
+			PostException(task.Exception);
+		}});
 	}
 	private const int FPS = 1000/60;
 	private async Task OffBufferLoop()
@@ -22,7 +31,7 @@ public partial class AboutView : ContentView
 		{
 			await Task.Yield();
 			await OffBuffer();
-			await Task.Delay(FPS);
+			await Task.Delay(dirty ? FPS : 1000);
 		}
 	}
 	private Page? ParentPage 
@@ -36,12 +45,14 @@ public partial class AboutView : ContentView
 			return view as Page;
 		}
 	}
+	bool dirty = true;
 	private async Task OffBuffer()
 	{
 		await Task.Yield();
 		if (AboutGraphic.CanvasSize.IsEmpty || AboutGraphic.Height == 0 || AboutGraphic.Width == 0) return;
 		var csz = AboutGraphic.CanvasSize;
 		var asz = new SKSize((float)AboutGraphic.Width,(float)AboutGraphic.Height);
+		
 		(var image_height,var image_width,var control_height,var control_width,var height_hint) = (
 				csz.Height,
 				csz.Width,
@@ -56,7 +67,7 @@ public partial class AboutView : ContentView
 		#else
 		var hscale = 1;
 		#endif
-		if (last_size == null || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height)
+		if (last_size == null || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height || about_img == null)
 		{
 			await Dispatcher.DispatchAsync(() => {
 				if (ParentPage is MainPage parent)
@@ -64,7 +75,7 @@ public partial class AboutView : ContentView
 					parent.IsGraphicLoading = true;
 				}
 			});
-		}
+		
 			
 			var x = global::Resources.Resources.About_text.Split("\n")
 			.Select(s => Task.Run(async () => {await Task.Yield(); return s;}))
@@ -121,12 +132,24 @@ public partial class AboutView : ContentView
 				return sbmp;
 			}));
 			about_img = await mx;
+			dirty = true;
 			scale = hscale;
 			last_size = new SKSize((float)control_width,(float)(about_img.Height / hscale));
-			await Dispatcher.DispatchAsync(() => AboutGraphic.InvalidateSurface());
+			
 			await Dispatcher.DispatchAsync(() => {
+				if (about_img is SKBitmap about_img_i)
+				{
+					if ((int)(about_img_i.Height / scale.Value)!= (int)(AboutGraphic.Height) )
+					{
+						AboutGraphic.HeightRequest = about_img_i.Height /scale.Value;
+						
+						
+					}
+				}
 				
 			});
+		}
+			await Dispatcher.DispatchAsync(() => AboutGraphic.InvalidateSurface());
 		//}
 	}
 	private SKSize? last_size;
@@ -134,25 +157,18 @@ public partial class AboutView : ContentView
 	private SKBitmap? about_img;
 	private void AboutGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
 	{
-		if (about_img != null && scale != null)
+		if (dirty && about_img != null && scale != null)
 		{
-			if ((int)(about_img.Height / scale.Value)!= (int)(AboutGraphic.Height) )
-			{
-				AboutGraphic.HeightRequest = about_img.Height /scale.Value;
+			dirty = false;
+			e.Surface.Canvas.DrawBitmap(about_img,new SKPoint((e.RawInfo.Width-about_img.Width)/2,0));
+			Dispatcher.Dispatch(() => {
+				if (ParentPage is MainPage parent)
+				{
+					parent.IsGraphicLoading = false;
+				}
+			});
 				
-				
-			}		
-			else
-			{
-				e.Surface.Canvas.DrawBitmap(about_img,new SKPoint((e.RawInfo.Width-about_img.Width)/2,0));
-				Dispatcher.Dispatch(() => {
-					if (ParentPage is MainPage parent)
-					{
-						parent.IsGraphicLoading = false;
-					}
-				});
-				
-			}
+			
 		}
 		
 	}
