@@ -87,7 +87,7 @@ public partial class TextViewer : ContentView
 		TextEditor.Text =  text;
 		hasChanged = false;
 	}
-
+	public bool IsGraphicLoading { get => Loader.IsVisible; set => Loader.IsVisible = Loader.IsRunning = value; }
     private void DoLoad()
     {
 		var fp = FilePicker.Default.PickAsync(PickOptions.Default)

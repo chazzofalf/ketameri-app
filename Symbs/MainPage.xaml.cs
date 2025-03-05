@@ -28,6 +28,7 @@ public partial class MainPage : ContentPage
         
 		_ = Task.Run(LoadAlphabet)
         .ContinueWith(AlphabetLoaded);
+        ExtraWinSpace.IsVisible=true;
 	}
     private const int FPS = 1000/60;
     private async Task AlphabetRenderingLoop()
@@ -77,10 +78,9 @@ public partial class MainPage : ContentPage
 		{
             last_size = new SKSize(asz.Width,asz.Height);
 			await Dispatcher.DispatchAsync(() => {
-				if (ParentPage is MainPage parent)
-				{
-					parent.IsGraphicLoading = true;
-				}
+				
+					IsGraphicLoading = true;
+				
 			});
             var newHeight = (double)0;
             var outtemp = AlphabetGraphicFull((int)image_height,(int)image_width,control_height,control_width,out newHeight);      
@@ -89,11 +89,14 @@ public partial class MainPage : ContentPage
                 
             alphabetGraphic = outtemp;
             dirty = true;
-            await AlphabetGraphic.Dispatcher.DispatchAsync(() => AlphabetGraphic.HeightRequest = newHeight);
+            await AlphabetGraphic.Dispatcher.DispatchAsync(() => {AlphabetGraphic.HeightRequest = newHeight;
+            // Scroller.InvalidateMeasure();
+            // AlphabetViewTab.InvalidateMeasure();
+        });
             
             scale = 1;
 		}
-        await AlphabetGraphic.Dispatcher.DispatchAsync(() => AlphabetGraphic.InvalidateSurface());
+        await AlphabetGraphic.Dispatcher.DispatchAsync(() => AlphabetGraphic?.InvalidateSurface());
     }
     private App? ParentApplication => Application.Current as App;
 	private void PostException(Exception e)
@@ -475,7 +478,7 @@ public partial class MainPage : ContentPage
         }
     }
     
-    private void AlphabetGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
+    private void  AlphabetGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {        
         if (alphabetGraphicImages is SKBitmap[] input)
         {
@@ -483,6 +486,7 @@ public partial class MainPage : ContentPage
             {
                 dirty = false;
                 e.Surface.Canvas.DrawBitmap(alphabetGraphic_i,new SKPoint(0,0));
+                 Dispatcher.Dispatch(() => IsGraphicLoading = false);
             }
             
             
@@ -491,7 +495,7 @@ public partial class MainPage : ContentPage
         
         
     }
-
+    
     private void AlphabetGraphic_SizeChanged(object sender, EventArgs e)
     {
         AlphabetGraphic.InvalidateSurface();

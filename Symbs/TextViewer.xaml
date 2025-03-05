@@ -38,6 +38,6 @@
                     <Button x:Name="NewButton" Text="New" Grid.Row="0" Grid.Column="2" Clicked="NewButton_Clicked"/>
                     
                 </Grid>
-        
+            <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="2" IsRunning="False" IsVisible="False" Color="Turquoise" BackgroundColor="Black"/>
             </Grid>
 </ContentView>

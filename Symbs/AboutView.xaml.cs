@@ -46,6 +46,7 @@ public partial class AboutView : ContentView
 		}
 	}
 	bool dirty = true;
+	public bool IsGraphicLoading { get => Loader.IsVisible; set => Loader.IsVisible = Loader.IsRunning = value; }
 	private async Task OffBuffer()
 	{
 		await Task.Yield();
@@ -70,10 +71,9 @@ public partial class AboutView : ContentView
 		if (last_size == null || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height || about_img == null)
 		{
 			await Dispatcher.DispatchAsync(() => {
-				if (ParentPage is MainPage parent)
-				{
-					parent.IsGraphicLoading = true;
-				}
+				
+					IsGraphicLoading = true;
+				
 			});
 		
 			
@@ -162,10 +162,9 @@ public partial class AboutView : ContentView
 			dirty = false;
 			e.Surface.Canvas.DrawBitmap(about_img,new SKPoint((e.RawInfo.Width-about_img.Width)/2,0));
 			Dispatcher.Dispatch(() => {
-				if (ParentPage is MainPage parent)
-				{
-					parent.IsGraphicLoading = false;
-				}
+				
+					IsGraphicLoading = false;
+				
 			});
 				
 			

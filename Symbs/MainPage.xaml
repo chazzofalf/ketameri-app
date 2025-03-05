@@ -8,14 +8,15 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ScrollView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+        <ScrollView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Grid ColumnSpacing="8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -41,13 +42,13 @@
             
             </Grid>
         </ScrollView>
-        <local:TextViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="TextViewTab"/>
+        <local:TextViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="TextViewTab"/>
         
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ImageViewTab" IsVisible="False" BackgroundColor="White"/>
-        <local:ImageViewer  Grid.Row="0" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False"/>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ImageViewTab" IsVisible="False" BackgroundColor="White"/>
+        <local:ImageViewer  Grid.Row="1" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False"/>
         
-        <local:AboutView Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2" x:Name="AboutViewTab" IsVisible="False"/>
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="AlphabetViewTab" IsVisible="False">
+        <local:AboutView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="2" x:Name="AboutViewTab" IsVisible="False"/>
+        <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="AlphabetViewTab" IsVisible="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>    
                 <RowDefinition Height="Auto"/>            
@@ -55,21 +56,28 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ScrollView Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+            <ContentView Grid.Row="0" Grid.Column="0" VerticalOptions="Fill" >
+                <ScrollView x:Name="Scroller"  Orientation="Vertical">
+                
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <skia:SKCanvasView HeightRequest="54" BackgroundColor="Black" x:Name="AlphabetGraphic" PaintSurface="AlphabetGraphic_PaintSurface" SizeChanged="AlphabetGraphic_SizeChanged"></skia:SKCanvasView>
+                    <skia:SKCanvasView Grid.Row="0" Grid.Column="0" HeightRequest="8"  BackgroundColor="Black" x:Name="AlphabetGraphic" PaintSurface="AlphabetGraphic_PaintSurface" SizeChanged="AlphabetGraphic_SizeChanged"></skia:SKCanvasView>
+                    <Grid x:Name="ExtraWinSpace" IsVisible="Collapse" Grid.Row="1" Grid.Column="0" HeightRequest="54" BackgroundColor="Black"/>
                 </Grid>
                 
             </ScrollView>
+            </ContentView>
+            
             <Button Text="Save Graphic" x:Name="SaveAlphabet" Clicked="SaveAlphabet_Clicked" Grid.Column="0" Grid.Row="1"/>
+            <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" IsRunning="False" IsVisible="False" Color="Turquoise" BackgroundColor="Black"/>
         </Grid>
-        <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" IsRunning="False" IsVisible="True" Color="Turquoise" BackgroundColor="Black"/>
+        
     </Grid>
 
 </ContentPage>

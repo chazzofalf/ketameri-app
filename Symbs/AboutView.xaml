@@ -21,6 +21,6 @@
                 <skia:SKCanvasView Grid.Column="0" Grid.Row="0" HeightRequest="54"  BackgroundColor="Black" x:Name="AboutGraphic" PaintSurface="AboutGraphic_PaintSurface" SizeChanged="AboutGraphic_SizeChanged"></skia:SKCanvasView>
             </Grid>
         </ScrollView>
-        
+        <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" IsRunning="False" IsVisible="False" Color="Turquoise" BackgroundColor="Black"/>
     </Grid>
 </ContentView>
