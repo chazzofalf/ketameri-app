@@ -22,7 +22,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Editor Grid.Row="0" Grid.Column="0" x:Name="TextEditor" TextColor="Turquoise" TextChanged="TextEditor_TextChanged" AutoSize="TextChanges"/>
-                        <Grid x:Name="WinSpacer" Grid.Column="0" Grid.Row="1" BackgroundColor="Black" IsVisible="True" HeightRequest="72"/>
+                        <Grid x:Name="WinSpacer" Grid.Column="0" Grid.Row="1" BackgroundColor="Black" IsVisible="Collapse" HeightRequest="72"/>
                     </Grid>
                     
                     
