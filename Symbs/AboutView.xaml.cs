@@ -22,6 +22,9 @@ public partial class AboutView : ContentView
 		{
 			PostException(task.Exception);
 		}});
+		#if WINDOWS
+			WindowsSpacer.IsVisible = true;
+		#endif
 	}
 	private const int FPS = 1000/60;
 	private async Task OffBufferLoop()

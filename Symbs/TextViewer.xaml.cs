@@ -8,6 +8,9 @@ public partial class TextViewer : ContentView
 	public TextViewer()
 	{
 		InitializeComponent();
+		#if WINDOWS
+			WinSpacer.IsVisible = true;
+		#endif
 	}
 	public string Text {
 		get => TextEditor.Text;

@@ -92,6 +92,7 @@ public partial class MainPage : ContentPage
             alphabetGraphic = outtemp;
             dirty = true;
             await AlphabetGraphic.Dispatcher.DispatchAsync(() => {AlphabetGraphic.HeightRequest = newHeight;
+            this.InvalidateMeasure();
             // Scroller.InvalidateMeasure();
             // AlphabetViewTab.InvalidateMeasure();
         });

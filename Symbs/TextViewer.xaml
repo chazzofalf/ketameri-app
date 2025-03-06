@@ -5,26 +5,29 @@
              >
              <Grid  x:Name="TextViewTab" Background="Black"> 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <ScrollView Grid.Column="0" Grid.Row="0" Orientation="Vertical">
+                <ScrollView x:Name="Scroll" Grid.Column="0" Grid.Row="1" Orientation="Vertical">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Editor Grid.Row="0" Grid.Column="0" x:Name="TextEditor" TextColor="Turquoise" TextChanged="TextEditor_TextChanged" AutoSize="TextChanges"/>
+                        <Grid x:Name="WinSpacer" Grid.Column="0" Grid.Row="1" BackgroundColor="Black" IsVisible="True" HeightRequest="72"/>
                     </Grid>
                     
                     
                 </ScrollView>
-                <Grid Grid.Row="1" Grid.Column="0">
+                <Grid Grid.Row="0" Grid.Column="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
