@@ -38,6 +38,7 @@ public partial class ImageViewer : ContentView
     SKBitmap? bitmap;
     private SKSize? last_size;
     private double? scale;
+    private double? scale_w;
     public bool IsGraphicLoading { get => Loader.IsVisible; set => Loader.IsVisible = Loader.IsRunning = value; }
 
 
@@ -83,7 +84,8 @@ public partial class ImageViewer : ContentView
 			
 			dirty = true;
 			scale = hscale;
-			last_size = new SKSize((float)bitmap.Width / wscale,(float)(bitmap.Height / hscale));
+            scale_w = wscale;
+			last_size = new SKSize((float)bitmap.Width / (float)wscale,(float)(bitmap.Height / hscale));
 			
 			await Dispatcher.DispatchAsync(() => {
 				if (bitmap is SKBitmap about_img_i)
@@ -94,9 +96,9 @@ public partial class ImageViewer : ContentView
 						
 						
 					}
-                    if ((int)(about_img_i.Width / scale.Value)!= (int)(ImageViewerViewer.Width) )
+                    if ((int)(about_img_i.Width / scale_w.Value)!= (int)(ImageViewerViewer.Width) )
                     {
-                        ImageViewerViewer.WidthRequest = about_img_i.Width /scale.Value;
+                        ImageViewerViewer.WidthRequest = about_img_i.Width /scale_w.Value;
                     }
 				}
 				

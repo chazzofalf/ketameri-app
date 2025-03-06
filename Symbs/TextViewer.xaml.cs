@@ -12,6 +12,7 @@ public partial class TextViewer : ContentView
 			WinSpacer.IsVisible = true;
 		#endif
 	}
+	
 	public string Text {
 		get => TextEditor.Text;
 		set => TextEditor.Text = value;
