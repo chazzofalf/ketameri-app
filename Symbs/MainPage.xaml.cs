@@ -285,6 +285,7 @@ public partial class MainPage : ContentPage
             ShowResultsViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
+            
         }
     }
 
@@ -303,6 +304,7 @@ public partial class MainPage : ContentPage
             ShowResultsViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
+            
         }
     }
 
@@ -321,6 +323,7 @@ public partial class MainPage : ContentPage
             ShowResultsViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkText"];
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
+            //ResultsViewTab.ShownHandle();
         }
     }
 
