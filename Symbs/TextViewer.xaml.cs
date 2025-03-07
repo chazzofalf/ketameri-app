@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.Swift;
 using CommunityToolkit.Maui.Storage;
 
 namespace Symbs;
@@ -12,11 +13,19 @@ public partial class TextViewer : ContentView
 			WinSpacer.IsVisible = true;
 		#endif
 	}
-	
-	public string Text {
-		get => TextEditor.Text;
-		set => TextEditor.Text = value;
+	private bool IsWindows
+	{
+		get
+		{
+			#if WINDOWS
+			return true;
+			#else
+			return false;
+			#endif
+		}
 	}
+	
+	
 	private void DoNew()
 	{
 		TextEditor.Text = "";
@@ -62,6 +71,18 @@ public partial class TextViewer : ContentView
     private void TextEditor_TextChanged(object sender, TextChangedEventArgs e)
     {
 		hasChanged = true;
+		if (ParentPage is MainPage mp)
+		{
+			if (IsWindows)
+			{
+				mp.Text = TextEditor.Text.Replace("\r","\n");
+			}
+			else
+			{
+				mp.Text = TextEditor.Text;
+			}
+			
+		}
     }
 
     private void LoadButton_Clicked(object sender, EventArgs e)

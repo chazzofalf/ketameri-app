@@ -16,7 +16,7 @@ public partial class MainPage : ContentPage
     private SKBitmap[]? alphabetGraphicImages;
     private SKBitmap? alphabetGraphic;
     
-    public string Text  { get => TextViewTab.Text; set => TextViewTab.Text = value; }
+    public string Text  { get ; set; } ="";
     public MainPage()
 	{
 		InitializeComponent();

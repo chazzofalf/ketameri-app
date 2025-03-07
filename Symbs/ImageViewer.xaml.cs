@@ -18,22 +18,7 @@ public partial class ImageViewer : ContentView
 	{
 		ParentApplication?.PostException(e);
 	}
-    public void ShownHandle()
-    {
-        if (currentText == null || currentText != Text)
-        {
-            Loader.IsVisible = true;
-            Loader.IsRunning = true;
-            UpdateImageView()
-            .ContinueWith(t => {
-                if (t.IsFaulted)
-                {
-                    PostException(t.Exception);
-                }
-            });
-
-        }
-    }
+    
     bool dirty = false;
     SKBitmap? bitmap;
     private SKSize? last_size;
@@ -45,8 +30,9 @@ public partial class ImageViewer : ContentView
     private async Task OffBuffer()
 	{
 		await Task.Yield();
-		if (ImageViewerViewer.CanvasSize.IsEmpty || ImageViewerViewer.Height == 0 || ImageViewerViewer.Width == 0 || Text == null) return;
-		var csz = ImageViewerViewer.CanvasSize;
+		if (ImageViewerViewer.CanvasSize.IsEmpty || ImageViewerViewer.Height == 0 || ImageViewerViewer.Width == 0 || ParentPage as MainPage == null || (ParentPage as MainPage)!.Text == null) return;
+		var text = (ParentPage as MainPage)!.Text;
+        var csz = ImageViewerViewer.CanvasSize;
 		var asz = new SKSize((float)ImageViewerViewer.Width,(float)ImageViewerViewer.Height);
 		
 		(var image_height,var image_width,var control_height,var control_width,var height_hint) = (
@@ -70,7 +56,7 @@ public partial class ImageViewer : ContentView
 		var hscale = 1;
         var wscale = 1;
 		#endif
-		if (last_size == null || currentText == null || currentText != Text || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height || bitmap == null)
+		if (last_size == null || currentText == null || currentText != text || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height || bitmap == null)
 		{
 			await Dispatcher.DispatchAsync(() => {
 				
@@ -79,8 +65,8 @@ public partial class ImageViewer : ContentView
 			});
             var sc = new SymbConvert.SymbConvert();
 
-			bitmap = sc.Translate(Text);
-            currentText = Text;
+			bitmap = sc.Translate(text);
+            currentText = text;
 			
 			dirty = true;
 			scale = hscale;
@@ -119,28 +105,7 @@ public partial class ImageViewer : ContentView
 			await Task.Delay(dirty ? FPS : 1000);
 		}
 	}
-    private async Task UpdateImageView()
-    {
-        await Task.Yield();
-        currentText = Text;
-        var sc = new SymbConvert.SymbConvert();
-        bitmap = sc.Translate(currentText);
-        
-        await Dispatcher.DispatchAsync(() => {
-            
-            
-            ImageViewerViewer.HeightRequest = bitmap.Height / (ImageViewerViewer.Height/ImageViewerViewer.CanvasSize.Height);
-            ImageViewerViewer.WidthRequest = bitmap.Width / (ImageViewerViewer.Width / ImageViewerViewer.CanvasSize.Width);
-        });
-        
-        await Dispatcher.DispatchAsync(() => {
-            dirty = true;
-            
-        });
-        ImageViewerViewer.InvalidateSurface();
-        
-    }
-    
+       
     private Page? ParentPage 
 	{
 		get {
@@ -158,7 +123,7 @@ public partial class ImageViewer : ContentView
             return ParentPage as MainPage ?? throw new Exception("No Main Page");
         }
     }
-    private string Text { get => MyMainPage.Text; set => MyMainPage.Text = value; }
+    
     private string? currentText = null;
     private void SKCanvasView_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {
