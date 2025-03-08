@@ -69,13 +69,15 @@ public partial class MainPage : ContentPage
 				AlphabetGraphic.Width,
 				(double)0
 			);
-		#if IOS
+#if IOS
 		var hscale = image_height  / control_height;
-		#elif ANDROID
+#elif ANDROID
 		var hscale = image_height  / control_height;
-		#else
-		var hscale = 1;
-		#endif
+#else
+#pragma warning disable CS0219 // Variable is assigned but its value is never used
+        var hscale = 1;
+#pragma warning restore CS0219 // Variable is assigned but its value is never used
+#endif
         if (last_size == null || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height || alphabetGraphic == null)
 		{
             last_size = new SKSize(asz.Width,asz.Height);
@@ -285,6 +287,7 @@ public partial class MainPage : ContentPage
             ShowResultsViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
+            TextViewTab.Hint();
             
         }
     }

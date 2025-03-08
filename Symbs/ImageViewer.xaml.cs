@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Storage;
+using MediaPlayer;
 using SkiaSharp;
 
 namespace Symbs;
@@ -30,7 +32,7 @@ public partial class ImageViewer : ContentView
     private async Task OffBuffer()
 	{
 		await Task.Yield();
-		if (ImageViewerViewer.CanvasSize.IsEmpty || ImageViewerViewer.Height == 0 || ImageViewerViewer.Width == 0 || ParentPage as MainPage == null || (ParentPage as MainPage)!.Text == null) return;
+		if (!IsVisible  || ImageViewerViewer.CanvasSize.IsEmpty || ImageViewerViewer.Height == 0 || ImageViewerViewer.Width == 0 || ParentPage as MainPage == null || (ParentPage as MainPage)!.Text == null) return;
 		var text = (ParentPage as MainPage)!.Text;
         var csz = ImageViewerViewer.CanvasSize;
 		var asz = new SKSize((float)ImageViewerViewer.Width,(float)ImageViewerViewer.Height);
@@ -47,11 +49,7 @@ public partial class ImageViewer : ContentView
         var wscale = image_width / control_width;
 		#elif ANDROID
 		var hscale = image_height  / control_height;
-        OffBufferLoop()
-		.ContinueWith((task) => {if (task.IsFaulted)
-		{
-			PostException(task.Exception);
-		}});
+        var wscale = image_width / control_width;
 		#else
 		var hscale = 1;
         var wscale = 1;
@@ -65,7 +63,7 @@ public partial class ImageViewer : ContentView
 			});
             var sc = new SymbConvert.SymbConvert();
 
-			bitmap = sc.Translate(text);
+			bitmap = sc.Translate(text,centered:true);
             currentText = text;
 			
 			dirty = true;
@@ -127,6 +125,7 @@ public partial class ImageViewer : ContentView
     private string? currentText = null;
     private void SKCanvasView_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {
+        if (!IsVisible) return;
         System.Console.WriteLine($"Draw! {System.DateTime.Now}");
         if (dirty)
         {
@@ -152,12 +151,59 @@ public partial class ImageViewer : ContentView
     private void SKCanvasView_SizeChanged(object sender, EventArgs e)
     {
     }
+	public async Task<SKBitmap?> PickAndShow()
+	{
+		PickOptions pickOptions = new PickOptions();
+		pickOptions.FileTypes = FilePickerFileType.Png;
+		try
+		{
+			var result = await FilePicker.Default.PickAsync();
+			if (result != null)
+			{
+				if (result.FileName.EndsWith("png", StringComparison.OrdinalIgnoreCase))
+				{
+					using var stream = await result.OpenReadAsync();
+					var image = SKBitmap.Decode(stream);
+					return image;
+				}
+			}
 
+			return null;
+		}
+		catch (Exception ex)
+		{
+			ParentApplication?.PostException(ex);
+			// The user canceled or something went wrong
+		}
+
+		return null;
+	}
     private void Load_Clicked(object sender, EventArgs e)
     {
+		PickAndShow()
+		.ContinueWith((task) => {
+			if (task.IsCompletedSuccessfully && task.Result != null)
+			{
+				var sc = new SymbConvert.SymbConvert();
+				var text = sc.ReverseTranslate(task.Result);
+				Dispatcher.Dispatch(() => {
+					if (ParentPage is MainPage mp)
+					{
+						mp.Text = text;
+						bitmap = task.Result;
+					}
+				});
+			}
+		});
     }
 
     private void Save_Clicked(object sender, EventArgs e)
     {
+		 if (bitmap != null )
+        {
+            
+            var fileSaverResult =  FileSaver.Default.SaveAsync("words.png", bitmap.Encode(SKEncodedImageFormat.Png,100).AsStream());
+            
+        }
     }
 }

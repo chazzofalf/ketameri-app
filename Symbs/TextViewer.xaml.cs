@@ -70,6 +70,7 @@ public partial class TextViewer : ContentView
 
     private void TextEditor_TextChanged(object sender, TextChangedEventArgs e)
     {
+		if (off) return;
 		hasChanged = true;
 		if (ParentPage is MainPage mp)
 		{
@@ -107,6 +108,16 @@ public partial class TextViewer : ContentView
 			DoLoad();
 		}
     }
+	bool off = false;
+	public void Hint()
+	{
+		off = true;
+		if (ParentPage is MainPage mp)
+		{
+			TextEditor.Text = mp.Text;
+		}
+		off = false;
+	}
 	private void DoLoadFinish(string text)
 	{
 		TextEditor.Text =  text;
