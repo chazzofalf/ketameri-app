@@ -21,7 +21,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>KetameriTranslator</ApplicationTitle>
+		<ApplicationTitle>Ketameri</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>tkk.chazztheintrepid.Symbs</ApplicationId>
@@ -42,35 +42,35 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
-	  <ApplicationTitle>Ketameri Translator</ApplicationTitle>
+	  <ApplicationTitle>Ketameri</ApplicationTitle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
-	  <ApplicationTitle>Ketameri Translator</ApplicationTitle>
+	  <ApplicationTitle>Ketameri</ApplicationTitle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-maccatalyst|AnyCPU'">
-	  <ApplicationTitle>Ketameri Translator</ApplicationTitle>
+	  <ApplicationTitle>Ketameri</ApplicationTitle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationTitle>Ketameri Translator</ApplicationTitle>
+	  <ApplicationTitle>Ketameri</ApplicationTitle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
-	  <ApplicationTitle>Ketameri Translator</ApplicationTitle>
+	  <ApplicationTitle>Ketameri</ApplicationTitle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
-	  <ApplicationTitle>Ketameri Translator</ApplicationTitle>
+	  <ApplicationTitle>Ketameri</ApplicationTitle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-maccatalyst|AnyCPU'">
-	  <ApplicationTitle>Ketameri Translator</ApplicationTitle>
+	  <ApplicationTitle>Ketameri</ApplicationTitle>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationTitle>Ketameri Translator</ApplicationTitle>
+	  <ApplicationTitle>Ketameri</ApplicationTitle>
 	</PropertyGroup>
 
 	<ItemGroup>
