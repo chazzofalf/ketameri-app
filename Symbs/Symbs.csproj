@@ -21,7 +21,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>Symbs</ApplicationTitle>
+		<ApplicationTitle>Ketameri Translator</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>tkk.chazztheintrepid.Symbs</ApplicationId>
