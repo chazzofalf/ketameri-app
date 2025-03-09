@@ -1,5 +1,4 @@
 using CommunityToolkit.Maui.Storage;
-using MediaPlayer;
 using SkiaSharp;
 
 namespace Symbs;
