@@ -10,6 +10,6 @@
     <EmbeddedResource Include="Scout.png"/>
     <EmbeddedResource Include="lettherebelight.txt"/>
     <EmbeddedResource Include="powerinfaith.txt"/>
-    <EmbeddedResource Include="about.txt"/>    
+    <EmbeddedResource Include="TextResources/about.txt"/>    
   </ItemGroup>
 </Project>
