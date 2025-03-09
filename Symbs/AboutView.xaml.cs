@@ -78,12 +78,12 @@ public partial class AboutView : ContentView
 					IsGraphicLoading = true;
 				
 			});
-		
+			var ns = global::Resources.Resources.Names;
 			
 			var x = global::Resources.Resources.About_text.Split("\n")
 			.Select(s => Task.Run(async () => {await Task.Yield(); return s;}))
 			.Select(s => Task.Run(async () => {await Task.Yield(); var ss = await s; var sc = new SymbConvert.SymbConvert(); return (English:ss,Ketameri:sc.Translate(ss)); }))
-			.Select(s => Task.Run(async () => {await Task.Yield(); var ss = await s; return (EnglishFont:new SKFont() {Size=54},EnglishBackground:SKColors.Black,EnglishForeground:SKColors.Turquoise,ss.English,ss.Ketameri);}))
+			.Select(s => Task.Run(async () => {await Task.Yield(); var ss = await s; return (EnglishFont:new SKFont() {Size=54,Embolden=true},EnglishBackground:SKColors.Black,EnglishForeground:SKColors.Turquoise,ss.English,ss.Ketameri);}))
 			.Select(s => Task.Run(async () => {await Task.Yield(); var ss = await s; return (ss.EnglishFont,ss.EnglishBackground,ss.EnglishForeground,EnglishRect:FontHeight(ss.EnglishFont,ss.English),ss.English,ss.Ketameri);}))
 			.Select(s => Task.Run(async () => {await Task.Yield(); var ss = await s; 
 			var engImg = new SKBitmap((int)ss.EnglishRect.Width,(int)ss.EnglishRect.Height);
@@ -117,7 +117,7 @@ public partial class AboutView : ContentView
 			// }));
 			var mx = Task.Run(async () => (await Task.WhenAll(x))
 			.Aggregate((max_width:0,sum_height:0,all:Enumerable.Empty<SKBitmap>()),(s,c) => {
-				return (max_width:int.Max(s.max_width,c.Width),sum_height:s.sum_height+c.Height,all:s.all.Append(c));
+				return (max_width:int.Max(s.max_width,c.Width),sum_height:s.sum_height+c.Height+27,all:s.all.Append(c));
 			},(s) => {
 				var obmp = new SKBitmap(s.max_width,s.sum_height);
 				var ocan = new SKCanvas(obmp);
@@ -125,7 +125,7 @@ public partial class AboutView : ContentView
 				foreach(var img in s.all)
 				{
 					ocan.DrawBitmap(img,new SKPoint((obmp.Width-img.Width)/2,y));
-					y+=img.Height;
+					y+=img.Height+27;
 				}
 				var width = image_width*9/10;
 				var ratio = (double)width/(double)obmp.Width;
