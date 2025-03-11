@@ -4,7 +4,8 @@
              x:Class="Symbs.MainPage"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              xmlns:local="clr-namespace:Symbs"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="Black">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -16,6 +17,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
+        <local:BackgroundView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="-1"/>
         <ScrollView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Grid ColumnSpacing="8">
                 <Grid.RowDefinitions>
@@ -67,15 +69,15 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <skia:SKCanvasView Grid.Row="0" Grid.Column="0" HeightRequest="8"  BackgroundColor="Black" x:Name="AlphabetGraphic" PaintSurface="AlphabetGraphic_PaintSurface" SizeChanged="AlphabetGraphic_SizeChanged"></skia:SKCanvasView>
-                    <Grid x:Name="ExtraWinSpace" IsVisible="Collapse" Grid.Row="1" Grid.Column="0" HeightRequest="54" BackgroundColor="Black"/>
+                    <skia:SKCanvasView Grid.Row="0" Grid.Column="0" HeightRequest="8"  x:Name="AlphabetGraphic" PaintSurface="AlphabetGraphic_PaintSurface" SizeChanged="AlphabetGraphic_SizeChanged"></skia:SKCanvasView>
+                    <Grid x:Name="ExtraWinSpace" IsVisible="Collapse" Grid.Row="1" Grid.Column="0" HeightRequest="54" />
                 </Grid>
                 
             </ScrollView>
             </ContentView>
             
             <Button Text="Save Graphic" x:Name="SaveAlphabet" Clicked="SaveAlphabet_Clicked" Grid.Column="0" Grid.Row="1"/>
-            <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" IsRunning="False" IsVisible="False" Color="Turquoise" BackgroundColor="Black"/>
+            <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" IsRunning="False" IsVisible="False" Color="Turquoise" />
         </Grid>
         
     </Grid>

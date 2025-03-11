@@ -71,7 +71,7 @@ public partial class AboutView : ContentView
 		#else
 		var hscale = 1;
 		#endif
-		if (last_size == null || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height || about_img == null)
+		if (last_size == null || (int)asz.Width != (int)last_size.Value.Width || (int)asz.Height != (int)last_size.Value.Height || about_img == null)
 		{
 			await Dispatcher.DispatchAsync(() => {
 				
@@ -134,7 +134,32 @@ public partial class AboutView : ContentView
 
 				return sbmp;
 			}));
-			about_img = await mx;
+			
+			//about_img = await mx;
+			var mxt = Task.Run(async () => {
+				await Task.Yield();
+				var img = await mx;
+				var steps = Enumerable.Range(0,img.Height)
+				.Select(r => Enumerable.Range(0,img.Width)
+				.Select(c => {
+					 var pxl = img.GetPixel(c,r);
+					 var turq = SKColors.Turquoise;
+					 if (pxl.Red == turq.Red
+					 && pxl.Green == turq.Green
+					 && pxl.Blue == turq.Blue
+					 && pxl.Alpha == turq.Alpha)
+					 {
+						img.SetPixel(c,r,turq);
+					 }
+					 else
+					 {
+						img.SetPixel(c,r,SKColors.Transparent);
+					 }
+					return 1;
+				}).Sum()).Sum();
+				return img;
+			});
+			about_img = await mxt;
 			dirty = true;
 			scale = hscale;
 			last_size = new SKSize((float)control_width,(float)(about_img.Height / hscale));

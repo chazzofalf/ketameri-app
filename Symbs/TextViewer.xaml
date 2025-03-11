@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Symbs.TextViewer"
              >
-             <Grid  x:Name="TextViewTab" Background="Black"> 
+             <Grid  x:Name="TextViewTab" > 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -22,7 +22,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Editor Grid.Row="0" Grid.Column="0" x:Name="TextEditor" TextColor="Turquoise" TextChanged="TextEditor_TextChanged" AutoSize="TextChanges"/>
-                        <Grid x:Name="WinSpacer" Grid.Column="0" Grid.Row="1" BackgroundColor="Black" IsVisible="Collapse" HeightRequest="72"/>
+                        <Grid x:Name="WinSpacer" Grid.Column="0" Grid.Row="1"  IsVisible="Collapse" HeightRequest="72"/>
                     </Grid>
                     
                     
@@ -41,6 +41,6 @@
                     <Button x:Name="NewButton" Text="New" Grid.Row="0" Grid.Column="2" Clicked="NewButton_Clicked"/>
                     
                 </Grid>
-            <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="2" IsRunning="False" IsVisible="False" Color="Turquoise" BackgroundColor="Black"/>
+            <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="2" IsRunning="False" IsVisible="False" Color="Turquoise" />
             </Grid>
 </ContentView>

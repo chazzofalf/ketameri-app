@@ -34,7 +34,7 @@
                 <Button Grid.Row="0" Grid.Column="0" x:Name="Load" Text="Load" Clicked="Load_Clicked"/>
                 <Button Grid.Row="0" Grid.Column="1" x:Name="Save" Text="Save" Clicked="Save_Clicked"/>
             </Grid>
-        <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="2" IsRunning="False" IsVisible="False" Color="Turquoise" BackgroundColor="Black"/>
+        <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="2" IsRunning="False" IsVisible="False" Color="Turquoise" />
         </Grid>        
     
 </ContentView>
