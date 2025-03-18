@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using SkiaSharp;
 
 namespace Symbs;
 
@@ -8,6 +9,12 @@ public partial class App : Application
 	{
 		InitializeComponent();
 	}
+	private Util? _util;
+	Util Util => _util = _util ??  new Util();
+	public SKBitmap MakeTransparency(SKBitmap bitmap)
+	{
+		return Util.MakeTransparency(bitmap);
+	} 
 	public void PostException(Exception e)
 	{
 		if (e is AggregateException ae)

@@ -141,7 +141,7 @@ public partial class MainPage : ContentPage
     private void AlphabetLoadedSync(SKBitmap[] result)
     {
         alphabetGraphicImages = result;
-        AlphabetGraphic.InvalidateSurface();
+        AlphabetGraphic?.InvalidateSurface();
         //AlphabetGraphic.HeightRequest = (double)result.Height;
         
     }
@@ -491,10 +491,33 @@ public partial class MainPage : ContentPage
     {        
         if (alphabetGraphicImages is SKBitmap[] input)
         {
-            if (alphabetGraphic is SKBitmap alphabetGraphic_i && dirty)
+            if (alphabetGraphic is SKBitmap alphabetGraphic_i && dirty && Microsoft.Maui.Controls.Application.Current is App app)
             {
+                
+                var renderCopy = app.MakeTransparency(alphabetGraphic_i);
+                var pixels = renderCopy.GetPixels();
+                
+                // var filter = SKColorFilter.CreateBlendMode(SKColors.Black,SKBlendMode.Screen);
+                // var paint = new SKPaint();
+                // paint.ColorFilter = filter;
+                // var renderer = new SKCanvas(renderCopy);
+                // renderer.DrawBitmap(alphabetGraphic_i,new SKPoint(0,0),paint);
                 dirty = false;
-                e.Surface.Canvas.DrawBitmap(alphabetGraphic_i,new SKPoint(0,0));
+                // Enumerable.Range(0,alphabetGraphic_i.Height)
+                // .Select(r => Enumerable.Range(0,alphabetGraphic_i.Width)
+                // .Select(c => {
+                //     var pxl = renderCopy.GetPixel(c,r);
+                //     var turq = SKColors.Turquoise;
+                //     if (pxl.Red != turq.Red
+                //     || pxl.Green != turq.Green
+                //     || pxl.Blue != turq.Blue
+                //     || pxl.Alpha != turq.Alpha)
+                //     {
+                //         renderCopy.SetPixel(c,r,SKColors.Transparent);
+                //     }
+                //     return 1;
+                // }).Sum()).Sum();
+                e.Surface.Canvas.DrawBitmap(renderCopy,new SKPoint(0,0));
                  Dispatcher.Dispatch(() => IsGraphicLoading = false);
             }
             
@@ -507,7 +530,7 @@ public partial class MainPage : ContentPage
     
     private void AlphabetGraphic_SizeChanged(object sender, EventArgs e)
     {
-        AlphabetGraphic.InvalidateSurface();
+        AlphabetGraphic?.InvalidateSurface();
     }
     public bool IsGraphicLoading { get => Loader.IsVisible; set => Loader.IsVisible = Loader.IsRunning = value; }
     private void SaveAlphabet_Clicked(object sender, EventArgs e)

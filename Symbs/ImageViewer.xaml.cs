@@ -53,7 +53,7 @@ public partial class ImageViewer : ContentView
 		var hscale = 1;
         var wscale = 1;
 		#endif
-		if (last_size == null || currentText == null || currentText != text || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height || bitmap == null)
+		if ((last_size == null || currentText == null || currentText != text || asz.Width != last_size.Value.Width || asz.Height != last_size.Value.Height || bitmap == null) && Microsoft.Maui.Controls.Application.Current is App app)
 		{
 			await Dispatcher.DispatchAsync(() => {
 				
@@ -63,6 +63,12 @@ public partial class ImageViewer : ContentView
             var sc = new SymbConvert.SymbConvert();
 
 			bitmap = sc.Translate(text,centered:true);
+			
+			var renderCopy = app.MakeTransparency(bitmap);
+			var pixels = renderCopy.GetPixels();                
+			rc = renderCopy;
+
+
             currentText = text;
 			
 			dirty = true;
@@ -122,6 +128,7 @@ public partial class ImageViewer : ContentView
     }
     
     private string? currentText = null;
+	private SKBitmap? rc = null;
     private void SKCanvasView_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {
         if (!IsVisible) return;
@@ -131,7 +138,9 @@ public partial class ImageViewer : ContentView
             dirty = false;
             if (bitmap is SKBitmap bitmap1)
             {
-                e.Surface.Canvas.DrawBitmap(bitmap1,new SKPoint(0,0));
+				e.Surface.Canvas.Clear();
+                e.Surface.Canvas.DrawBitmap(rc,new SKPoint(0,0));
+				
                 Loader.IsVisible = Loader.IsRunning = false;
             }
            
@@ -140,7 +149,8 @@ public partial class ImageViewer : ContentView
         {
             if (bitmap is SKBitmap bitmap1)
             {
-                e.Surface.Canvas.DrawBitmap(bitmap1,new SKPoint(0,0));
+                e.Surface.Canvas.Clear();
+                e.Surface.Canvas.DrawBitmap(rc,new SKPoint(0,0));
             }
             
             

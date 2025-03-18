@@ -1,9 +1,11 @@
 
 
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using CommunityToolkit.Maui.Converters;
 using Resources;
 using SkiaSharp;
+using SkiaSharp.Views.Maui;
 
 namespace Symbs;
 
@@ -136,30 +138,8 @@ public partial class AboutView : ContentView
 			}));
 			
 			//about_img = await mx;
-			var mxt = Task.Run(async () => {
-				await Task.Yield();
-				var img = await mx;
-				var steps = Enumerable.Range(0,img.Height)
-				.Select(r => Enumerable.Range(0,img.Width)
-				.Select(c => {
-					 var pxl = img.GetPixel(c,r);
-					 var turq = SKColors.Turquoise;
-					 if (pxl.Red == turq.Red
-					 && pxl.Green == turq.Green
-					 && pxl.Blue == turq.Blue
-					 && pxl.Alpha == turq.Alpha)
-					 {
-						img.SetPixel(c,r,turq);
-					 }
-					 else
-					 {
-						img.SetPixel(c,r,SKColors.Transparent);
-					 }
-					return 1;
-				}).Sum()).Sum();
-				return img;
-			});
-			about_img = await mxt;
+			
+			about_img = await mx;
 			dirty = true;
 			scale = hscale;
 			last_size = new SKSize((float)control_width,(float)(about_img.Height / hscale));
@@ -183,12 +163,57 @@ public partial class AboutView : ContentView
 	private SKSize? last_size;
 	private double? scale;
 	private SKBitmap? about_img;
-	private void AboutGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
-	{
-		if (dirty && about_img != null && scale != null)
+	private SKBitmap? _turquoisePixel;
+	private SKBitmap TurquoisePixel => _turquoisePixel = _turquoisePixel ?? GenerateTurquoisePixel();
+	private byte[]? _turquoisePixelBytes;
+	private byte[] TurquoisePixelBytes => _turquoisePixelBytes = _turquoisePixelBytes ?? GenerateTurquoisePixelBytes();
+
+    private byte[] GenerateTurquoisePixelBytes()
+    {
+		byte[] pBytes = new byte[TurquoisePixel.BytesPerPixel];
+		
+		unsafe
 		{
+			byte *pixelData = (byte *)TurquoisePixel.GetPixels();
+			for (var i=0;i<pBytes.Length;i++)
+			{
+				pBytes[i] = pixelData[i];
+			}
+		} 
+		return pBytes;
+    }
+	private unsafe bool PixelMatch(byte *ptr,int offset,byte[] pixelTest)
+	{
+		return ptr[offset+0] == pixelTest[0] &&
+		ptr[offset+1] == pixelTest[1] &&
+		ptr[offset+2] == pixelTest[2] &&
+		ptr[offset+3] == pixelTest[3];
+	}
+	private unsafe bool IsTurquoise(byte *ptr,int offset)
+	{
+		return PixelMatch(ptr,offset,TurquoisePixelBytes);
+	}
+
+    private SKBitmap GenerateTurquoisePixel()
+    {
+        var pixel = new SKBitmap(1,1);
+		var turquoise = SKColors.Turquoise;
+		var turquoisePaint = new SKPaint() { Color = turquoise};
+		var canvas = new SKCanvas(pixel);
+		canvas.DrawRect(new SKRect(0,0,pixel.Width,pixel.Height),turquoisePaint);
+		return pixel;
+    }
+
+    private void AboutGraphic_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
+	{
+		if (dirty && about_img != null && scale != null && Microsoft.Maui.Controls.Application.Current is App app)
+		{
+			
+			//var renderCopy = about_img.Copy();
+			var renderCopy = app.MakeTransparency(about_img);
+			
 			dirty = false;
-			e.Surface.Canvas.DrawBitmap(about_img,new SKPoint((e.RawInfo.Width-about_img.Width)/2,0));
+			e.Surface.Canvas.DrawBitmap(renderCopy,new SKPoint((e.RawInfo.Width-about_img.Width)/2,0));
 			Dispatcher.Dispatch(() => {
 				
 					IsGraphicLoading = false;

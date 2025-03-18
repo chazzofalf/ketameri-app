@@ -17,8 +17,8 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <local:BackgroundView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="-1"/>
-        <ScrollView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+        <local:BackgroundView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="0"/>
+        <ScrollView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" ZIndex="1">
             <Grid ColumnSpacing="8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -44,21 +44,21 @@
             
             </Grid>
         </ScrollView>
-        <local:TextViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="TextViewTab"/>
+        <local:TextViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="TextViewTab" ZIndex="1"/>
         
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ImageViewTab" IsVisible="False" BackgroundColor="White"/>
-        <local:ImageViewer  Grid.Row="1" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False"/>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ImageViewTab" IsVisible="False" BackgroundColor="White" ZIndex="1"/>
+        <local:ImageViewer  Grid.Row="1" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False" ZIndex="1"/>
         
-        <local:AboutView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="2" x:Name="AboutViewTab" IsVisible="False"/>
-        <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="AlphabetViewTab" IsVisible="False">
+        <local:AboutView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="2" x:Name="AboutViewTab" IsVisible="False" ZIndex="1"/>
+        <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="AlphabetViewTab" IsVisible="False" ZIndex="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>    
-                <RowDefinition Height="Auto"/>            
+                <RowDefinition Height="Auto"/>    
+                <RowDefinition Height="*"/>            
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ContentView Grid.Row="0" Grid.Column="0" VerticalOptions="Fill" >
+            <ContentView Grid.Row="1" Grid.Column="0" VerticalOptions="Fill" >
                 <ScrollView x:Name="Scroller"  Orientation="Vertical">
                 
                 <Grid>
@@ -76,7 +76,7 @@
             </ScrollView>
             </ContentView>
             
-            <Button Text="Save Graphic" x:Name="SaveAlphabet" Clicked="SaveAlphabet_Clicked" Grid.Column="0" Grid.Row="1"/>
+            <Button Text="Save Graphic" x:Name="SaveAlphabet" Clicked="SaveAlphabet_Clicked" Grid.Column="0" Grid.Row="0"/>
             <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" IsRunning="False" IsVisible="False" Color="Turquoise" />
         </Grid>
         

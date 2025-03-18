@@ -9,10 +9,10 @@
                 <ColumnDefinition Width="*"/>                
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ScrollView Grid.Row="0" Grid.Column="0" Orientation="Both">
+            <ScrollView Grid.Row="1" Grid.Column="0" Orientation="Both">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -20,10 +20,10 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <skia:SKCanvasView Grid.Row="0" Grid.Column="0" HeightRequest="54" WidthRequest="54" PaintSurface="SKCanvasView_PaintSurface" SizeChanged="SKCanvasView_SizeChanged" x:Name="ImageViewerViewer"/>
+                    <skia:SKCanvasView Grid.Row="0" Grid.Column="0" HeightRequest="54" WidthRequest="54" PaintSurface="SKCanvasView_PaintSurface" SizeChanged="SKCanvasView_SizeChanged" x:Name="ImageViewerViewer" BackgroundColor="Black"/>
                 </Grid>
             </ScrollView>
-            <Grid Grid.Row="1" Grid.Column="0">
+            <Grid Grid.Row="0" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
