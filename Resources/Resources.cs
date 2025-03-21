@@ -29,4 +29,5 @@ public class Resources
     public static string Testing_PowerInFaith => GetString("powerinfaith.txt"); // Another Favorite Verse. 
     public static string Testing_PowerInFaithNoLines => Testing_PowerInFaith.Replace("\n"," ");
     public static string About_text => GetString("TextResources.about.txt"); // About Page Message
+    public static string[] Names => typeof(Resources).Assembly.GetManifestResourceNames();
 }
