@@ -5,7 +5,7 @@
              xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              xmlns:local="clr-namespace:Symbs"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="Black">
+             BackgroundColor="Black" Padding="11">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,8 +17,10 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <local:BackgroundView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="0"/>
-        <ScrollView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" ZIndex="1">
+        <local:HollowedView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="0"/>
+        <local:BackgroundView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="1"/>
+        <local:BorderView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="2"/>
+        <ScrollView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" ZIndex="3">
             <Grid ColumnSpacing="8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -44,13 +46,13 @@
             
             </Grid>
         </ScrollView>
-        <local:TextViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="TextViewTab" ZIndex="1"/>
+        <local:TextViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="TextViewTab" ZIndex="3"/>
         
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ImageViewTab" IsVisible="False" BackgroundColor="White" ZIndex="1"/>
-        <local:ImageViewer  Grid.Row="1" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False" ZIndex="1"/>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ImageViewTab" IsVisible="False" BackgroundColor="White" ZIndex="3"/>
+        <local:ImageViewer  Grid.Row="1" Grid.Column="0" x:Name="ResultsViewTab" IsVisible="False" ZIndex="3"/>
         
-        <local:AboutView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="2" x:Name="AboutViewTab" IsVisible="False" ZIndex="1"/>
-        <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="AlphabetViewTab" IsVisible="False" ZIndex="1">
+        <local:AboutView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="2" x:Name="AboutViewTab" IsVisible="False" ZIndex="3"/>
+        <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="AlphabetViewTab" IsVisible="False" ZIndex="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>    
                 <RowDefinition Height="*"/>            

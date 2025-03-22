@@ -24,6 +24,9 @@ public class Resources
     }
     public static Stream GlyphResource => GetResource("Glyphs.json.gz"); // All The Ketameri Symbols in a nice file so I don't have to regenerate them laboriously every time run the app. Saves time.
     public static Stream Testing_ScoutTestResource => GetResource("Scout.png"); //My Dog.
+    public static Stream BorderResource => GetResource("zethana_small.png"); 
+    public static Stream VBorderResource => GetResource("zethana_small_vertical.png"); 
+    public static Stream WorshipResource => GetResource("worship.png"); 
     public static string Testing_LetThereBeLight => GetString("lettherebelight.txt"); // A Favorite Verse. 
     public static string Testing_LetThereBeLightNoLines => Testing_LetThereBeLight.Replace("\n"," ");
     public static string Testing_PowerInFaith => GetString("powerinfaith.txt"); // Another Favorite Verse. 

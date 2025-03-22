@@ -11,5 +11,8 @@
     <EmbeddedResource Include="lettherebelight.txt"/>
     <EmbeddedResource Include="powerinfaith.txt"/>
     <EmbeddedResource Include="TextResources/about.txt"/>    
+    <EmbeddedResource Include="zethana_small_vertical.png"/>    
+    <EmbeddedResource Include="zethana_small.png"/>    
+    <EmbeddedResource Include="worship.png"/>
   </ItemGroup>
 </Project>
