@@ -16,7 +16,10 @@ public partial class BorderView : ContentView
     private void Top_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {
 		SKBitmap tileImage = ImageTiler.LoadImage(global::Resources.Resources.BorderResource);
-		SKBitmap tiledImage = ImageTiler.CreateTiledImage(e.RawInfo.Width, e.RawInfo.Height, tileImage);
+        var scale = e.RawInfo.Width / Top.Width;
+        SKBitmap scImage = new SKBitmap((int)(tileImage.Width*scale),(int)(tileImage.Height*scale));
+        tileImage.ScalePixels(scImage,SKSamplingOptions.Default);
+		SKBitmap tiledImage = ImageTiler.CreateTiledImage(e.RawInfo.Width, e.RawInfo.Height, scImage);
 		var canvas = e.Surface.Canvas;
     	canvas.Clear();
     	canvas.DrawBitmap(tiledImage, new SKRect(0, 0, e.RawInfo.Width, e.RawInfo.Height));
@@ -30,7 +33,10 @@ public partial class BorderView : ContentView
     private void Left_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
     {
 		SKBitmap tileImage = ImageTiler.LoadImage(global::Resources.Resources.VBorderResource);
-		SKBitmap tiledImage = ImageTiler.CreateTiledImage(e.RawInfo.Width, e.RawInfo.Height, tileImage);
+        var scale = e.RawInfo.Width / Left.Width;
+        SKBitmap scImage = new SKBitmap((int)(tileImage.Width*scale),(int)(tileImage.Height*scale));
+        tileImage.ScalePixels(scImage,SKSamplingOptions.Default);
+		SKBitmap tiledImage = ImageTiler.CreateTiledImage(e.RawInfo.Width, e.RawInfo.Height, scImage);
 		var canvas = e.Surface.Canvas;
     	canvas.Clear();
     	canvas.DrawBitmap(tiledImage, new SKRect(0, 0, e.RawInfo.Width, e.RawInfo.Height));
