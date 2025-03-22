@@ -13,6 +13,9 @@ public partial class ImageViewer : ContentView
 		{
 			PostException(task.Exception);
 		}});
+		#if WINDOWS
+			WinSpacer.IsVisible = true;
+		#endif
 	}
     private App? ParentApplication => Application.Current as App;
 	private void PostException(Exception e)

@@ -11,16 +11,19 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+
             </Grid.RowDefinitions>
             <ScrollView Grid.Row="1" Grid.Column="0" Orientation="Both">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <skia:SKCanvasView Grid.Row="0" Grid.Column="0" HeightRequest="54" WidthRequest="54" PaintSurface="SKCanvasView_PaintSurface" SizeChanged="SKCanvasView_SizeChanged" x:Name="ImageViewerViewer" BackgroundColor="Black"/>
+                    <Grid x:Name="WinSpacer" Grid.Column="0" Grid.Row="1"  IsVisible="Collapse" HeightRequest="85"/>
                 </Grid>
             </ScrollView>
             <Grid Grid.Row="0" Grid.Column="0">

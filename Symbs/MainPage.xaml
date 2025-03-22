@@ -82,7 +82,7 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <skia:SKCanvasView Grid.Row="0" Grid.Column="0" HeightRequest="8"  x:Name="AlphabetGraphic" PaintSurface="AlphabetGraphic_PaintSurface" SizeChanged="AlphabetGraphic_SizeChanged"></skia:SKCanvasView>
-                    <Grid x:Name="ExtraWinSpace" IsVisible="Collapse" Grid.Row="1" Grid.Column="0" HeightRequest="54" />
+                    <Grid x:Name="ExtraWinSpace" IsVisible="Collapse" Grid.Row="1" Grid.Column="0" HeightRequest="67" />
                 </Grid>
                 
             </ScrollView>

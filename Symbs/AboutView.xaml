@@ -20,7 +20,7 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <skia:SKCanvasView Grid.Column="0" Grid.Row="0" HeightRequest="54"  x:Name="AboutGraphic" PaintSurface="AboutGraphic_PaintSurface" SizeChanged="AboutGraphic_SizeChanged"></skia:SKCanvasView>
-                <ActivityIndicator x:Name="WindowsSpacer" Grid.Row="1" Grid.Column="0" IsVisible="Collapse" HeightRequest="108"/>
+                <ActivityIndicator x:Name="WindowsSpacer" Grid.Row="1" Grid.Column="0" IsVisible="Collapse" HeightRequest="121"/>
             </Grid>
         </ScrollView>
         <ActivityIndicator x:Name="Loader" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" IsRunning="False" IsVisible="False" Color="Turquoise" />
