@@ -48,9 +48,13 @@ class ForwardTokenizer
     
    
     private char[]? _Vowels = null;
-    private char[] Vowels => _Vowels = _Vowels ?? "aeiouy".ToArray();
+    private char[]? _UniversalY = null;
+    private char[] Vowels => _Vowels = _Vowels ?? "aeiou".ToArray();
+    private char[] UniversalY => _UniversalY = _UniversalY ?? "y".ToArray();
     private char[]? _UpperVowels = null;
+    private char[]? _UpperUniversalY = null;
     private char[] UpperVowels => _UpperVowels = _UpperVowels ?? Vowels.Select(char.ToUpper).ToArray();
+    private char[] UpperUniversalY => _UpperUniversalY = _UpperUniversalY ?? UniversalY.Select(char.ToUpper).ToArray();
     
     
     
@@ -65,6 +69,7 @@ class ForwardTokenizer
     private bool IsNumber(char c) => Digits.Contains(c);        
     private bool IsVowel(char c) => Vowels.Contains(c) || UpperVowels.Contains(c);
     private bool IsLetter(char c) => Letters.Contains(c);
+    private bool IsUniversalY(char c) => UniversalY.Contains(c) || UpperUniversalY.Contains(c);
     private List<char> buffer = new List<char>();
     private List<Graphic.CachedGraphic> cbuffer = new List<Graphic.CachedGraphic>();
     
@@ -136,11 +141,13 @@ class ForwardTokenizer
             var last_null,
             var numeric_last,
             var capital_last,
-            var vowel_last,    
+            var vowel_last,  
+            var universal_y_last,  
             var letter_last,        
             var numeric_english,  
             var capital_english,
-            var vowel_english,          
+            var vowel_english,     
+            var universal_y_english,   
             var letter_english,
             var special_english
         ) = (
@@ -148,10 +155,12 @@ class ForwardTokenizer
                 last != null ? IsNumber(last.Value) : false,
                 last != null ? IsCapital(last.Value) : false,
                 last != null ? IsVowel(last.Value) : false,
+                last != null ? IsUniversalY(last.Value) : false,
                 last != null ? IsLetter(last.Value) : false,
                 IsNumber(englishChar),
                 IsCapital(englishChar),
                 IsVowel(englishChar),
+                IsUniversalY(englishChar),
                 IsLetter(englishChar),
                 !IsSupportedCharacter(englishChar)
             );
@@ -206,9 +215,9 @@ class ForwardTokenizer
                 {
                     if (!capital_english)
                     {
-                        if (vowel_last)
+                        if (vowel_last || universal_y_last)
                         {
-                            if (!vowel_english)
+                            if (!vowel_english || universal_y_english)
                             {
                                 outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}{englishChar}"));
                                 buffer.Clear();
@@ -246,9 +255,9 @@ class ForwardTokenizer
                 {
                     if (!capital_english)
                     {
-                         if (vowel_last)
+                         if (vowel_last || universal_y_last)
                         {
-                            if (!vowel_english)
+                            if (!vowel_english || universal_y_english)
                             {
                                 outx.Add(Graphic.CachedGraphic.GetGraphicWithLetter($"{last}{englishChar}"));
                                 buffer.Clear();
@@ -307,13 +316,15 @@ class ForwardTokenizer
             var last_null,
             var numeric_last,
             var capital_last,
-            var vowel_last,    
+            var vowel_last, 
+            var universal_y_last,   
             var letter_last            
         ) = (
                 last == null,
                 last != null ? IsNumber(last.Value) : false,
                 last != null ? IsCapital(last.Value) : false,
                 last != null ? IsVowel(last.Value) : false,
+                last != null ? IsUniversalY(last.Value) : false,
                 last != null ? IsLetter(last.Value) : false                
             );
         if (numeric_last)

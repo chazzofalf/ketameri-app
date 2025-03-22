@@ -10,14 +10,16 @@ class LetterSymbol : Symbol
 
     private static LetterSymbol[] GenerateAll()
     {
-        var pool = _GetAllSymbols().AsEnumerable();
+        var pool = _GetAllSymbols().ToList();
         var selected = Enumerable.Empty<LetterSymbol>().ToList();
         while (pool.Any())
         {
             var pick = pool.First();
-            pool = pool.Skip(1);
+            pool.RemoveAt(0);
             selected.Add(pick);
-            pool = pool.Where(s => !pick.Similar(s));
+            pool.RemoveAll(s => pick.Similar(s));
+            
+            System.Diagnostics.Debug.WriteLine(pick);
         }
         return selected.ToArray();
     }
@@ -150,6 +152,7 @@ class LetterSymbol : Symbol
         {
             cachedAll[number] = new LetterSymbol(number);
         }
+        
         return cachedAll[number];
     }
     

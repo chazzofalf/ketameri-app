@@ -10,6 +10,8 @@ public class Glyph
     private static string[]? _LowerConsonants;
     private static string[]? _UpperConsonants;
     private static string[]? _LowerVowelConsonants;
+    private static string[]? _LowerUniverseY;
+    private static string[]? _UpperUniverseY;
     private static string[]? _UpperVowelConsonants;
     private static string[]? _LowerConsonantVowels;
     private static string[]? _UpperConsonantVowels;
@@ -27,8 +29,12 @@ public class Glyph
     .Append("e")
     .Append("i")
     .Append("o")
-    .Append("u")
-    .Append("y")
+    .Append("u")    
+    .ToArray();
+    private static string[] LowerUniversalY => _LowerUniverseY = _LowerUniverseY ?? Enumerable.Repeat("y",1)
+    .ToArray();
+    private static string[] UpperUniverseY => _UpperUniverseY = _UpperUniverseY ?? LowerUniversalY
+    .Select(s => s.ToUpperInvariant())
     .ToArray();
     private static string[] UpperVowels => _UpperVowels = _UpperVowels ?? LowerVowels
     .Select(s => s.ToUpperInvariant())
@@ -45,30 +51,35 @@ public class Glyph
     .Select(s => s.ToUpper())
     .ToArray();
     private static string[] LowerVowelConsonants => _LowerVowelConsonants = _LowerVowelConsonants ?? LowerVowels
+    .Concat(LowerUniversalY)
     .SelectMany(v => LowerConsonants
+    .Concat(LowerUniversalY)
     .Select(c => $"{v}{c}"))
     .ToArray();
     private static string[] UpperVowelConsonants => _UpperVowelConsonants = _UpperVowelConsonants ?? LowerVowelConsonants
     .Select(s => $"{char.ToUpperInvariant(s[0])}{s[1]}")
     .ToArray();
     private static string[] LowerConsonantVowels => _LowerConsonantVowels = _LowerConsonantVowels ?? LowerConsonants
+    .Concat(LowerUniversalY)
     .SelectMany(c => LowerVowels
     .Select(v => $"{c}{v}"))
     .ToArray();    
     private static string[] UpperConsonantVowels => _UpperConsonantVowels = _UpperConsonantVowels ?? LowerConsonantVowels
     .Select(s => ($"{char.ToUpperInvariant(s[0])}{s[1]}"))
     .ToArray();
-    private static string[] Punctuation => _Punctuation = _Punctuation ?? ".!?,'\":;()=<>+-/*^[]{}`~@#$%&_|\\°≤≥≠"
+    private static string[] Punctuation => _Punctuation = _Punctuation ?? ".!?,'\":;()=<>+-/*^[]{}`~@#$%&_"
     .Select(s => $"{s}")
     .ToArray();
     private static (string Text,bool IsNumber,bool IsSpecial,bool IsText) [] Alphabet => _Alphabet = _Alphabet ?? 
     Space.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true))
     .Concat(Numbers.Select(s => (Text:s,IsNumber:true,IsSpecial:false,IsText:false)))
     .Concat(UpperVowels.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(UpperUniverseY.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Concat(UpperConsonants.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Concat(UpperVowelConsonants.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Concat(UpperConsonantVowels.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Concat(LowerVowels.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
+    .Concat(LowerUniversalY.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Concat(LowerConsonants.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Concat(LowerVowelConsonants.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))
     .Concat(LowerConsonantVowels.Select(s => (Text:s,IsNumber:false,IsSpecial:false,IsText:true)))

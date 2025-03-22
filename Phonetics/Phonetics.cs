@@ -70,18 +70,21 @@ public class Phonetics
         .Select(s => $"{s}")
         .ToArray();
         
+
+
         var vowel_mappings = vowels.Where(s => PartialMappingDictionary.ContainsKey(s))
         .Select(s => (English:s,Protodimenian:PartialMappingDictionary[s]));
+
         var not_mapped_vowels = vowels.Where(s => !PartialMappingDictionary.ContainsKey(s));        
         var not_mapped_value_vowels = vowels.Where(s => !PartialMappingDictionary.ContainsValue(s));
-        vowel_mappings = vowel_mappings.Concat(not_mapped_vowels.Zip(not_mapped_value_vowels.Reverse(),(a,b) => (English:a,Protodimenian:b)));
+        vowel_mappings = vowel_mappings.Concat(not_mapped_vowels.Zip(not_mapped_value_vowels,(a,b) => (English:a,Protodimenian:b)));
 
         var consonants_mappings = consonants        
         .Where(s => PartialMappingDictionary.ContainsKey(s))
         .Select(s => (English:s,Protodimenian:PartialMappingDictionary[s]));
         var not_mapped_consonants = consonants.Where(s => !PartialMappingDictionary.ContainsKey(s));
         var not_mapped_value_consonants = consonants.Where(s => !PartialMappingDictionary.ContainsValue(s));
-        consonants_mappings = consonants_mappings.Concat(not_mapped_consonants.Zip(not_mapped_value_consonants.Reverse(),(a,b) => (English:a,Protodimenian:b)));
+        consonants_mappings = consonants_mappings.Concat(not_mapped_consonants.Zip(not_mapped_value_consonants,(a,b) => (English:a,Protodimenian:b)));
         var all_mappings = vowel_mappings.Concat(consonants_mappings);
         all_mappings = all_mappings.Concat(all_mappings.Select(s => (English:s.English.ToUpperInvariant(),Protodimenian:s.Protodimenian.ToUpperInvariant())));
         var dict = 
