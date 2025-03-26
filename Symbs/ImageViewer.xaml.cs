@@ -139,10 +139,11 @@ public partial class ImageViewer : ContentView
         if (dirty)
         {
             dirty = false;
-            if (bitmap is SKBitmap bitmap1)
+            if (bitmap is SKBitmap bitmap1 && Application.Current is App app1)
             {
+				var trans = app1.MakeTransparency(bitmap1);
 				e.Surface.Canvas.Clear();
-                e.Surface.Canvas.DrawBitmap(rc,new SKPoint(0,0));
+                e.Surface.Canvas.DrawBitmap(trans,new SKPoint(0,0));
 				
                 Loader.IsVisible = Loader.IsRunning = false;
             }
