@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using SkiaSharp;
+﻿using SkiaSharp;
 
 namespace Graphic;
 class Graphic
@@ -9,8 +8,8 @@ class Graphic
 
     public static int NumberOfGlyphs => AllGraphics.Length;
     public static Graphic GetGraphicAtIndex(int index) => AllGraphics[index];
-    public static Graphic GetLetterGraphicWithNumber(int number) =>  AllGraphics.Where(s => s.Glyph.Number == number && s.Glyph.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
-    public static Graphic GetNumberGraphicWithNumber(int number) =>  AllGraphics.Where(s => s.Glyph.Number == number && !s.Glyph.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
+    public static Graphic GetLetterGraphicWithNumber(int number) =>  AllGraphics.Where(s => s.Glyph.Number == number && s.Glyph.IsLetterSymbol).First();
+    public static Graphic GetNumberGraphicWithNumber(int number) =>  AllGraphics.Where(s => s.Glyph.Number == number && !s.Glyph.IsLetterSymbol).First();
     
     public static Graphic GetGraphicWithLetter(string letter) => AllGraphics.Where(s=> s.Glyph.Letter == letter).First();
    
@@ -26,13 +25,6 @@ class Graphic
     {
         return Glyph.ReadBitMap(row,column);
     }
-
-
-    
-    
-    
-
-    
 
     private static Graphic[] AllGraphics => _AllGraphics = _AllGraphics ?? 
     Enumerable.Range(0,global::Glyph.Glyph.NumberOfGlyphs)
@@ -76,82 +68,7 @@ class Graphic
     }
 
     private SKBitmap GenerateSmallBitmap()
-    {       
-        // if (IsLetterSymbol)
-        // {
-        //     var bmps = new SKBitmap(5,5);
-        //     var _ = Enumerable.Range(0,5)
-        //     .Select(r => Enumerable.Range(0,5)
-        //     .Select(c => 
-        //     {
-        //         if (ReadBitMap(r,c))
-        //         {
-        //             bmps.SetPixel(c,r,SKColors.Black);
-                    
-        //         }
-        //         return 1;
-        //     }).Sum()).Sum();
-        //     var vs_left_orig = new SKBitmap(1,5);
-        //     var vs_mid_left_orig = new SKBitmap(1,5);
-        //     var vs_mid_orig = new SKBitmap(1,5);
-        //     var vs_mid_right_orig = new SKBitmap(1,5);
-        //     var vs_right_orig = new SKBitmap(1,5);
-        //     var c = new SKCanvas(vs_left_orig);
-        //     c.DrawBitmap(bmps,new SKRect(0,0,1,5),new SKRect(0,0,1,5));
-        //     c = new SKCanvas(vs_mid_left_orig);
-        //     c.DrawBitmap(bmps,new SKRect(1,0,2,5),new SKRect(0,0,1,5));
-        //     c = new SKCanvas(vs_mid_orig);
-        //     c.DrawBitmap(bmps,new SKRect(2,0,3,5),new SKRect(0,0,1,5));
-        //     c = new SKCanvas(vs_mid_right_orig);
-        //     c.DrawBitmap(bmps,new SKRect(3,0,4,5),new SKRect(0,0,1,5));
-        //     c = new SKCanvas(vs_right_orig);
-        //     c.DrawBitmap(bmps,new SKRect(4,0,5,5),new SKRect(0,0,1,5));
-            
-        
-        //     var vs_mid_left = new SKBitmap(3,5);
-        //     var vs_mid_right = new SKBitmap(3,5);
-        //     vs_mid_left_orig.ScalePixels(vs_mid_left,SKSamplingOptions.Default);
-        //     vs_mid_right_orig.ScalePixels(vs_mid_right,SKSamplingOptions.Default);
-        //     var stretched_horz = new SKBitmap(9,5);
-        //     c = new SKCanvas(stretched_horz);
-        //     c.DrawBitmap(vs_left_orig,0,0);
-        //     c.DrawBitmap(vs_mid_left,1,0);
-        //     c.DrawBitmap(vs_mid_orig,4,0);
-        //     c.DrawBitmap(vs_mid_right,5,0);
-        //     c.DrawBitmap(vs_right_orig,8,0);
-        //     var hs_top_orig = new SKBitmap(9,1);
-        //     var hs_mid_top_orig = new SKBitmap(9,1);
-        //     var hs_mid_orig = new SKBitmap(9,1);
-        //     var hs_mid_bottom_orig = new SKBitmap(9,1);
-        //     var hs_bottom_orig = new SKBitmap(9,1);
-        //     c = new SKCanvas(hs_top_orig);
-        //     c.DrawBitmap(stretched_horz,new SKRect(0,0,9,1),new SKRect(0,0,9,1));
-        //     c = new SKCanvas(hs_mid_top_orig);
-        //     c.DrawBitmap(stretched_horz,new SKRect(0,1,9,2),new SKRect(0,0,9,1));
-        //     c = new SKCanvas(hs_mid_orig);
-        //     c.DrawBitmap(stretched_horz,new SKRect(0,2,9,3),new SKRect(0,0,9,1));
-        //     c = new SKCanvas(hs_mid_bottom_orig);
-        //     c.DrawBitmap(stretched_horz,new SKRect(0,3,9,4),new SKRect(0,0,9,1));
-        //     c = new SKCanvas(hs_bottom_orig);
-        //     c.DrawBitmap(stretched_horz,new SKRect(0,4,9,5),new SKRect(0,0,9,1));
-        //     var hs_mid_top_scaled = new SKBitmap(9,3);
-        //     var hs_mid_bottom_scaled = new SKBitmap(9,3);
-        //     hs_mid_top_orig.ScalePixels(hs_mid_top_scaled,SKSamplingOptions.Default);
-        //     hs_mid_bottom_orig.ScalePixels(hs_mid_bottom_scaled,SKSamplingOptions.Default);
-        //     var o = new SKBitmap(9,9);
-        //     c = new SKCanvas(o);
-        //     c.DrawBitmap(hs_top_orig,0,0);
-        //     c.DrawBitmap(hs_mid_top_scaled,0,1);
-        //     c.DrawBitmap(hs_mid_orig,0,4);
-        //     c.DrawBitmap(hs_mid_bottom_scaled,0,5);
-        //     c.DrawBitmap(hs_bottom_orig,0,8);
-        //     return o;
-
-
-            
-        // } 
-        // else
-        // {
+    {               
             var bmpx = new SKBitmap(9,9);
             var canx = new SKCanvas(bmpx);
             var blackx = new SKPaint();
@@ -166,11 +83,7 @@ class Graphic
                 }
                 return 1;
             }).Sum()).Sum();
-            return bmpx;
-        // }
-        
-
-        
+            return bmpx;        
     }
     public SKBitmap ColorizeBitmap(SKColor? color=null,bool useSmall=false)
     {
@@ -210,7 +123,7 @@ class Graphic
         }
         
 
-        return original; // TODO: You're here!
+        return original; 
     }
     public SKBitmap ColorizeBitmap(string hex,bool useSmall=false)
     {

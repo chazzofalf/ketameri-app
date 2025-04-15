@@ -24,9 +24,12 @@ namespace SymbolTest
             }
             using (textout = new StreamWriter(File.OpenWrite("Symboltest.txt")))
             {
-                // TestSymbols();
-                // TestPhonetics();
-                // TestGlyphs();
+                #if false 
+                //Disabled Tests
+                TestSymbols();
+                TestPhonetics();
+                TestGlyphs();
+                #endif
                 TestGraphics();
                 TestTokenizer();
                 TestRecognizer();

@@ -95,8 +95,7 @@ public partial class MainPage : ContentPage
             dirty = true;
             await AlphabetGraphic.Dispatcher.DispatchAsync(() => {AlphabetGraphic.HeightRequest = newHeight;
             this.InvalidateMeasure();
-            // Scroller.InvalidateMeasure();
-            // AlphabetViewTab.InvalidateMeasure();
+            
         });
             
             scale = 1;
@@ -142,7 +141,7 @@ public partial class MainPage : ContentPage
     {
         alphabetGraphicImages = result;
         AlphabetGraphic?.InvalidateSurface();
-        //AlphabetGraphic.HeightRequest = (double)result.Height;
+        
         
     }
     private SKRect FontHeight(SKFont font,string text)
@@ -166,8 +165,7 @@ public partial class MainPage : ContentPage
             return (font:s.font,rect:FontHeight(s.font,s.title),transliterationRect:FontHeight(s.font,s.transliteration),s.glyph,s.title,s.transliteration);
             }
         )
-        .Select(s => (font:s.font,rect:s.rect.Height == 0 || s.rect.Width == 0 ? new SKRect(0,0,1,1) : s.rect,transliterationRect:s.transliterationRect.Height == 0 || s.transliterationRect.Width == 0 ? new SKRect(0,0,1,1) : s.transliterationRect,s.glyph,s.title,s.transliteration))
-        //.Select(s => (font:s.font,rect:new SKRect(0,0,s.rect.Width,s.rect.Height),s.glyph,s.title))
+        .Select(s => (font:s.font,rect:s.rect.Height == 0 || s.rect.Width == 0 ? new SKRect(0,0,1,1) : s.rect,transliterationRect:s.transliterationRect.Height == 0 || s.transliterationRect.Width == 0 ? new SKRect(0,0,1,1) : s.transliterationRect,s.glyph,s.title,s.transliteration))        
         .Select(s => (title:(Func<SKBitmap>)(() => {
             var bmp = new SKBitmap((int)s.rect.Width,(int)s.rect.Height);
             using (var can = new SKCanvas(bmp))
@@ -252,23 +250,7 @@ public partial class MainPage : ContentPage
                 }
             }
             return bordered;
-        });        
-        /*.Aggregate((MaxWidth:0,SumHeight:0,Rerun:Enumerable.Empty<SKBitmap>()),(state,current) => 
-            (MaxWidth:int.Max(current.Width,state.MaxWidth),state.SumHeight+current.Height + (state.SumHeight > 0 ? 54 :0),state.Rerun.Append(current)),(fin) =>
-            {
-                var bmp = new SKBitmap(fin.MaxWidth,fin.SumHeight);
-                var y = 0;
-                using (var can = new SKCanvas(bmp))
-                {
-                    foreach (var img in fin.Rerun)
-                    {
-                        can.DrawBitmap(img,new SKPoint(0,y));
-                    y += 189;
-                    }
-                }
-                return bmp;
-            }
-        );*/
+        });                
         return x.ToArray();
         
     }
@@ -277,13 +259,11 @@ public partial class MainPage : ContentPage
         if (!TextViewTab.IsVisible)
         {
             AlphabetViewTab.IsVisible = AboutViewTab.IsVisible = ResultsViewTab.IsVisible = ImageViewTab.IsVisible = !(TextViewTab.IsVisible = true);
-            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDark"];
-            // ShowImageViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
+            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDark"];            
             ShowResultsViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
             ShowAboutViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
             ShowAlphabetViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
-            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkText"];
-            // ShowImageViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
+            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkText"];            
             ShowResultsViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
@@ -297,13 +277,11 @@ public partial class MainPage : ContentPage
         if (!ImageViewTab.IsVisible)
         {
             AlphabetViewTab.IsVisible = AboutViewTab.IsVisible = ResultsViewTab.IsVisible = TextViewTab.IsVisible = !(ImageViewTab.IsVisible = true);
-            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
-            // ShowImageViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDark"];
+            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];            
             ShowResultsViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
             ShowAboutViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
             ShowAlphabetViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
-            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
-            // ShowImageViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkText"];
+            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];            
             ShowResultsViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
@@ -316,17 +294,14 @@ public partial class MainPage : ContentPage
         if (!ResultsViewTab.IsVisible)
         {
             AlphabetViewTab.IsVisible = AboutViewTab.IsVisible = TextViewTab.IsVisible = ImageViewTab.IsVisible = !(ResultsViewTab.IsVisible = true);
-            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
-            // ShowImageViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
+            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];            
             ShowResultsViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDark"];
             ShowAboutViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
             ShowAlphabetViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
-            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
-            // ShowImageViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
+            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];            
             ShowResultsViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkText"];
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
-            ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
-            //ResultsViewTab.ShownHandle();
+            ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];            
         }
     }
 
@@ -335,13 +310,11 @@ public partial class MainPage : ContentPage
         if (!AboutViewTab.IsVisible)
         {
             AlphabetViewTab.IsVisible = ResultsViewTab.IsVisible = TextViewTab.IsVisible = ImageViewTab.IsVisible = !(AboutViewTab.IsVisible = true);
-            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
-            // ShowImageViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
+            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];            
             ShowResultsViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
             ShowAboutViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDark"];
             ShowAlphabetViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
-            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
-            // ShowImageViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
+            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];            
             ShowResultsViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkText"];
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
@@ -353,13 +326,11 @@ public partial class MainPage : ContentPage
         if (!AlphabetViewTab.IsVisible)
         {
             AboutViewTab.IsVisible = ResultsViewTab.IsVisible = TextViewTab.IsVisible = ImageViewTab.IsVisible = !(AlphabetViewTab.IsVisible = true);
-            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
-            // ShowImageViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
+            ShowTextViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];            
             ShowResultsViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
             ShowAboutViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDarkInactive"];
             ShowAlphabetViewButton.BackgroundColor = (Color)Application.Current!.Resources["PrimaryDark"];
-            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
-            // ShowImageViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
+            ShowTextViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];            
             ShowResultsViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAboutViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkTextInactive"];
             ShowAlphabetViewButton.TextColor = (Color)Application.Current!.Resources["PrimaryDarkText"];
@@ -497,26 +468,9 @@ public partial class MainPage : ContentPage
                 var renderCopy = app.MakeTransparency(alphabetGraphic_i);
                 var pixels = renderCopy.GetPixels();
                 
-                // var filter = SKColorFilter.CreateBlendMode(SKColors.Black,SKBlendMode.Screen);
-                // var paint = new SKPaint();
-                // paint.ColorFilter = filter;
-                // var renderer = new SKCanvas(renderCopy);
-                // renderer.DrawBitmap(alphabetGraphic_i,new SKPoint(0,0),paint);
+                
                 dirty = false;
-                // Enumerable.Range(0,alphabetGraphic_i.Height)
-                // .Select(r => Enumerable.Range(0,alphabetGraphic_i.Width)
-                // .Select(c => {
-                //     var pxl = renderCopy.GetPixel(c,r);
-                //     var turq = SKColors.Turquoise;
-                //     if (pxl.Red != turq.Red
-                //     || pxl.Green != turq.Green
-                //     || pxl.Blue != turq.Blue
-                //     || pxl.Alpha != turq.Alpha)
-                //     {
-                //         renderCopy.SetPixel(c,r,SKColors.Transparent);
-                //     }
-                //     return 1;
-                // }).Sum()).Sum();
+                
                 e.Surface.Canvas.DrawBitmap(renderCopy,new SKPoint(0,0));
                  Dispatcher.Dispatch(() => IsGraphicLoading = false);
             }

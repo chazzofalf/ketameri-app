@@ -54,7 +54,7 @@ public class CachedGraphic
     public static CachedGraphic  GetGraphicAtIndex(int index) => All[index];
     private static CachedGraphic[]? GenerateFromJSONCache()
     {
-        //return null;
+        
         var outx = (DataClass[]?)null;
         try
         {
@@ -83,7 +83,7 @@ public class CachedGraphic
         {
             Directory.CreateDirectory("Cache");
         }
-        //if (!File.Exists("Cache/Glyphs.json.gz"))
+        
 
         
             using (var fio = File.OpenWrite("Cache/Glyphs.json.gz"))
@@ -172,15 +172,15 @@ public class CachedGraphic
         }
         
 
-        return original; // TODO: You're here!
+        return original; 
     }
     public SKBitmap ColorizeBitmap(string hex,bool useSmall=false)
     {
         return ColorizeBitmap(SKColor.Parse(hex),useSmall);
     }
 
-    public static CachedGraphic GetLetterGraphicWithNumber(int number) =>  All.Where(s => s.Number == number && s.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
-    public static CachedGraphic GetNumberGraphicWithNumber(int number) =>  All.Where(s => s.Number == number && !s.IsLetterSymbol).First(); //Glyphs.Where(s => s.Number == number).First();
+    public static CachedGraphic GetLetterGraphicWithNumber(int number) =>  All.Where(s => s.Number == number && s.IsLetterSymbol).First(); 
+    public static CachedGraphic GetNumberGraphicWithNumber(int number) =>  All.Where(s => s.Number == number && !s.IsLetterSymbol).First(); 
     
     public static CachedGraphic GetGraphicWithLetter(string letter) => All.Where(s=> s.Letter == letter).First();
    

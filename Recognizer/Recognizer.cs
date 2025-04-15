@@ -17,106 +17,12 @@ public static class Extensions
     }
 }
 public class Recognizer
-{
-    // public IRecognizedOrientation DetermineGlyphOrientation(SKBitmap glyphImage)
-    // {
-    //     lock (orientationCheckLock)
-    //     {
-
-        
-    //         if (glyphImage != lastCheckedImage || lastDeterminedOrientation == null)            
-    //         {
-    //             if (glyphImage.Height != glyphImage.Width) throw new Exception("Ketameri Glyphs are square. This is not!");
-    //             SKBitmap mini = new SKBitmap(11,11);
-    //             glyphImage.ScalePixels(mini,SKSamplingOptions.Default);
-    //             (int top,int bottom,int right,int left) = Enumerable.Range(0,4)
-    //             .Select(s => 
-    //             Enumerable.Range(0,11)
-    //             .Select(c => {
-    //                 if (s == 0)
-    //                 {
-    //                     if ((mini.GetPixel(c,0).Red & 1) == 1)
-    //                     {
-    //                         return 1;
-    //                     }
-    //                     else
-    //                     {
-    //                         return 0;
-    //                     }
-    //                 }
-    //                 else if (s == 1) {
-    //                     if ((mini.GetPixel(c,10).Red & 1) == 1)
-    //                     {
-    //                         return 1;
-    //                     }
-    //                     else
-    //                     {
-    //                         return 0;
-    //                     }
-    //                 }
-    //                 else if (s == 2) {
-    //                     if ((mini.GetPixel(10,c).Red & 1) == 1)
-    //                     {
-    //                         return 1;
-    //                     }
-    //                     else
-    //                     {
-    //                         return 0;
-    //                     }
-    //                 }
-    //                 else if (s == 3) {
-    //                     if ((mini.GetPixel(0,c).Red & 1) == 1)
-    //                     {
-    //                         return 1;
-    //                     }
-    //                     else
-    //                     {
-    //                         return 0;
-    //                     }
-    //                 }
-    //                 else
-    //                 {
-    //                     return 0;
-    //                 }
-    //             }).Sum()).ToArray();
-    //             (var vflip,var hflip,var rotate) = (false,false,false);
-    //             if (top == 2 || top == 3)
-    //             {
-    //                 rotate = true;
-    //                 var temp = 0;
-    //                 left = top;
-    //                 top = right;
-    //                 right = bottom;
-    //                 bottom = temp;
-                    
-    //             }
-    //             if (top == 1) {
-    //                 vflip = true;
-    //             }
-    //             if (left == 2)
-    //             {
-    //                 hflip = true;
-    //             }
-    //             lastCheckedImage = glyphImage;
-    //             lastDeterminedOrientation = new RecognizedOrientation(vflip,hflip,rotate);
-                
-
-    //         }
-    //     }
-    //     return lastDeterminedOrientation;
-        
-    // }
+{    
     public Graphic.CachedGraphic Recognize(SKBitmap glyphImage)
     {
         Graphic.CachedGraphic? recognizedGraphic = null;
         
-            if (glyphImage.Height != glyphImage.Width) throw new Exception("Ketameri Glyphs are square. This is not!");
-            // var ori = DetermineGlyphOrientation(glyphImage);
-            // if (ori.IsHorizontallyFlipped || ori.IsVerticallyFlipped || ori.IsRotated) throw new Exception("Out of proper orientation. Please use DetermineGlyphOrientation(...) and orient the root graphic properly first.");
-            
-            // var borderless = new SKBitmap(glyphImage.Width*9/11,glyphImage.Height*9/11); // 54 is 9/11 of 66. Never forget. 
-            // var c = new SKCanvas(borderless);
-            // c.DrawBitmap(glyphImage,new SKRect(glyphImage.Width/11,glyphImage.Height/11,glyphImage.Width*10/11,glyphImage.Height*10/11),new SKRect(0,0,glyphImage.Width*9/11,glyphImage.Height*9/11));
+            if (glyphImage.Height != glyphImage.Width) throw new Exception("Ketameri Glyphs are square. This is not!");            
             var borderless = glyphImage;
             var borderless_mini = new SKBitmap(9,9);
             borderless.ScalePixels(borderless_mini,SKSamplingOptions.Default);
@@ -128,15 +34,7 @@ public class Recognizer
                 .Select(s => 2 + 2*s)
                 .Select(c => Enumerable.Range(0,2)
                 .Select(s => s * 5)
-                .Select(r => (borderless_mini.GetPixel(c,r).Red & 1) == 0).ToArray())
-                // .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (RowIndex:b,Row:a
-                // .Zip(Enumerable.Range(0,int.MaxValue),(c,d) => (ColumnIndex:d,Item:c))))
-                // .SelectMany(r => r.Row.Select(c => (r.RowIndex,c.ColumnIndex,c.Item)))
-                // .GroupBy(s => s.ColumnIndex)
-                // .Select(tr => tr.OrderBy(c => c.RowIndex))
-                // .Select(r => r
-                // .Select(c=> c.Item)                
-                
+                .Select(r => (borderless_mini.GetPixel(c,r).Red & 1) == 0).ToArray())                
                 .Select(cnt => {
                     num *= 3;
                     if (cnt[0] != cnt[1])

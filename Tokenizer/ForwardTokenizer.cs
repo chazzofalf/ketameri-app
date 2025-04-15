@@ -103,9 +103,50 @@ class ForwardTokenizer
         {
             var arabicNumber /* The 0123456789 are arabic numerals. look it up! (Start here: https://www.ahdictionary.com/word/search.html?id=A5414100 if you are truly curious or need your spirit's misplaced upset quelled.) */
             = BigInteger.Parse(string.Join("",english));
+            /* The Ketameri writing system possesses a base-14 numerical system
+
+            0 |||
+            1 ||'
+            2 |',
+            3 |'|
+            4 |''
+            5 ',,
+            6 ',|
+            7 ','
+            8 '|,
+            9 '||
+            10 '|'
+            11 '',
+            12 ''|
+            13 '''
+
+            For instance the number 2025 is written as '|| |'' '|'
+            The number 42 is ||| |'|
+            The number 54 is ''| |'| 
+            The number 69 is ''' |''
+
+            In reading these numbers, remember that Ketameri is right to left. You should interpret ''| |'| as |'| ''| when trying to go back to arabic by hand.
+
+            Section "A": A little bit of numerological poetry:
             
-            var ketameriNumber /* Our ancient Ketameri brothers used a base-14 system with lucky number 13 [They loved magic and superstition way too much!] (3*(3*1))+1)+1) (sometimes style-listically (''' / sky sky sky)). The Favored One's two favorite numbers are ['|][''|] (sky water towards sky sky water) and ['][',,]['|,] (sky water towards sky earth earth towards sky water earth) or 54 and 666. A note on the second favorite number last five bits of the binary representation of that number are the reverse inverse of the first five, this a number of conflict. And man (Homo Sapiens, human beings, male and female) are creatures of absolute conflict (we cannot live with out causing ourselves and each other conflict trouble!) Therefore 666 is the number of man! Solution of numerical riddle the beast of the sea and the beast of the land solved! Now as to what name of what unlucky person that conflicting number represents?...*/
-            = Enumerable.Empty<BigInteger>();
+            Funny tidbit about 42 and 69,
+            when the top of a triangle is 42 degrees,
+            the two remaining angles,
+            if that triangle is to be split into two right triangles,
+            The remaining two angles are both 69.
+
+            With 54 it is 63 and 63.
+            6 times 9 being supported at the triangles base by 7 times 9.
+            How poetically divine. ;-)
+            
+            The Question to Mr. Douglas' answer of "42." Is "54?" (What does it really mean to be aLIVe?)
+            The answer to that is most likely this:
+            It is to be. 
+            It your purpose to figure out what that means for you.
+            I find this to be beautiful and I hope Section A is allowed to stay.
+            Because I don't want to have to make it go away.            
+             */
+            var ketameriNumber   = Enumerable.Empty<BigInteger>();
             if (arabicNumber == 0)
             {
                 ketameriNumber = ketameriNumber.Append(0);
