@@ -86,38 +86,38 @@ public partial class AboutView : ContentView
 			var black = new SKPaint() { Color=ss.EnglishBackground };
 			var turquoise = new SKPaint { Color=ss.EnglishForeground};
 			canvas.DrawRect(new SKRect(0,0,engImg.Width,engImg.Height),black);
-			canvas.DrawText(ss.English,new SKPoint(-ss.EnglishRect.Left,-ss.EnglishRect.Top),ss.EnglishFont,turquoise);
+			canvas.DrawText(ss.English,new SKPoint(-ss.EnglishRect.Left,-ss.EnglishRect.Top),SKTextAlign.Left,ss.EnglishFont,turquoise);
 			
 			
 			return (English:engImg,Ketameri:ss.Ketameri);
 			}))
 			.Select(s => Task.Run(async () => { await Task.Yield(); var ss = await s;
-				var cbmp = new SKBitmap(int.Max(ss.English.Width,ss.Ketameri.Width),ss.English.Height+ss.Ketameri.Height+16);
-				var ccan = new SKCanvas(cbmp);
+				var combinedBmp = new SKBitmap(int.Max(ss.English.Width,ss.Ketameri.Width),ss.English.Height+ss.Ketameri.Height+16);
+				var combinedCanvas = new SKCanvas(combinedBmp);
 				var black = new SKPaint() { Color = SKColors.Black};
-				ccan.DrawRect(new SKRect(0,0,cbmp.Width,cbmp.Height),black);
-				ccan.DrawBitmap(ss.English,new SKPoint((cbmp.Width-ss.English.Width)/2,8));
-				ccan.DrawBitmap(ss.Ketameri,new SKPoint((cbmp.Width-ss.Ketameri.Width)/2,8+ss.English.Height+8));
+				combinedCanvas.DrawRect(new SKRect(0,0,combinedBmp.Width,combinedBmp.Height),black);
+				combinedCanvas.DrawBitmap(ss.English,new SKPoint((combinedBmp.Width-ss.English.Width)/2,8),SKSamplingOptions.Default);
+				combinedCanvas.DrawBitmap(ss.Ketameri,new SKPoint((combinedBmp.Width-ss.Ketameri.Width)/2,8+ss.English.Height+8),SKSamplingOptions.Default);
 				
-				return cbmp;
+				return combinedBmp;
 			}));
 			
 			var mx = Task.Run(async () => (await Task.WhenAll(x))
 			.Aggregate((max_width:0,sum_height:0,all:Enumerable.Empty<SKBitmap>()),(s,c) => {
 				return (max_width:int.Max(s.max_width,c.Width),sum_height:s.sum_height+c.Height+27,all:s.all.Append(c));
 			},(s) => {
-				var obmp = new SKBitmap(s.max_width,s.sum_height);
-				var ocan = new SKCanvas(obmp);
+				var outputBmp = new SKBitmap(s.max_width,s.sum_height);
+				var canvas = new SKCanvas(outputBmp);
 				var y = 0;
 				foreach(var img in s.all)
 				{
-					ocan.DrawBitmap(img,new SKPoint((obmp.Width-img.Width)/2,y));
+					canvas.DrawBitmap(img,new SKPoint((outputBmp.Width-img.Width)/2,y),SKSamplingOptions.Default);
 					y+=img.Height+27;
 				}
 				var width = image_width*9/10;
-				var ratio = (double)width/(double)obmp.Width;
-				var sbmp = new SKBitmap((int)width,(int)(obmp.Height*ratio));
-				obmp.ScalePixels(sbmp,SKSamplingOptions.Default);
+				var ratio = (double)width/(double)outputBmp.Width;
+				var sbmp = new SKBitmap((int)width,(int)(outputBmp.Height*ratio));
+				outputBmp.ScalePixels(sbmp,SKSamplingOptions.Default);
 
 				return sbmp;
 			}));
@@ -196,7 +196,7 @@ public partial class AboutView : ContentView
 			var renderCopy = app.MakeTransparency(about_img);
 			
 			dirty = false;
-			e.Surface.Canvas.DrawBitmap(renderCopy,new SKPoint((e.RawInfo.Width-about_img.Width)/2,0));
+			e.Surface.Canvas.DrawBitmap(renderCopy,new SKPoint((e.RawInfo.Width-about_img.Width)/2,0),SKSamplingOptions.Default);
 			Dispatcher.Dispatch(() => {
 				
 					IsGraphicLoading = false;
