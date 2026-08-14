@@ -22,7 +22,7 @@ public partial class BorderView : ContentView
 		SKBitmap tiledImage = ImageTiler.CreateTiledImage(e.RawInfo.Width, e.RawInfo.Height, scImage);
 		var canvas = e.Surface.Canvas;
     	canvas.Clear();
-    	canvas.DrawBitmap(tiledImage, new SKRect(0, 0, e.RawInfo.Width, e.RawInfo.Height));
+    	canvas.DrawBitmap(tiledImage, new SKRect(0, 0, e.RawInfo.Width, e.RawInfo.Height), SKSamplingOptions.Default);
     }
 
     private void Bottom_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
@@ -39,7 +39,7 @@ public partial class BorderView : ContentView
 		SKBitmap tiledImage = ImageTiler.CreateTiledImage(e.RawInfo.Width, e.RawInfo.Height, scImage);
 		var canvas = e.Surface.Canvas;
     	canvas.Clear();
-    	canvas.DrawBitmap(tiledImage, new SKRect(0, 0, e.RawInfo.Width, e.RawInfo.Height));
+    	canvas.DrawBitmap(tiledImage, new SKRect(0, 0, e.RawInfo.Width, e.RawInfo.Height), SKSamplingOptions.Default);
     }
 
     private void Right_PaintSurface(object sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
@@ -61,7 +61,7 @@ internal class ImageTiler
                 for (int x = 0; x < width; x += tileImage.Width)
                 {
                     // Draw the tile image at the current position
-                    canvas.DrawBitmap(tileImage, x, y);
+                    canvas.DrawBitmap(tileImage, x, y, SKSamplingOptions.Default);
                 }
             }
         }
