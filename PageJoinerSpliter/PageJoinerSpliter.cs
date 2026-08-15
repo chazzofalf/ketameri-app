@@ -25,7 +25,7 @@ public class PageJoinerSpliter
         {
             var padded = new SKBitmap(s.Width+2,s.Height+2);
             var can = new SKCanvas(padded);
-            can.DrawBitmap(s,1,1);
+            can.DrawBitmap(s, 1, 1, SKSamplingOptions.Default);
             return padded;
         })
         .Aggregate((MaxWidth:0,TotalHeight:0,Items:Enumerable.Empty<SKBitmap>()),(prev,cur) => {
@@ -55,7 +55,7 @@ public class PageJoinerSpliter
                 filtered.SetPixel(c,r,filtered.GetPixel(c,r).WithRed((byte)(filtered.GetPixel(c,r).Red | 1)));
                 return 1;
             }).Sum()).Sum();
-            can.DrawBitmap(filtered,new SKPoint(outx.Width/2-backgroundimg.Width/2,outx.Height/2-outx.Height/2));
+            can.DrawBitmap(filtered, new SKPoint(outx.Width/2-backgroundimg.Width/2,outx.Height/2-outx.Height/2), SKSamplingOptions.Default);
         }
         var ops2 = x.Select(y => {
             outx.SetPixel(4+y.X,4+y.Y,outx.GetPixel(4+y.X,4+y.Y).WithRed((byte)(outx.GetPixel(4+y.X,4+y.Y).Red & 0xfe)) );
@@ -65,7 +65,7 @@ public class PageJoinerSpliter
             return 1;
         }).Sum();
         ops2 = x.Select(y => {
-            can.DrawBitmap(y.Item,4+y.X,4+y.Y);
+            can.DrawBitmap(y.Item, 4+y.X, 4+y.Y, SKSamplingOptions.Default);
             return 1;
         }).Sum();        
         ops2 = new [] {Enumerable.Range(0,outx.Width-4)
@@ -231,7 +231,7 @@ public class PageJoinerSpliter
         var debordered = new SKBitmap(page.Width-4,page.Height-4);
         using (var canvas = new SKCanvas(debordered))
         {
-            canvas.DrawBitmap(page,new SKRect(2,2,page.Width-2,page.Height-2),new SKRect(0,0,page.Width-4,page.Height-4));
+            canvas.DrawBitmap(page, new SKRect(2,2,page.Width-2,page.Height-2), new SKRect(0,0,page.Width-4,page.Height-4), SKSamplingOptions.Default);
         }        
         (var top,var bottom,var right,var left) = new [] {
             Enumerable.Range(0,debordered.Width)
@@ -295,7 +295,7 @@ public class PageJoinerSpliter
         var stripped = new SKBitmap(debordered.Width-4,debordered.Height-4);
         using (var canvas = new SKCanvas(stripped))
         {
-            canvas.DrawBitmap(debordered,new SKRect(2,2,debordered.Width-2,debordered.Height-2),new SKRect(0,0,debordered.Width-4,debordered.Height-4));
+            canvas.DrawBitmap(debordered, new SKRect(2,2,debordered.Width-2,debordered.Height-2), new SKRect(0,0,debordered.Width-4,debordered.Height-4), SKSamplingOptions.Default);
         }        
         return Enumerable.Range(0,stripped.Height)
         .SelectMany(r => Enumerable.Range(0,stripped.Width)
@@ -334,7 +334,7 @@ public class PageJoinerSpliter
             var segment = new SKBitmap((int)r.Width,(int)r.Height);
             using (var canvas = new SKCanvas(segment))
             {
-                canvas.DrawBitmap(stripped,new SKRect(r.Left,r.Top,r.Right,r.Bottom),new SKRect(0,0,r.Width,r.Height));                
+                canvas.DrawBitmap(stripped, new SKRect(r.Left,r.Top,r.Right,r.Bottom), new SKRect(0,0,r.Width,r.Height), SKSamplingOptions.Default);                
             }
             return segment;
         }).ToArray();
@@ -358,7 +358,7 @@ public class PageJoinerSpliter
         // horizontally
         canvas.Translate(bmp.Width, 0);
         canvas.Scale(-1, 1);
-        canvas.DrawBitmap(bmp, 0, 0);
+        canvas.DrawBitmap(bmp, 0, 0, SKSamplingOptions.Default);
         return flipped;
     }
     private static SKBitmap VFlip(SKBitmap bmp)
@@ -374,7 +374,7 @@ public class PageJoinerSpliter
         // horizontally
         canvas.Translate(0, bmp.Height);
         canvas.Scale(1, -1);
-        canvas.DrawBitmap(bmp, 0, 0);
+        canvas.DrawBitmap(bmp, 0, 0, SKSamplingOptions.Default);
         return flipped;
     }
     private static SKBitmap Rotate(SKBitmap bitmap)
@@ -386,7 +386,7 @@ public class PageJoinerSpliter
         {
             surface.Translate(rotated.Width, 0);
             surface.RotateDegrees(90);
-            surface.DrawBitmap(bitmap, 0, 0);
+            surface.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default);
         }
 
         return rotated;

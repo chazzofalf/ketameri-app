@@ -19,7 +19,7 @@ public class LineJoinerSplitter
             .Select(idx => {
                 var glyph = new SKBitmap(fontsize,fontsize);
                 var canvas = new SKCanvas(glyph);
-                canvas.DrawBitmap(line,new SKRect((fontsize+line_width)*idx,0,(fontsize+line_width)*idx+fontsize,fontsize),new SKRect(0,0,fontsize,fontsize));
+                canvas.DrawBitmap(line, new SKRect((fontsize+line_width)*idx,0,(fontsize+line_width)*idx+fontsize,fontsize), new SKRect(0,0,fontsize,fontsize), SKSamplingOptions.Default);
                 return rec.Recognize(glyph);
             }).Reverse().ToArray();
         }
@@ -59,7 +59,7 @@ public class LineJoinerSplitter
         .Reverse()  // Protodimic, Ketameri, and other very old texts are read right to left.
         .Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (Index:b,Item:a))
         .Select(s => {
-            can.DrawBitmap(s.Item,s.Index*(glyphWidth+lineThickness),0);
+            can.DrawBitmap(s.Item, s.Index*(glyphWidth+lineThickness), 0, SKSamplingOptions.Default);
             return 1;
         })
         .Sum();
@@ -71,7 +71,7 @@ public class LineJoinerSplitter
             var paint = new SKPaint();
             paint.Color = realBackgroundColor;
             cano.DrawRect(new SKRect(0,0,outx.Width,outx.Height),paint);
-            cano.DrawBitmap(orig_outx,new SKPoint(0,0));
+            cano.DrawBitmap(orig_outx, new SKPoint(0,0), SKSamplingOptions.Default);
         }
         
 

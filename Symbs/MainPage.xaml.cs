@@ -175,7 +175,7 @@ public partial class MainPage : ContentPage
                     pt.Color = SKColors.Black;
                     can.DrawRect(new SKRect(0,0,bmp.Width,bmp.Height),pt);
                     pt.Color = SKColors.Turquoise;
-                    can.DrawText(s.title,new SKPoint(-s.rect.Left,-s.rect.Top),s.font,pt);                    
+                    can.DrawText(s.title, new SKPoint(-s.rect.Left,-s.rect.Top), SKTextAlign.Left, s.font, pt);                    
                 }
             }
             return bmp;
@@ -189,7 +189,7 @@ public partial class MainPage : ContentPage
                     pt.Color = SKColors.Black;
                     can.DrawRect(new SKRect(0,0,bmp.Width,bmp.Height),pt);
                     pt.Color = SKColors.Turquoise;
-                    can.DrawText(s.transliteration,new SKPoint(-s.transliterationRect.Left,-s.transliterationRect.Top),s.font,pt);                    
+                    can.DrawText(s.transliteration, new SKPoint(-s.transliterationRect.Left,-s.transliterationRect.Top), SKTextAlign.Left, s.font, pt);                    
                 }
             }
             return bmp;
@@ -199,7 +199,7 @@ public partial class MainPage : ContentPage
             var bmp = new SKBitmap(int.Max(s.title.Width,s.title.Height),int.Max(s.title.Width,s.title.Height));
             using (var can = new SKCanvas(bmp))
             {
-                can.DrawBitmap(s.title,new SKPoint((bmp.Width-s.title.Width)/2,(bmp.Height-s.title.Height)/2));
+                can.DrawBitmap(s.title, new SKPoint((bmp.Width-s.title.Width)/2,(bmp.Height-s.title.Height)/2), SKSamplingOptions.Default);
 
             }
             return bmp;
@@ -208,7 +208,7 @@ public partial class MainPage : ContentPage
             var bmp = new SKBitmap(int.Max(s.transliteration.Width,s.transliteration.Height),int.Max(s.transliteration.Width,s.transliteration.Height));
             using (var can = new SKCanvas(bmp))
             {
-                can.DrawBitmap(s.transliteration,new SKPoint((bmp.Width-s.transliteration.Width)/2,(bmp.Height-s.transliteration.Height)/2));
+                can.DrawBitmap(s.transliteration, new SKPoint((bmp.Width-s.transliteration.Width)/2,(bmp.Height-s.transliteration.Height)/2), SKSamplingOptions.Default);
 
             }
             return bmp;
@@ -229,9 +229,9 @@ public partial class MainPage : ContentPage
             var bmp = new SKBitmap(54,175);
             using (var can = new SKCanvas(bmp))
             {
-                can.DrawBitmap(s.glyph,new SKPoint(0,0));
-                can.DrawBitmap(s.title,new SKPoint(0,54+27));
-                can.DrawBitmap(s.transliteration,new SKPoint(13,54+27+54+13));
+                can.DrawBitmap(s.glyph, new SKPoint(0,0), SKSamplingOptions.Default);
+                can.DrawBitmap(s.title, new SKPoint(0,54+27), SKSamplingOptions.Default);
+                can.DrawBitmap(s.transliteration, new SKPoint(13,54+27+54+13), SKSamplingOptions.Default);
             }
             return bmp;
         }))
@@ -246,7 +246,7 @@ public partial class MainPage : ContentPage
                     can.DrawRect(new SKRect(0,0,bordered.Width,bordered.Height),p);
                     p.Color = SKColors.Black;
                     can.DrawRect(new SKRect(1,1,bordered.Width-1,bordered.Height-1),p);
-                    can.DrawBitmap(s,6,6);
+                    can.DrawBitmap(s, 6, 6, SKSamplingOptions.Default);
                 }
             }
             return bordered;
@@ -355,14 +355,14 @@ public partial class MainPage : ContentPage
         headerCanvas.DrawRect(new SKRect(0,0,headerGraphic.Width,headerGraphic.Height),black);
     
     
-        headerCanvas.DrawText(headerText,new SKPoint(-headerRect.Left,-headerRect.Top),headerFont,turquoise);
+        headerCanvas.DrawText(headerText, new SKPoint(-headerRect.Left,-headerRect.Top), SKTextAlign.Left, headerFont, turquoise);
         
 
     
         subHeaderCanvas.DrawRect(new SKRect(0,0,subHeaderGraphic.Width,subHeaderGraphic.Height),black);
     
     
-        subHeaderCanvas.DrawText(subHeaderText,new SKPoint(-subHeaderRect.Left,-subHeaderRect.Top),headerFont,turquoise);
+        subHeaderCanvas.DrawText(subHeaderText, new SKPoint(-subHeaderRect.Left,-subHeaderRect.Top), SKTextAlign.Left, headerFont, turquoise);
                 
         
         
@@ -381,8 +381,8 @@ public partial class MainPage : ContentPage
         
         outputCanvas.DrawRect(new SKRect(0,0,output.Width,output.Height),black);
             
-        outputCanvas.DrawBitmap(scaledHeader,new SKPoint((realWidth-scaledHeader.Width)/2,8));
-        outputCanvas.DrawBitmap(scaledSubheader,new SKPoint((realWidth-scaledSubheader.Width)/2,8+scaledHeader.Height+27));
+        outputCanvas.DrawBitmap(scaledHeader, new SKPoint((realWidth-scaledHeader.Width)/2,8), SKSamplingOptions.Default);
+        outputCanvas.DrawBitmap(scaledSubheader, new SKPoint((realWidth-scaledSubheader.Width)/2,8+scaledHeader.Height+27), SKSamplingOptions.Default);
         
         return output;
     }
@@ -398,8 +398,8 @@ public partial class MainPage : ContentPage
             using (var blanker = new SKCanvas(outx))
             {
                 blanker.DrawRect(new SKRect(0,0,outx.Width,outx.Height),black);
-                blanker.DrawBitmap(header,0,0);
-                blanker.DrawBitmap(grid,0,(int)heightHintHeader);
+                blanker.DrawBitmap(header, 0, 0, SKSamplingOptions.Default);
+                blanker.DrawBitmap(grid, 0, (int)heightHintHeader, SKSamplingOptions.Default);
             }
         }
         #if IOS
@@ -443,7 +443,7 @@ public partial class MainPage : ContentPage
                         var y = idx / segs_per_width;
                         var ix = (x * seg_width) +8;
                         var iy = (y * (seg_height+27)) +8;
-                        can.DrawBitmap(img,new SKPoint(ix,(int)iy));
+                        can.DrawBitmap(img, new SKPoint(ix,(int)iy), SKSamplingOptions.Default);
                         idx += 1;
                     }
                 }
@@ -471,7 +471,7 @@ public partial class MainPage : ContentPage
                 
                 dirty = false;
                 
-                e.Surface.Canvas.DrawBitmap(renderCopy,new SKPoint(0,0));
+                e.Surface.Canvas.DrawBitmap(renderCopy, new SKPoint(0,0), SKSamplingOptions.Default);
                  Dispatcher.Dispatch(() => IsGraphicLoading = false);
             }
             

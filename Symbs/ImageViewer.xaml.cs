@@ -143,7 +143,7 @@ public partial class ImageViewer : ContentView
             {
 				var trans = app1.MakeTransparency(bitmap1);
 				e.Surface.Canvas.Clear();
-                e.Surface.Canvas.DrawBitmap(trans,new SKPoint(0,0));
+                e.Surface.Canvas.DrawBitmap(trans, new SKPoint(0,0), SKSamplingOptions.Default);
 				
                 Loader.IsVisible = Loader.IsRunning = false;
             }
@@ -154,7 +154,7 @@ public partial class ImageViewer : ContentView
             if (bitmap is SKBitmap bitmap1)
             {
                 e.Surface.Canvas.Clear();
-                e.Surface.Canvas.DrawBitmap(rc,new SKPoint(0,0));
+                e.Surface.Canvas.DrawBitmap(rc, new SKPoint(0,0), SKSamplingOptions.Default);
             }
             
             

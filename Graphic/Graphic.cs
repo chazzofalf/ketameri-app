@@ -112,10 +112,10 @@ class Graphic
                     using (var paint = new SKPaint())
                     {
                         paint.ColorFilter = colorFilter;
-                        canvas.DrawBitmap(original, 0, 0, paint);
+                        canvas.DrawBitmap(original, 0, 0, SKSamplingOptions.Default, paint);
                         canvas.Flush();
                         paint.ColorFilter = turquoiseFilter;
-                        canvas.DrawBitmap(original,0,0,paint);
+                        canvas.DrawBitmap(original, 0, 0, SKSamplingOptions.Default, paint);
                     }
                 }
                 

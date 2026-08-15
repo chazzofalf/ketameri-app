@@ -295,7 +295,7 @@ namespace SymbolTest
             var paint = new SKPaint();
             paint.Color = SKColors.Black.WithRed(1);
             can.DrawRect(new SKRect(0,0,img.Width,img.Height),paint);
-            can.DrawBitmap(large,new SKPoint(0,0));
+            can.DrawBitmap(large, new SKPoint(0,0), SKSamplingOptions.Default);
             return img;
         })).Zip(Enumerable.Range(0,int.MaxValue),(a,b) => (RowIndex:b,Row:a
         .Zip(Enumerable.Range(0,int.MaxValue),(c,d) => (ColumnIndex:d,Column:c))))
