@@ -43,23 +43,18 @@ public partial class TextViewer : ContentView
 			return view as Page;
 		}
 	}
-    private void NewButton_Clicked(object sender, EventArgs e)
+    private async void NewButton_Clicked(object sender, EventArgs e)
     {
 		
 		if (hasChanged)
 		{
-			ParentPage?.DisplayAlert("Unsaved Changes", "Do you want to load a new document and discard current changes?", "Yes", "No")
-			.ContinueWith(async (task) => {
-				if (task.IsCompletedSuccessfully)
+			if (ParentPage is not null)
+			{
+				if (await ParentPage.DisplayAlertAsync("Unsaved Changes", "Do you want to load a new document and discard current changes?", "Yes", "No"))
 				{
-					if (task.Result)
-					{
-						await Dispatcher.DispatchAsync(() => DoNew());
-					}
-					
+					DoNew();
 				}
-			});
-			
+			}
 		}
 		else
 		{
@@ -86,22 +81,17 @@ public partial class TextViewer : ContentView
 		}
     }
 
-    private void LoadButton_Clicked(object sender, EventArgs e)
+    private async void LoadButton_Clicked(object sender, EventArgs e)
     {
 		if (hasChanged)
 		{
-			ParentPage?.DisplayAlert("Unsaved Changes", "Do you want to load another document and discard current changes?", "Yes", "No")
-			.ContinueWith(async (task) => {
-				if (task.IsCompletedSuccessfully)
+			if (ParentPage is not null)
+			{
+				if (await ParentPage.DisplayAlertAsync("Unsaved Changes", "Do you want to load another document and discard current changes?", "Yes", "No"))
 				{
-					if (task.Result)
-					{
-						await Dispatcher.DispatchAsync(() => DoLoad());
-					}
-					
+					DoLoad();
 				}
-			});
-			
+			}
 		}
 		else
 		{
